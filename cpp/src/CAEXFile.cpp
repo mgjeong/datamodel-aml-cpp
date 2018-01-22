@@ -1,19 +1,18 @@
 #include "CAEXFile.h"
 
 CAEXFile::CAEXFile() {
-    instanceHierarchy = new InstanceHierarchy();
-    roleClassLib = new RoleClassLib();
-    systemUnitClassLib = new SystemUnitClassLib();
-
+    // instanceHierarchy = new InstanceHierarchy();
+    // roleClassLib = new RoleClassLib();
+    // systemUnitClassLib = new SystemUnitClassLib();
     setFileName("test.aml");
     setSchemaVersion("2.15");
     setNoNamespace("CAEX_ClassModel_V2.15.xsd");
     setXsi("http://www.w3.org/2001/XMLSchema-instance");
 }
 CAEXFile::CAEXFile(std::string filename) {
-    instanceHierarchy = new InstanceHierarchy();
-    roleClassLib = new RoleClassLib();
-    systemUnitClassLib = new SystemUnitClassLib();
+    // instanceHierarchy = new InstanceHierarchy();
+    // roleClassLib = new RoleClassLib();
+    // systemUnitClassLib = new SystemUnitClassLib();
 
     setFileName(filename + ".aml");
     setSchemaVersion("2.15");
@@ -46,21 +45,21 @@ void CAEXFile::setXsi(std::string xsi) {
     this->xsi = xsi;
 }
 
-InstanceHierarchy* CAEXFile::getInstanceHierarchy() {
+std::vector<InstanceHierarchy*> CAEXFile::getInstanceHierarchy() {
     return instanceHierarchy;
 }
-void CAEXFile::setInstanceHierarchy(InstanceHierarchy* instancehierarchy) {
+void CAEXFile::setInstanceHierarchy(std::vector<InstanceHierarchy*> instancehierarchy) {
     instanceHierarchy = instancehierarchy;
 }
-RoleClassLib* CAEXFile::getRoleClassLib() {
+std::vector<RoleClassLib*> CAEXFile::getRoleClassLib() {
     return roleClassLib;
 }
-void CAEXFile::setRoleClassLib(RoleClassLib* roleclasslib) {
+void CAEXFile::setRoleClassLib(std::vector<RoleClassLib*> roleclasslib) {
     roleClassLib = roleclasslib;
 }
-SystemUnitClassLib* CAEXFile::getSystemUnitClassLib() {
+std::vector<SystemUnitClassLib*> CAEXFile::getSystemUnitClassLib() {
     return systemUnitClassLib;
 }
-void CAEXFile::setSystemUnitClassLib(SystemUnitClassLib* systemunitclasslib) {
+void CAEXFile::setSystemUnitClassLib(std::vector<SystemUnitClassLib*> systemunitclasslib) {
     systemUnitClassLib = systemunitclasslib;
 }
