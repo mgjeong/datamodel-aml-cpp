@@ -11,9 +11,9 @@ private:
     std::string noNamespace;
     std::string xsi;
 
-    InstanceHierarchy* instanceHierarchy;
-    RoleClassLib* roleClassLib;
-    SystemUnitClassLib* systemUnitClassLib;
+    std::vector<InstanceHierarchy*> instanceHierarchy;
+    std::vector<RoleClassLib*> roleClassLib;
+    std::vector<SystemUnitClassLib*> systemUnitClassLib;
 
 public:
     CAEXFile();
@@ -28,10 +28,10 @@ public:
     std::string getXsi();
     void setXsi(std::string xsi);
 
-    InstanceHierarchy* getInstanceHierarchy();
-    void setInstanceHierarchy(InstanceHierarchy* instanceHierarchy);
-    RoleClassLib* getRoleClassLib();
-    void setRoleClassLib(RoleClassLib* roleClassLib);
-    SystemUnitClassLib* getSystemUnitClassLib();
-    void setSystemUnitClassLib(SystemUnitClassLib* systemUnitClassLib);
+    std::vector<InstanceHierarchy*> getInstanceHierarchy();
+    void setInstanceHierarchy(std::vector<InstanceHierarchy*> instanceHierarchy);
+    std::vector<RoleClassLib*> getRoleClassLib();
+    void setRoleClassLib(std::vector<RoleClassLib*> roleClassLib);
+    std::vector<SystemUnitClassLib*> getSystemUnitClassLib();
+    void setSystemUnitClassLib(std::vector<SystemUnitClassLib*> systemUnitClassLib);
 };

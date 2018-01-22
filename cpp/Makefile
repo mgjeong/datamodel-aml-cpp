@@ -12,7 +12,7 @@ SRC_DIR = src protobuf
 CXXFLAGS = -std=c++0x -g -Wall $(INC_DIR)
 
 LDFLAGS = -lprotobuf
-OBJS = Event.pb.o AMLModel.o AMLObject.o Attribute.o CAEXFile.o CommonElement.o InstanceHierarchy.o InternalElement.o RoleClass.o RoleClassLib.o SupportedRoleClass.o SystemUnitClass.o SystemUnitClassLib.o 
+OBJS = Event.pb.o AML.pb.o AMLModel.o AMLObject.o Attribute.o CAEXFile.o CommonElement.o InstanceHierarchy.o InternalElement.o RoleClass.o RoleClassLib.o SupportedRoleClass.o SystemUnitClass.o SystemUnitClassLib.o 
 
 TARGET = Test
 
