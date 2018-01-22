@@ -1,5 +1,0 @@
-c++ -I ../libxsd -c sample.cpp CAEX_Classmodel_V2.15.cxx
-
-c++ -o sample CAEX_Classmodel_V2.15.o sample.o -lxerces-c
-
-./sample data_modeling.aml
