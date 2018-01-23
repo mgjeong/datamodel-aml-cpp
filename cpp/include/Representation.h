@@ -4,7 +4,6 @@
 #include <string>
 
 #include "CAEXFile.h"
-#include "AMLModel.h"
 #include "Event.pb.h"
 
 typedef unsigned char BYTE;
@@ -12,16 +11,16 @@ typedef unsigned char BYTE;
 class Representation
 {
 public:
-    Representation(std::string amlFilePath);
-    Representation(std::string amlFilePath, std::string name);
+    Representation(const std::string amlFilePath);
     virtual ~Representation(void);
 
-    datamodel::Event* AmlToEvent(std::string xmlStr);
+    datamodel::Event* AmlToEvent(const std::string xmlStr);
     std::string EventToAml(datamodel::Event* event);
     datamodel::Event* ByteToEvent(BYTE* byte);
     BYTE* EventToByte(datamodel::Event event);
 
 private:
+    class AMLModel;
     AMLModel* m_amlModel;
 };
 
