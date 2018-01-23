@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "AMLObject.h"
 #include "InternalElement.h"
 #include "InstanceHierarchy.h"
 #include "Event.pb.h"
@@ -46,11 +47,10 @@ void toProtoAtt(datamodel::Attribute *protoatt, Attribute *att) {
     protoatt->set_attributedatatype(att->getAttributeDataType());
     protoatt->set_value(att->getValue());
 
-    if(att->getAttribute().empty()==false) {
-        for(Attribute *satt: att->getAttribute()) {
-            datamodel::Attribute *subprotoatt = protoatt->add_attribute();
-            toProtoAtt(subprotoatt, satt);
-        }
+    
+    for(Attribute *satt: att->getAttribute()) {
+        datamodel::Attribute *subprotoatt = protoatt->add_attribute();
+        toProtoAtt(subprotoatt, satt);
     }
 
     return;
@@ -77,18 +77,18 @@ void toProtoIe(datamodel::InternalElement *protoie, InternalElement *ie){
     return;
 }
 
-std::string toProtoBuf(InstanceHierarchy ih) {
-    if(&ih == nullptr) {
+std::string toProtoBuf(InstanceHierarchy* ih) {
+    if(ih == nullptr) {
         cout << ("ih == nullptr") << endl;
         return nullptr;
     }
 
     datamodel::InstanceHierarchy protoih;
     
-    protoih.set_name(ih.getName());
-    protoih.set_version(ih.getVersion());
+    protoih.set_name(ih->getName());
+    protoih.set_version(ih->getVersion());
 
-    for(InternalElement *ie: ih.getInternalElement()) {
+    for(InternalElement *ie: ih->getInternalElement()) {
         datamodel::InternalElement *protoie = protoih.add_internalelement();
         toProtoIe(protoie, ie);
     }
@@ -107,6 +107,60 @@ std::string toProtoBuf(InstanceHierarchy ih) {
     return ret;
 }   
 
+Attribute* toAMLAtt(datamodel::Attribute *protoatt) {
+    Attribute* att = new Attribute();
+    att->setName(protoatt->name());
+    att->setAttributeDataType(protoatt->attributedatatype());
+    att->setValue(protoatt->value());
+
+    for(datamodel::Attribute subprotoatt: protoatt->attribute()) {
+        Attribute *subatt = toAMLAtt(&subprotoatt);
+        att->getAttribute().push_back(subatt);
+    }
+
+    return att;
+}
+
+InternalElement* toAMLIe(datamodel::InternalElement *protoie) {
+    InternalElement* ie = new InternalElement();
+    ie->setName(protoie->name());
+    ie->setRefBaseSystemUnitPath(protoie->refbasesystemunitpath());
+
+    SupportedRoleClass *src = new SupportedRoleClass();
+    src->setRefRoleClassPath(protoie->supportedroleclass().refroleclasspath());
+
+    for(datamodel::InternalElement subprotoie: protoie->internalelement()) {
+        InternalElement *subie = toAMLIe(&subprotoie);
+        ie->getInternalElement().push_back(subie);
+    }
+
+    for(datamodel::Attribute protoatt: protoie->attribute()) {
+        Attribute *att = toAMLAtt(&protoatt);
+        ie->getAttribute().push_back(att);
+    }
+
+    return ie;
+}
+
+AMLObject* toAMLObj(std::string str) {
+    datamodel::InstanceHierarchy protoih;
+    protoih.ParseFromString(str);
+
+    AMLObject* ret = new AMLObject();
+
+    InstanceHierarchy* ih = new InstanceHierarchy();
+    ih->setName(protoih.name());
+    ih->setVersion(protoih.version());
+
+    for(datamodel::InternalElement protoie: protoih.internalelement()) {
+        InternalElement* ie = toAMLIe(&protoie);
+        ih->getInternalElement().push_back(ie);
+    }
+
+    ret->setInstanceHierarchy(ih);
+
+    return ret;
+}
 
 
 int main() {
@@ -143,31 +197,42 @@ int main() {
         cout << "Data modified : " << reading.modified() << endl;
         cout << "Data origin : " << reading.origin() << endl;
     }
-    
+    cout<<"11111111111111111111"<<endl;
 
-    datamodel::InstanceHierarchy ih;
-    ih.set_name("test");
-    ih.set_version("1.1.1");
+    // datamodel::InstanceHierarchy ih;
+    // ih.set_name("test");
+    // ih.set_version("1.1.1");
 
+    // cout << "InstanceHierarchy" << endl;
+    // cout << "InstanceHierarchy name : " << ih.name() << endl;
+    // cout << "InstanceHierarchy version : " << ih.version() << endl;
+
+    InstanceHierarchy* ih = new InstanceHierarchy();
+    ih->setName("test");
+    ih->setVersion("1.1.1");
     cout << "InstanceHierarchy" << endl;
-    cout << "InstanceHierarchy name : " << ih.name() << endl;
-    cout << "InstanceHierarchy version : " << ih.version() << endl;
+    cout << "InstanceHierarchy name : " << ih->getName() << endl;
+    cout << "InstanceHierarchy version : " << ih->getVersion() << endl;
 
     std::string teststr;
-    bool result = ih.SerializeToString(&teststr);
-    if(result == false) {
-        cout<<"error"<<endl;
-    }
+    //bool result = ih.SerializeToString(&teststr);
+    teststr = toProtoBuf(ih);
+    // if(result == false) {
+    //     cout<<"error"<<endl;
+    // }
 
     cout << teststr << endl;
 
-    datamodel::InstanceHierarchy ih2;
+    // datamodel::InstanceHierarchy ih2;
     
-    ih2.ParseFromString(teststr);
+    // ih2.ParseFromString(teststr);
+    cout<<"11111111111111111111"<<endl;
+    AMLObject* obj = toAMLObj(teststr);
+    InstanceHierarchy* ih2 = obj->getInstanceHierarchy();
 
     cout << "InstanceHierarchy" << endl;
-    cout << "InstanceHierarchy name : " << ih2.name() << endl;
-    cout << "InstanceHierarchy version : " << ih2.version() << endl;
+    cout << "InstanceHierarchy name : " << ih2->getName() << endl;
+    cout << "InstanceHierarchy version : " << ih2->getVersion() << endl;
 
     return 0;
 
