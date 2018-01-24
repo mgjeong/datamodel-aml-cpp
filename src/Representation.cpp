@@ -291,12 +291,10 @@ std::string Representation::EventToAml(const datamodel::Event* event)
 
 datamodel::Event* Representation::ByteToEvent(const std::string& byte)
 {
-    datamodel::Event* event;
-    (void)event;
     //
     //
     //
-    return event;
+    return NULL;
 }
 
 std::string Representation::EventToByte(const datamodel::Event* event)

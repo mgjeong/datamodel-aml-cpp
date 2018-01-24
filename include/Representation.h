@@ -3,10 +3,7 @@
 
 #include <string>
 
-#include "CAEXFile.h"
 #include "Event.pb.h"
-
-typedef unsigned char BYTE;
 
 class Representation
 {
