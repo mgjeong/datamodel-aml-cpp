@@ -3,8 +3,8 @@
 #include <sstream>
 
 #include "Representation.h"
-#include "CAEXFile.h"
 #include "Event.pb.h"
+#include "AML.pb.h"
 
 #include "pugixml.hpp"
 
@@ -54,6 +54,12 @@ static const char KEY_ORIGIN[]                  = "origin";
                             }\
                             std::cout<<std::endl;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class T>
+void extractAttribute(T* attr, pugi::xml_node xmlNode);
+
+template <class T>
+void extractInternalElement(T* ie, pugi::xml_node xmlNode);
 
 template <typename T>
 std::string toString(const T& t)
@@ -138,7 +144,7 @@ public:
         return event;
     }
 
-    pugi::xml_document* constructXmlDoc(datamodel::Event* event)
+    pugi::xml_document* constructXmlDoc(const datamodel::Event* event)
     {
         pugi::xml_document* xml_doc = new pugi::xml_document();
 
@@ -257,7 +263,7 @@ Representation::~Representation(void)
     delete m_amlModel;
 }
 
-datamodel::Event* Representation::AmlToEvent(const std::string xmlStr)
+datamodel::Event* Representation::AmlToEvent(const std::string& xmlStr)
 {
     pugi::xml_document dataXml;
     pugi::xml_parse_result result = dataXml.load_string(xmlStr.c_str());
@@ -269,7 +275,7 @@ datamodel::Event* Representation::AmlToEvent(const std::string xmlStr)
     return event;
 }
 
-std::string Representation::EventToAml(datamodel::Event* event)
+std::string Representation::EventToAml(const datamodel::Event* event)
 {
     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(event);
     
@@ -283,21 +289,111 @@ std::string Representation::EventToAml(datamodel::Event* event)
     return stream.str();
 }
 
-datamodel::Event* Representation::ByteToEvent(BYTE* byte)
+datamodel::Event* Representation::ByteToEvent(const std::string& byte)
 {
     datamodel::Event* event;
+    (void)event;
     //
     //
     //
     return event;
 }
 
-BYTE* Representation::EventToByte(datamodel::Event event)
+std::string Representation::EventToByte(const datamodel::Event* event)
 {
-    //
-    //
-    //
-    return NULL;
+    // convert Event to XML object
+    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(event);
+    
+    // convert XML object to AML proto object
+    std::vector<datamodel::InstanceHierarchy*> ihList;
+
+    for (pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY); xml_ih; xml_ih = xml_ih.next_sibling(INSTANCE_HIERARCHY))
+    {
+        datamodel::InstanceHierarchy* ih = new datamodel::InstanceHierarchy();
+
+        ih->set_name    (xml_ih.attribute(NAME).value());
+      //ih->set_version (xml_ih.child_value(VERSION)); // @TODO: required?
+        
+        extractInternalElement<datamodel::InstanceHierarchy>(ih, xml_ih);
+
+        ihList.push_back(ih);                
+    }
+
+    std::string binary;
+    ihList[0]->SerializeToString(&binary);  // @TODO: constructXmlDoc currently ensures that xml_doc has only one InstanceHierarchy.
+
+    return binary;
+}
+
+void extractSubAttribute(datamodel::Attribute* att, pugi::xml_node xmlNode)
+{
+    for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))    
+    {
+        datamodel::Attribute* attr = att->add_attribute();
+
+        attr->set_name              (xmlAttr.attribute(NAME).value());
+        attr->set_attributedatatype (xmlAttr.attribute(ATTRIBUTE_DATA_TYPE).value());
+      //attr->set_description       (xmlAttr.child_value(DESCRIPTION)); //@TODO: required?
+
+        extractSubAttribute(attr, xmlAttr);
+
+        pugi::xml_node xmlValue = xmlAttr.child(VALUE);
+        if (NULL != xmlValue)
+        {
+            attr->set_value(xmlValue.value());
+        }
+    }
+
+    return;
+}
+
+template <class T>
+void extractAttribute(T* attr, pugi::xml_node xmlNode)
+{
+    for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))
+    {
+        datamodel::Attribute* attr_child = attr->add_attribute();
+
+        attr_child->set_name              (xmlAttr.attribute(NAME).value());
+        attr_child->set_attributedatatype (xmlAttr.attribute(ATTRIBUTE_DATA_TYPE).value());
+      //attr->set_description       (xmlAttr.child_value(DESCRIPTION)); //@TODO: required?
+
+        extractAttribute<datamodel::Attribute>(attr_child, xmlAttr);
+
+        pugi::xml_node xmlValue = xmlAttr.child(VALUE);
+        if (NULL != xmlValue)
+        {
+            attr_child->set_value(xmlValue.value());
+        }
+    }
+
+    return;
+}
+
+template <class T>
+void extractInternalElement(T* ie, pugi::xml_node xmlNode)
+{
+    for (pugi::xml_node xmlIe = xmlNode.child(INTERNAL_ELEMENT); xmlIe; xmlIe = xmlIe.next_sibling(INTERNAL_ELEMENT))    
+    {
+        datamodel::InternalElement* ie_child = ie->add_internalelement();
+
+        ie_child->set_name                    (xmlIe.attribute(NAME).value());
+        ie_child->set_refbasesystemunitpath   (xmlIe.attribute(REF_BASE_SYSTEM_UNIT_PATH).value());
+        
+        extractAttribute<datamodel::InternalElement>(ie_child, xmlIe);
+        extractInternalElement<datamodel::InternalElement>(ie_child, xmlIe);
+
+        pugi::xml_node xmlSrc = xmlIe.child(SUPPORTED_ROLE_CLASS);
+        if (NULL != xmlSrc)
+        {
+            datamodel::SupportedRoleClass* src = new datamodel::SupportedRoleClass();
+            src->set_refroleclasspath(xmlSrc.attribute(REF_ROLE_CLASS_PATH).value());
+
+            ie_child->set_allocated_supportedroleclass(src);
+        }
+    }
+
+    return;
 }
 
 // std::vector<Attribute*> extractAttribute(pugi::xml_node xmlNode)

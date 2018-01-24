@@ -14,10 +14,10 @@ public:
     Representation(const std::string amlFilePath);
     virtual ~Representation(void);
 
-    datamodel::Event* AmlToEvent(const std::string xmlStr);
-    std::string EventToAml(datamodel::Event* event);
-    datamodel::Event* ByteToEvent(BYTE* byte);
-    BYTE* EventToByte(datamodel::Event event);
+    datamodel::Event* AmlToEvent(const std::string& xmlStr);
+    std::string EventToAml(const datamodel::Event* event);
+    datamodel::Event* ByteToEvent(const std::string& byte);
+    std::string EventToByte(const datamodel::Event* event);
 
 private:
     class AMLModel;
