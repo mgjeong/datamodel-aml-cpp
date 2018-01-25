@@ -13,7 +13,7 @@ public:
 
     datamodel::Event* AmlToEvent(const std::string& xmlStr);
     std::string EventToAml(const datamodel::Event* event);
-    datamodel::Event* ByteToEvent(const std::string& byte);
+    datamodel::Event* ByteToEvent(const std::string byte);
     std::string EventToByte(const datamodel::Event* event);
 
 private:

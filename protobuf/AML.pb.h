@@ -34,6 +34,9 @@ namespace datamodel {
 class Attribute;
 class AttributeDefaultTypeInternal;
 extern AttributeDefaultTypeInternal _Attribute_default_instance_;
+class CAEXFile;
+class CAEXFileDefaultTypeInternal;
+extern CAEXFileDefaultTypeInternal _CAEXFile_default_instance_;
 class InstanceHierarchy;
 class InstanceHierarchyDefaultTypeInternal;
 extern InstanceHierarchyDefaultTypeInternal _InstanceHierarchy_default_instance_;
@@ -76,6 +79,192 @@ void InitDefaults();
 
 // ===================================================================
 
+class CAEXFile : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:datamodel.CAEXFile) */ {
+ public:
+  CAEXFile();
+  virtual ~CAEXFile();
+
+  CAEXFile(const CAEXFile& from);
+
+  inline CAEXFile& operator=(const CAEXFile& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  CAEXFile(CAEXFile&& from) noexcept
+    : CAEXFile() {
+    *this = ::std::move(from);
+  }
+
+  inline CAEXFile& operator=(CAEXFile&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CAEXFile& default_instance();
+
+  static inline const CAEXFile* internal_default_instance() {
+    return reinterpret_cast<const CAEXFile*>(
+               &_CAEXFile_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    0;
+
+  void Swap(CAEXFile* other);
+  friend void swap(CAEXFile& a, CAEXFile& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline CAEXFile* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  CAEXFile* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const CAEXFile& from);
+  void MergeFrom(const CAEXFile& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(CAEXFile* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .datamodel.InstanceHierarchy InstanceHierarchy = 5;
+  int instancehierarchy_size() const;
+  void clear_instancehierarchy();
+  static const int kInstanceHierarchyFieldNumber = 5;
+  const ::datamodel::InstanceHierarchy& instancehierarchy(int index) const;
+  ::datamodel::InstanceHierarchy* mutable_instancehierarchy(int index);
+  ::datamodel::InstanceHierarchy* add_instancehierarchy();
+  ::google::protobuf::RepeatedPtrField< ::datamodel::InstanceHierarchy >*
+      mutable_instancehierarchy();
+  const ::google::protobuf::RepeatedPtrField< ::datamodel::InstanceHierarchy >&
+      instancehierarchy() const;
+
+  // required string FileName = 1;
+  bool has_filename() const;
+  void clear_filename();
+  static const int kFileNameFieldNumber = 1;
+  const ::std::string& filename() const;
+  void set_filename(const ::std::string& value);
+  #if LANG_CXX11
+  void set_filename(::std::string&& value);
+  #endif
+  void set_filename(const char* value);
+  void set_filename(const char* value, size_t size);
+  ::std::string* mutable_filename();
+  ::std::string* release_filename();
+  void set_allocated_filename(::std::string* filename);
+
+  // required string SchemaVersion = 2;
+  bool has_schemaversion() const;
+  void clear_schemaversion();
+  static const int kSchemaVersionFieldNumber = 2;
+  const ::std::string& schemaversion() const;
+  void set_schemaversion(const ::std::string& value);
+  #if LANG_CXX11
+  void set_schemaversion(::std::string&& value);
+  #endif
+  void set_schemaversion(const char* value);
+  void set_schemaversion(const char* value, size_t size);
+  ::std::string* mutable_schemaversion();
+  ::std::string* release_schemaversion();
+  void set_allocated_schemaversion(::std::string* schemaversion);
+
+  // required string xsi = 3;
+  bool has_xsi() const;
+  void clear_xsi();
+  static const int kXsiFieldNumber = 3;
+  const ::std::string& xsi() const;
+  void set_xsi(const ::std::string& value);
+  #if LANG_CXX11
+  void set_xsi(::std::string&& value);
+  #endif
+  void set_xsi(const char* value);
+  void set_xsi(const char* value, size_t size);
+  ::std::string* mutable_xsi();
+  ::std::string* release_xsi();
+  void set_allocated_xsi(::std::string* xsi);
+
+  // required string xmlns = 4;
+  bool has_xmlns() const;
+  void clear_xmlns();
+  static const int kXmlnsFieldNumber = 4;
+  const ::std::string& xmlns() const;
+  void set_xmlns(const ::std::string& value);
+  #if LANG_CXX11
+  void set_xmlns(::std::string&& value);
+  #endif
+  void set_xmlns(const char* value);
+  void set_xmlns(const char* value, size_t size);
+  ::std::string* mutable_xmlns();
+  ::std::string* release_xmlns();
+  void set_allocated_xmlns(::std::string* xmlns);
+
+  // @@protoc_insertion_point(class_scope:datamodel.CAEXFile)
+ private:
+  void set_has_filename();
+  void clear_has_filename();
+  void set_has_schemaversion();
+  void clear_has_schemaversion();
+  void set_has_xsi();
+  void clear_has_xsi();
+  void set_has_xmlns();
+  void clear_has_xmlns();
+
+  // helper for ByteSizeLong()
+  size_t RequiredFieldsByteSizeFallback() const;
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::datamodel::InstanceHierarchy > instancehierarchy_;
+  ::google::protobuf::internal::ArenaStringPtr filename_;
+  ::google::protobuf::internal::ArenaStringPtr schemaversion_;
+  ::google::protobuf::internal::ArenaStringPtr xsi_;
+  ::google::protobuf::internal::ArenaStringPtr xmlns_;
+  friend struct protobuf_AML_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class RoleClassLib : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:datamodel.RoleClassLib) */ {
  public:
   RoleClassLib();
@@ -117,7 +306,7 @@ class RoleClassLib : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_RoleClassLib_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    0;
+    1;
 
   void Swap(RoleClassLib* other);
   friend void swap(RoleClassLib& a, RoleClassLib& b) {
@@ -282,7 +471,7 @@ class RoleClass : public ::google::protobuf::Message /* @@protoc_insertion_point
                &_RoleClass_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    1;
+    2;
 
   void Swap(RoleClass* other);
   friend void swap(RoleClass& a, RoleClass& b) {
@@ -447,7 +636,7 @@ class SystemUnitClassLib : public ::google::protobuf::Message /* @@protoc_insert
                &_SystemUnitClassLib_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(SystemUnitClassLib* other);
   friend void swap(SystemUnitClassLib& a, SystemUnitClassLib& b) {
@@ -594,7 +783,7 @@ class SystemUnitClass : public ::google::protobuf::Message /* @@protoc_insertion
                &_SystemUnitClass_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    3;
+    4;
 
   void Swap(SystemUnitClass* other);
   friend void swap(SystemUnitClass& a, SystemUnitClass& b) {
@@ -766,7 +955,7 @@ class InstanceHierarchy : public ::google::protobuf::Message /* @@protoc_inserti
                &_InstanceHierarchy_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(InstanceHierarchy* other);
   friend void swap(InstanceHierarchy& a, InstanceHierarchy& b) {
@@ -913,7 +1102,7 @@ class InternalElement : public ::google::protobuf::Message /* @@protoc_insertion
                &_InternalElement_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    5;
+    6;
 
   void Swap(InternalElement* other);
   friend void swap(InternalElement& a, InternalElement& b) {
@@ -1085,7 +1274,7 @@ class SupportedRoleClass : public ::google::protobuf::Message /* @@protoc_insert
                &_SupportedRoleClass_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    6;
+    7;
 
   void Swap(SupportedRoleClass* other);
   friend void swap(SupportedRoleClass& a, SupportedRoleClass& b) {
@@ -1201,7 +1390,7 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
                &_Attribute_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    7;
+    8;
 
   void Swap(Attribute* other);
   friend void swap(Attribute& a, Attribute& b) {
@@ -1336,6 +1525,292 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// CAEXFile
+
+// required string FileName = 1;
+inline bool CAEXFile::has_filename() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CAEXFile::set_has_filename() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CAEXFile::clear_has_filename() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CAEXFile::clear_filename() {
+  filename_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_filename();
+}
+inline const ::std::string& CAEXFile::filename() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.FileName)
+  return filename_.GetNoArena();
+}
+inline void CAEXFile::set_filename(const ::std::string& value) {
+  set_has_filename();
+  filename_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.FileName)
+}
+#if LANG_CXX11
+inline void CAEXFile::set_filename(::std::string&& value) {
+  set_has_filename();
+  filename_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.FileName)
+}
+#endif
+inline void CAEXFile::set_filename(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_filename();
+  filename_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.FileName)
+}
+inline void CAEXFile::set_filename(const char* value, size_t size) {
+  set_has_filename();
+  filename_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.FileName)
+}
+inline ::std::string* CAEXFile::mutable_filename() {
+  set_has_filename();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.FileName)
+  return filename_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CAEXFile::release_filename() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.FileName)
+  clear_has_filename();
+  return filename_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CAEXFile::set_allocated_filename(::std::string* filename) {
+  if (filename != NULL) {
+    set_has_filename();
+  } else {
+    clear_has_filename();
+  }
+  filename_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), filename);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.FileName)
+}
+
+// required string SchemaVersion = 2;
+inline bool CAEXFile::has_schemaversion() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CAEXFile::set_has_schemaversion() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CAEXFile::clear_has_schemaversion() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CAEXFile::clear_schemaversion() {
+  schemaversion_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_schemaversion();
+}
+inline const ::std::string& CAEXFile::schemaversion() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.SchemaVersion)
+  return schemaversion_.GetNoArena();
+}
+inline void CAEXFile::set_schemaversion(const ::std::string& value) {
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.SchemaVersion)
+}
+#if LANG_CXX11
+inline void CAEXFile::set_schemaversion(::std::string&& value) {
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.SchemaVersion)
+}
+#endif
+inline void CAEXFile::set_schemaversion(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.SchemaVersion)
+}
+inline void CAEXFile::set_schemaversion(const char* value, size_t size) {
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.SchemaVersion)
+}
+inline ::std::string* CAEXFile::mutable_schemaversion() {
+  set_has_schemaversion();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.SchemaVersion)
+  return schemaversion_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CAEXFile::release_schemaversion() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.SchemaVersion)
+  clear_has_schemaversion();
+  return schemaversion_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CAEXFile::set_allocated_schemaversion(::std::string* schemaversion) {
+  if (schemaversion != NULL) {
+    set_has_schemaversion();
+  } else {
+    clear_has_schemaversion();
+  }
+  schemaversion_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), schemaversion);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.SchemaVersion)
+}
+
+// required string xsi = 3;
+inline bool CAEXFile::has_xsi() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CAEXFile::set_has_xsi() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CAEXFile::clear_has_xsi() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CAEXFile::clear_xsi() {
+  xsi_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_xsi();
+}
+inline const ::std::string& CAEXFile::xsi() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.xsi)
+  return xsi_.GetNoArena();
+}
+inline void CAEXFile::set_xsi(const ::std::string& value) {
+  set_has_xsi();
+  xsi_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.xsi)
+}
+#if LANG_CXX11
+inline void CAEXFile::set_xsi(::std::string&& value) {
+  set_has_xsi();
+  xsi_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.xsi)
+}
+#endif
+inline void CAEXFile::set_xsi(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_xsi();
+  xsi_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.xsi)
+}
+inline void CAEXFile::set_xsi(const char* value, size_t size) {
+  set_has_xsi();
+  xsi_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.xsi)
+}
+inline ::std::string* CAEXFile::mutable_xsi() {
+  set_has_xsi();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.xsi)
+  return xsi_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CAEXFile::release_xsi() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.xsi)
+  clear_has_xsi();
+  return xsi_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CAEXFile::set_allocated_xsi(::std::string* xsi) {
+  if (xsi != NULL) {
+    set_has_xsi();
+  } else {
+    clear_has_xsi();
+  }
+  xsi_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), xsi);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.xsi)
+}
+
+// required string xmlns = 4;
+inline bool CAEXFile::has_xmlns() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void CAEXFile::set_has_xmlns() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void CAEXFile::clear_has_xmlns() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void CAEXFile::clear_xmlns() {
+  xmlns_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_xmlns();
+}
+inline const ::std::string& CAEXFile::xmlns() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.xmlns)
+  return xmlns_.GetNoArena();
+}
+inline void CAEXFile::set_xmlns(const ::std::string& value) {
+  set_has_xmlns();
+  xmlns_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.xmlns)
+}
+#if LANG_CXX11
+inline void CAEXFile::set_xmlns(::std::string&& value) {
+  set_has_xmlns();
+  xmlns_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.xmlns)
+}
+#endif
+inline void CAEXFile::set_xmlns(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_xmlns();
+  xmlns_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.xmlns)
+}
+inline void CAEXFile::set_xmlns(const char* value, size_t size) {
+  set_has_xmlns();
+  xmlns_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.xmlns)
+}
+inline ::std::string* CAEXFile::mutable_xmlns() {
+  set_has_xmlns();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.xmlns)
+  return xmlns_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CAEXFile::release_xmlns() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.xmlns)
+  clear_has_xmlns();
+  return xmlns_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CAEXFile::set_allocated_xmlns(::std::string* xmlns) {
+  if (xmlns != NULL) {
+    set_has_xmlns();
+  } else {
+    clear_has_xmlns();
+  }
+  xmlns_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), xmlns);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.xmlns)
+}
+
+// repeated .datamodel.InstanceHierarchy InstanceHierarchy = 5;
+inline int CAEXFile::instancehierarchy_size() const {
+  return instancehierarchy_.size();
+}
+inline void CAEXFile::clear_instancehierarchy() {
+  instancehierarchy_.Clear();
+}
+inline const ::datamodel::InstanceHierarchy& CAEXFile::instancehierarchy(int index) const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_.Get(index);
+}
+inline ::datamodel::InstanceHierarchy* CAEXFile::mutable_instancehierarchy(int index) {
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_.Mutable(index);
+}
+inline ::datamodel::InstanceHierarchy* CAEXFile::add_instancehierarchy() {
+  // @@protoc_insertion_point(field_add:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::datamodel::InstanceHierarchy >*
+CAEXFile::mutable_instancehierarchy() {
+  // @@protoc_insertion_point(field_mutable_list:datamodel.CAEXFile.InstanceHierarchy)
+  return &instancehierarchy_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::datamodel::InstanceHierarchy >&
+CAEXFile::instancehierarchy() const {
+  // @@protoc_insertion_point(field_list:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_;
+}
+
+// -------------------------------------------------------------------
+
 // RoleClassLib
 
 // required string Name = 1;
@@ -2866,6 +3341,8 @@ Attribute::attribute() const {
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

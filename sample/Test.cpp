@@ -120,8 +120,8 @@ bool isSameEvent(datamodel::Event* event1, datamodel::Event* event2)
 int main() {
     datamodel::Event sample_event = createSampleEvent();
     
-    //printEvent(&sample_event);
-    //cout << "-------------------------------------------------------------" << endl;
+    printEvent(&sample_event);
+    cout << "-------------------------------------------------------------" << endl;
 
     Representation* rep = new Representation("sample/data_modeling.aml");
 

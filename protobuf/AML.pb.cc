@@ -18,6 +18,11 @@
 // @@protoc_insertion_point(includes)
 
 namespace datamodel {
+class CAEXFileDefaultTypeInternal {
+public:
+ ::google::protobuf::internal::ExplicitlyConstructed<CAEXFile>
+     _instance;
+} _CAEXFile_default_instance_;
 class RoleClassLibDefaultTypeInternal {
 public:
  ::google::protobuf::internal::ExplicitlyConstructed<RoleClassLib>
@@ -64,7 +69,7 @@ namespace protobuf_AML_2eproto {
 
 namespace {
 
-::google::protobuf::Metadata file_level_metadata[8];
+::google::protobuf::Metadata file_level_metadata[9];
 
 }  // namespace
 
@@ -87,9 +92,25 @@ PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::ParseTable const
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
   { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
+  { NULL, NULL, 0, -1, -1, -1, -1, NULL, false },
 };
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CAEXFile, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CAEXFile, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CAEXFile, filename_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CAEXFile, schemaversion_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CAEXFile, xsi_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CAEXFile, xmlns_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CAEXFile, instancehierarchy_),
+  0,
+  1,
+  2,
+  3,
+  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RoleClassLib, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RoleClassLib, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -190,17 +211,19 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_ATTRIBUTE_SECTION
   ~0u,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 9, sizeof(RoleClassLib)},
-  { 13, 22, sizeof(RoleClass)},
-  { 26, 34, sizeof(SystemUnitClassLib)},
-  { 37, 47, sizeof(SystemUnitClass)},
-  { 52, 60, sizeof(InstanceHierarchy)},
-  { 63, 73, sizeof(InternalElement)},
-  { 78, 84, sizeof(SupportedRoleClass)},
-  { 85, 94, sizeof(Attribute)},
+  { 0, 10, sizeof(CAEXFile)},
+  { 15, 24, sizeof(RoleClassLib)},
+  { 28, 37, sizeof(RoleClass)},
+  { 41, 49, sizeof(SystemUnitClassLib)},
+  { 52, 62, sizeof(SystemUnitClass)},
+  { 67, 75, sizeof(InstanceHierarchy)},
+  { 78, 88, sizeof(InternalElement)},
+  { 93, 99, sizeof(SupportedRoleClass)},
+  { 100, 109, sizeof(Attribute)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::google::protobuf::Message*>(&_CAEXFile_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_RoleClassLib_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_RoleClass_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_SystemUnitClassLib_default_instance_),
@@ -229,7 +252,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 8);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 9);
 }
 
 }  // namespace
@@ -237,7 +260,9 @@ void TableStruct::InitDefaultsImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
-  _RoleClassLib_default_instance_._instance.DefaultConstruct();
+  _CAEXFile_default_instance_._instance.DefaultConstruct();
+  ::google::protobuf::internal::OnShutdownDestroyMessage(
+      &_CAEXFile_default_instance_);_RoleClassLib_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
       &_RoleClassLib_default_instance_);_RoleClass_default_instance_._instance.DefaultConstruct();
   ::google::protobuf::internal::OnShutdownDestroyMessage(
@@ -267,37 +292,40 @@ namespace {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\tAML.proto\022\tdatamodel\"k\n\014RoleClassLib\022\014"
-      "\n\004Name\030\001 \002(\t\022\023\n\013Description\030\002 \001(\t\022\017\n\007Ver"
-      "sion\030\003 \001(\t\022\'\n\tRoleClass\030\004 \003(\0132\024.datamode"
-      "l.RoleClass\"q\n\tRoleClass\022\014\n\004Name\030\001 \002(\t\022\023"
-      "\n\013Description\030\002 \001(\t\022\030\n\020RefBaseClassPath\030"
-      "\003 \001(\t\022\'\n\tAttribute\030\004 \003(\0132\024.datamodel.Att"
-      "ribute\"h\n\022SystemUnitClassLib\022\014\n\004Name\030\001 \002"
-      "(\t\022\017\n\007Version\030\002 \001(\t\0223\n\017SystemUnitClass\030\004"
-      " \003(\0132\032.datamodel.SystemUnitClass\"\322\001\n\017Sys"
-      "temUnitClass\022\014\n\004Name\030\001 \002(\t\022\030\n\020RefBaseCla"
-      "ssPath\030\002 \001(\t\0229\n\022SupportedRoleClass\030\003 \001(\013"
-      "2\035.datamodel.SupportedRoleClass\0223\n\017Inter"
-      "nalElement\030\004 \003(\0132\032.datamodel.InternalEle"
-      "ment\022\'\n\tAttribute\030\005 \003(\0132\024.datamodel.Attr"
-      "ibute\"g\n\021InstanceHierarchy\022\014\n\004Name\030\001 \002(\t"
-      "\022\017\n\007Version\030\002 \001(\t\0223\n\017InternalElement\030\003 \003"
-      "(\0132\032.datamodel.InternalElement\"\327\001\n\017Inter"
-      "nalElement\022\014\n\004Name\030\001 \002(\t\022\035\n\025RefBaseSyste"
-      "mUnitPath\030\002 \001(\t\0229\n\022SupportedRoleClass\030\003 "
-      "\001(\0132\035.datamodel.SupportedRoleClass\0223\n\017In"
-      "ternalElement\030\004 \003(\0132\032.datamodel.Internal"
-      "Element\022\'\n\tAttribute\030\005 \003(\0132\024.datamodel.A"
-      "ttribute\".\n\022SupportedRoleClass\022\030\n\020RefRol"
-      "eClassPath\030\001 \002(\t\"l\n\tAttribute\022\014\n\004Name\030\001 "
-      "\002(\t\022\031\n\021AttributeDataType\030\002 \002(\t\022\r\n\005Value\030"
-      "\003 \002(\t\022\'\n\tAttribute\030\004 \003(\0132\024.datamodel.Att"
-      "ributeB\'\n\033edge.datamodel.protobuf.amlB\010P"
-      "rotoAML"
+      "\n\tAML.proto\022\tdatamodel\"\210\001\n\010CAEXFile\022\020\n\010F"
+      "ileName\030\001 \002(\t\022\025\n\rSchemaVersion\030\002 \002(\t\022\013\n\003"
+      "xsi\030\003 \002(\t\022\r\n\005xmlns\030\004 \002(\t\0227\n\021InstanceHier"
+      "archy\030\005 \003(\0132\034.datamodel.InstanceHierarch"
+      "y\"k\n\014RoleClassLib\022\014\n\004Name\030\001 \002(\t\022\023\n\013Descr"
+      "iption\030\002 \001(\t\022\017\n\007Version\030\003 \001(\t\022\'\n\tRoleCla"
+      "ss\030\004 \003(\0132\024.datamodel.RoleClass\"q\n\tRoleCl"
+      "ass\022\014\n\004Name\030\001 \002(\t\022\023\n\013Description\030\002 \001(\t\022\030"
+      "\n\020RefBaseClassPath\030\003 \001(\t\022\'\n\tAttribute\030\004 "
+      "\003(\0132\024.datamodel.Attribute\"h\n\022SystemUnitC"
+      "lassLib\022\014\n\004Name\030\001 \002(\t\022\017\n\007Version\030\002 \001(\t\0223"
+      "\n\017SystemUnitClass\030\004 \003(\0132\032.datamodel.Syst"
+      "emUnitClass\"\322\001\n\017SystemUnitClass\022\014\n\004Name\030"
+      "\001 \002(\t\022\030\n\020RefBaseClassPath\030\002 \001(\t\0229\n\022Suppo"
+      "rtedRoleClass\030\003 \001(\0132\035.datamodel.Supporte"
+      "dRoleClass\0223\n\017InternalElement\030\004 \003(\0132\032.da"
+      "tamodel.InternalElement\022\'\n\tAttribute\030\005 \003"
+      "(\0132\024.datamodel.Attribute\"g\n\021InstanceHier"
+      "archy\022\014\n\004Name\030\001 \002(\t\022\017\n\007Version\030\002 \001(\t\0223\n\017"
+      "InternalElement\030\003 \003(\0132\032.datamodel.Intern"
+      "alElement\"\327\001\n\017InternalElement\022\014\n\004Name\030\001 "
+      "\002(\t\022\035\n\025RefBaseSystemUnitPath\030\002 \001(\t\0229\n\022Su"
+      "pportedRoleClass\030\003 \001(\0132\035.datamodel.Suppo"
+      "rtedRoleClass\0223\n\017InternalElement\030\004 \003(\0132\032"
+      ".datamodel.InternalElement\022\'\n\tAttribute\030"
+      "\005 \003(\0132\024.datamodel.Attribute\".\n\022Supported"
+      "RoleClass\022\030\n\020RefRoleClassPath\030\001 \002(\t\"l\n\tA"
+      "ttribute\022\014\n\004Name\030\001 \002(\t\022\031\n\021AttributeDataT"
+      "ype\030\002 \002(\t\022\r\n\005Value\030\003 \002(\t\022\'\n\tAttribute\030\004 "
+      "\003(\0132\024.datamodel.AttributeB\'\n\033edge.datamo"
+      "del.protobuf.amlB\010ProtoAML"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1087);
+      descriptor, 1226);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "AML.proto", &protobuf_RegisterTypes);
 }
@@ -316,6 +344,815 @@ struct StaticDescriptorInitializer {
 
 }  // namespace protobuf_AML_2eproto
 
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int CAEXFile::kFileNameFieldNumber;
+const int CAEXFile::kSchemaVersionFieldNumber;
+const int CAEXFile::kXsiFieldNumber;
+const int CAEXFile::kXmlnsFieldNumber;
+const int CAEXFile::kInstanceHierarchyFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+CAEXFile::CAEXFile()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_AML_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:datamodel.CAEXFile)
+}
+CAEXFile::CAEXFile(const CAEXFile& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_),
+      _cached_size_(0),
+      instancehierarchy_(from.instancehierarchy_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  filename_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_filename()) {
+    filename_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.filename_);
+  }
+  schemaversion_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_schemaversion()) {
+    schemaversion_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.schemaversion_);
+  }
+  xsi_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_xsi()) {
+    xsi_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.xsi_);
+  }
+  xmlns_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_xmlns()) {
+    xmlns_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.xmlns_);
+  }
+  // @@protoc_insertion_point(copy_constructor:datamodel.CAEXFile)
+}
+
+void CAEXFile::SharedCtor() {
+  _cached_size_ = 0;
+  filename_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  schemaversion_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  xsi_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  xmlns_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+CAEXFile::~CAEXFile() {
+  // @@protoc_insertion_point(destructor:datamodel.CAEXFile)
+  SharedDtor();
+}
+
+void CAEXFile::SharedDtor() {
+  filename_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  schemaversion_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  xsi_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  xmlns_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void CAEXFile::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CAEXFile::descriptor() {
+  protobuf_AML_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_AML_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const CAEXFile& CAEXFile::default_instance() {
+  protobuf_AML_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+CAEXFile* CAEXFile::New(::google::protobuf::Arena* arena) const {
+  CAEXFile* n = new CAEXFile;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void CAEXFile::Clear() {
+// @@protoc_insertion_point(message_clear_start:datamodel.CAEXFile)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  instancehierarchy_.Clear();
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 15u) {
+    if (cached_has_bits & 0x00000001u) {
+      GOOGLE_DCHECK(!filename_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
+      (*filename_.UnsafeRawStringPointer())->clear();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      GOOGLE_DCHECK(!schemaversion_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
+      (*schemaversion_.UnsafeRawStringPointer())->clear();
+    }
+    if (cached_has_bits & 0x00000004u) {
+      GOOGLE_DCHECK(!xsi_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
+      (*xsi_.UnsafeRawStringPointer())->clear();
+    }
+    if (cached_has_bits & 0x00000008u) {
+      GOOGLE_DCHECK(!xmlns_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
+      (*xmlns_.UnsafeRawStringPointer())->clear();
+    }
+  }
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool CAEXFile::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:datamodel.CAEXFile)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string FileName = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_filename()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->filename().data(), static_cast<int>(this->filename().length()),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "datamodel.CAEXFile.FileName");
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // required string SchemaVersion = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_schemaversion()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->schemaversion().data(), static_cast<int>(this->schemaversion().length()),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "datamodel.CAEXFile.SchemaVersion");
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // required string xsi = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_xsi()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->xsi().data(), static_cast<int>(this->xsi().length()),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "datamodel.CAEXFile.xsi");
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // required string xmlns = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_xmlns()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->xmlns().data(), static_cast<int>(this->xmlns().length()),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "datamodel.CAEXFile.xmlns");
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated .datamodel.InstanceHierarchy InstanceHierarchy = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_instancehierarchy()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:datamodel.CAEXFile)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:datamodel.CAEXFile)
+  return false;
+#undef DO_
+}
+
+void CAEXFile::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:datamodel.CAEXFile)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // required string FileName = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->filename().data(), static_cast<int>(this->filename().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.FileName");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->filename(), output);
+  }
+
+  // required string SchemaVersion = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->schemaversion().data(), static_cast<int>(this->schemaversion().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.SchemaVersion");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->schemaversion(), output);
+  }
+
+  // required string xsi = 3;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->xsi().data(), static_cast<int>(this->xsi().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.xsi");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->xsi(), output);
+  }
+
+  // required string xmlns = 4;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->xmlns().data(), static_cast<int>(this->xmlns().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.xmlns");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      4, this->xmlns(), output);
+  }
+
+  // repeated .datamodel.InstanceHierarchy InstanceHierarchy = 5;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->instancehierarchy_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->instancehierarchy(static_cast<int>(i)), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:datamodel.CAEXFile)
+}
+
+::google::protobuf::uint8* CAEXFile::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:datamodel.CAEXFile)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // required string FileName = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->filename().data(), static_cast<int>(this->filename().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.FileName");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->filename(), target);
+  }
+
+  // required string SchemaVersion = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->schemaversion().data(), static_cast<int>(this->schemaversion().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.SchemaVersion");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->schemaversion(), target);
+  }
+
+  // required string xsi = 3;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->xsi().data(), static_cast<int>(this->xsi().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.xsi");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->xsi(), target);
+  }
+
+  // required string xmlns = 4;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->xmlns().data(), static_cast<int>(this->xmlns().length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "datamodel.CAEXFile.xmlns");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->xmlns(), target);
+  }
+
+  // repeated .datamodel.InstanceHierarchy InstanceHierarchy = 5;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->instancehierarchy_size()); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        5, this->instancehierarchy(static_cast<int>(i)), deterministic, target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:datamodel.CAEXFile)
+  return target;
+}
+
+size_t CAEXFile::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:datamodel.CAEXFile)
+  size_t total_size = 0;
+
+  if (has_filename()) {
+    // required string FileName = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->filename());
+  }
+
+  if (has_schemaversion()) {
+    // required string SchemaVersion = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->schemaversion());
+  }
+
+  if (has_xsi()) {
+    // required string xsi = 3;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->xsi());
+  }
+
+  if (has_xmlns()) {
+    // required string xmlns = 4;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->xmlns());
+  }
+
+  return total_size;
+}
+size_t CAEXFile::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:datamodel.CAEXFile)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  if (((_has_bits_[0] & 0x0000000f) ^ 0x0000000f) == 0) {  // All required fields are present.
+    // required string FileName = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->filename());
+
+    // required string SchemaVersion = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->schemaversion());
+
+    // required string xsi = 3;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->xsi());
+
+    // required string xmlns = 4;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->xmlns());
+
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
+  }
+  // repeated .datamodel.InstanceHierarchy InstanceHierarchy = 5;
+  {
+    unsigned int count = static_cast<unsigned int>(this->instancehierarchy_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->instancehierarchy(static_cast<int>(i)));
+    }
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CAEXFile::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:datamodel.CAEXFile)
+  GOOGLE_DCHECK_NE(&from, this);
+  const CAEXFile* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const CAEXFile>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:datamodel.CAEXFile)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:datamodel.CAEXFile)
+    MergeFrom(*source);
+  }
+}
+
+void CAEXFile::MergeFrom(const CAEXFile& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:datamodel.CAEXFile)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  instancehierarchy_.MergeFrom(from.instancehierarchy_);
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 15u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_filename();
+      filename_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.filename_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      set_has_schemaversion();
+      schemaversion_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.schemaversion_);
+    }
+    if (cached_has_bits & 0x00000004u) {
+      set_has_xsi();
+      xsi_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.xsi_);
+    }
+    if (cached_has_bits & 0x00000008u) {
+      set_has_xmlns();
+      xmlns_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.xmlns_);
+    }
+  }
+}
+
+void CAEXFile::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:datamodel.CAEXFile)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CAEXFile::CopyFrom(const CAEXFile& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:datamodel.CAEXFile)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CAEXFile::IsInitialized() const {
+  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->instancehierarchy())) return false;
+  return true;
+}
+
+void CAEXFile::Swap(CAEXFile* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void CAEXFile::InternalSwap(CAEXFile* other) {
+  using std::swap;
+  instancehierarchy_.InternalSwap(&other->instancehierarchy_);
+  filename_.Swap(&other->filename_);
+  schemaversion_.Swap(&other->schemaversion_);
+  xsi_.Swap(&other->xsi_);
+  xmlns_.Swap(&other->xmlns_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata CAEXFile::GetMetadata() const {
+  protobuf_AML_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_AML_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// CAEXFile
+
+// required string FileName = 1;
+bool CAEXFile::has_filename() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void CAEXFile::set_has_filename() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void CAEXFile::clear_has_filename() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void CAEXFile::clear_filename() {
+  filename_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_filename();
+}
+const ::std::string& CAEXFile::filename() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.FileName)
+  return filename_.GetNoArena();
+}
+void CAEXFile::set_filename(const ::std::string& value) {
+  set_has_filename();
+  filename_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.FileName)
+}
+#if LANG_CXX11
+void CAEXFile::set_filename(::std::string&& value) {
+  set_has_filename();
+  filename_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.FileName)
+}
+#endif
+void CAEXFile::set_filename(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_filename();
+  filename_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.FileName)
+}
+void CAEXFile::set_filename(const char* value, size_t size) {
+  set_has_filename();
+  filename_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.FileName)
+}
+::std::string* CAEXFile::mutable_filename() {
+  set_has_filename();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.FileName)
+  return filename_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* CAEXFile::release_filename() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.FileName)
+  clear_has_filename();
+  return filename_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void CAEXFile::set_allocated_filename(::std::string* filename) {
+  if (filename != NULL) {
+    set_has_filename();
+  } else {
+    clear_has_filename();
+  }
+  filename_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), filename);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.FileName)
+}
+
+// required string SchemaVersion = 2;
+bool CAEXFile::has_schemaversion() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void CAEXFile::set_has_schemaversion() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void CAEXFile::clear_has_schemaversion() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void CAEXFile::clear_schemaversion() {
+  schemaversion_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_schemaversion();
+}
+const ::std::string& CAEXFile::schemaversion() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.SchemaVersion)
+  return schemaversion_.GetNoArena();
+}
+void CAEXFile::set_schemaversion(const ::std::string& value) {
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.SchemaVersion)
+}
+#if LANG_CXX11
+void CAEXFile::set_schemaversion(::std::string&& value) {
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.SchemaVersion)
+}
+#endif
+void CAEXFile::set_schemaversion(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.SchemaVersion)
+}
+void CAEXFile::set_schemaversion(const char* value, size_t size) {
+  set_has_schemaversion();
+  schemaversion_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.SchemaVersion)
+}
+::std::string* CAEXFile::mutable_schemaversion() {
+  set_has_schemaversion();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.SchemaVersion)
+  return schemaversion_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* CAEXFile::release_schemaversion() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.SchemaVersion)
+  clear_has_schemaversion();
+  return schemaversion_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void CAEXFile::set_allocated_schemaversion(::std::string* schemaversion) {
+  if (schemaversion != NULL) {
+    set_has_schemaversion();
+  } else {
+    clear_has_schemaversion();
+  }
+  schemaversion_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), schemaversion);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.SchemaVersion)
+}
+
+// required string xsi = 3;
+bool CAEXFile::has_xsi() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+void CAEXFile::set_has_xsi() {
+  _has_bits_[0] |= 0x00000004u;
+}
+void CAEXFile::clear_has_xsi() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+void CAEXFile::clear_xsi() {
+  xsi_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_xsi();
+}
+const ::std::string& CAEXFile::xsi() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.xsi)
+  return xsi_.GetNoArena();
+}
+void CAEXFile::set_xsi(const ::std::string& value) {
+  set_has_xsi();
+  xsi_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.xsi)
+}
+#if LANG_CXX11
+void CAEXFile::set_xsi(::std::string&& value) {
+  set_has_xsi();
+  xsi_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.xsi)
+}
+#endif
+void CAEXFile::set_xsi(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_xsi();
+  xsi_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.xsi)
+}
+void CAEXFile::set_xsi(const char* value, size_t size) {
+  set_has_xsi();
+  xsi_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.xsi)
+}
+::std::string* CAEXFile::mutable_xsi() {
+  set_has_xsi();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.xsi)
+  return xsi_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* CAEXFile::release_xsi() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.xsi)
+  clear_has_xsi();
+  return xsi_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void CAEXFile::set_allocated_xsi(::std::string* xsi) {
+  if (xsi != NULL) {
+    set_has_xsi();
+  } else {
+    clear_has_xsi();
+  }
+  xsi_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), xsi);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.xsi)
+}
+
+// required string xmlns = 4;
+bool CAEXFile::has_xmlns() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+void CAEXFile::set_has_xmlns() {
+  _has_bits_[0] |= 0x00000008u;
+}
+void CAEXFile::clear_has_xmlns() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+void CAEXFile::clear_xmlns() {
+  xmlns_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_xmlns();
+}
+const ::std::string& CAEXFile::xmlns() const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.xmlns)
+  return xmlns_.GetNoArena();
+}
+void CAEXFile::set_xmlns(const ::std::string& value) {
+  set_has_xmlns();
+  xmlns_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.CAEXFile.xmlns)
+}
+#if LANG_CXX11
+void CAEXFile::set_xmlns(::std::string&& value) {
+  set_has_xmlns();
+  xmlns_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.CAEXFile.xmlns)
+}
+#endif
+void CAEXFile::set_xmlns(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_xmlns();
+  xmlns_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.CAEXFile.xmlns)
+}
+void CAEXFile::set_xmlns(const char* value, size_t size) {
+  set_has_xmlns();
+  xmlns_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.CAEXFile.xmlns)
+}
+::std::string* CAEXFile::mutable_xmlns() {
+  set_has_xmlns();
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.xmlns)
+  return xmlns_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* CAEXFile::release_xmlns() {
+  // @@protoc_insertion_point(field_release:datamodel.CAEXFile.xmlns)
+  clear_has_xmlns();
+  return xmlns_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void CAEXFile::set_allocated_xmlns(::std::string* xmlns) {
+  if (xmlns != NULL) {
+    set_has_xmlns();
+  } else {
+    clear_has_xmlns();
+  }
+  xmlns_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), xmlns);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.CAEXFile.xmlns)
+}
+
+// repeated .datamodel.InstanceHierarchy InstanceHierarchy = 5;
+int CAEXFile::instancehierarchy_size() const {
+  return instancehierarchy_.size();
+}
+void CAEXFile::clear_instancehierarchy() {
+  instancehierarchy_.Clear();
+}
+const ::datamodel::InstanceHierarchy& CAEXFile::instancehierarchy(int index) const {
+  // @@protoc_insertion_point(field_get:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_.Get(index);
+}
+::datamodel::InstanceHierarchy* CAEXFile::mutable_instancehierarchy(int index) {
+  // @@protoc_insertion_point(field_mutable:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_.Mutable(index);
+}
+::datamodel::InstanceHierarchy* CAEXFile::add_instancehierarchy() {
+  // @@protoc_insertion_point(field_add:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_.Add();
+}
+::google::protobuf::RepeatedPtrField< ::datamodel::InstanceHierarchy >*
+CAEXFile::mutable_instancehierarchy() {
+  // @@protoc_insertion_point(field_mutable_list:datamodel.CAEXFile.InstanceHierarchy)
+  return &instancehierarchy_;
+}
+const ::google::protobuf::RepeatedPtrField< ::datamodel::InstanceHierarchy >&
+CAEXFile::instancehierarchy() const {
+  // @@protoc_insertion_point(field_list:datamodel.CAEXFile.InstanceHierarchy)
+  return instancehierarchy_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 

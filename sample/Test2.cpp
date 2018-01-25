@@ -10,7 +10,7 @@ using namespace std;
 datamodel::Event getProtoBufEvent()
 {
     datamodel::Event event;
-    event.set_device("CNC");
+    event.set_device("Robot1");
     event.set_created(10);
     event.set_modified(20);
     event.set_id("id");
@@ -18,34 +18,44 @@ datamodel::Event getProtoBufEvent()
     event.set_origin(20);
 
     datamodel::Reading *reading1 = event.add_reading();
-    reading1->set_name("reading1");
-    reading1->set_value("10");
+    reading1->set_name("Robot_Model");
+    reading1->set_value("SR-P7-R970");
     reading1->set_created(25);
-    reading1->set_device("device");
+    reading1->set_device("Robot1");
     reading1->set_modified(20);
     reading1->set_id("id1");
     reading1->set_origin(25);
     reading1->set_pushed(1);
 
     datamodel::Reading *reading2 = event.add_reading();
-    reading2->set_name("reading2");
-    reading2->set_value("20");
+    reading2->set_name("Robot_SW_Version");
+    reading2->set_value("0.0.1");
     reading2->set_created(30);
-    reading2->set_device("device");
+    reading2->set_device("Robot1");
     reading2->set_modified(20);
     reading2->set_id("id2");
     reading2->set_origin(25);
     reading2->set_pushed(1);
 
     datamodel::Reading *reading3 = event.add_reading();
-    reading2->set_name("reading3");
-    reading2->set_value("20");
-    reading2->set_created(30);
-    reading2->set_device("device");
-    reading2->set_modified(20);
-    reading2->set_id("id2");
-    reading2->set_origin(25);
-    reading2->set_pushed(1);
+    reading3->set_name("Robot_Servo_Status");
+    reading3->set_value("5");
+    reading3->set_created(30);
+    reading3->set_device("Robot1");
+    reading3->set_modified(20);
+    reading3->set_id("id3");
+    reading3->set_origin(25);
+    reading3->set_pushed(1);
+
+    datamodel::Reading *reading4 = event.add_reading();
+    reading4->set_name("Robot_Log");
+    reading4->set_value("[2,Reconfigure Request]");
+    reading4->set_created(30);
+    reading4->set_device("Robot1");
+    reading4->set_modified(20);
+    reading4->set_id("id4");
+    reading4->set_origin(25);
+    reading4->set_pushed(1);
 
     return event;
 }
