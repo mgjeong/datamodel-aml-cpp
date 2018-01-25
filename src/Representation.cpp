@@ -2,10 +2,6 @@
 //#include <stdexcept>
 #include <sstream>
 
-#include <iostream>
-using namespace std;
-
-
 #include "Representation.h"
 #include "Event.pb.h"
 #include "AML.pb.h"
@@ -112,11 +108,11 @@ public:
         delete m_doc;
     }
     
-    datamodel::Event* constructEvent(pugi::xml_document* xml_caex)
+    datamodel::Event* constructEvent(pugi::xml_document* xml_doc)
     {
         datamodel::Event* event = new datamodel::Event();
 
-        pugi::xml_node xml_ih = xml_caex->child(CAEX_FILE).child(INSTANCE_HIERARCHY); // xml_ih might have next_sibling(INSTANCE_HIERARCHY)
+        pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY); // xml_ih might have next_sibling(INSTANCE_HIERARCHY)
 
         pugi::xml_node xml_event;
         for (xml_event = xml_ih.child(INTERNAL_ELEMENT); xml_event; xml_event = xml_event.next_sibling(INTERNAL_ELEMENT))
@@ -158,15 +154,21 @@ public:
         return event;
     }
 
-    pugi::xml_document* constructXmlDoc(const datamodel::Event* event)
+    pugi::xml_document* constructXmlDoc()
     {
         pugi::xml_document* xml_doc = new pugi::xml_document();
 
-        // initialize AML
-        pugi::xml_node xml_caexFile = initializeAML(xml_doc);
+        initializeAML(xml_doc);
+
+        return xml_doc;
+    }
+
+    pugi::xml_document* constructXmlDoc(const datamodel::Event* event)
+    {
+        pugi::xml_document* xml_doc = constructXmlDoc();
         
         // add InstanceHierarchy
-        pugi::xml_node xml_ih = xml_caexFile.append_child(INSTANCE_HIERARCHY);
+        pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).append_child(INSTANCE_HIERARCHY);
         xml_ih.append_attribute(NAME) = EDGE_COREDATA;
 
         // add Event as InternalElement
@@ -303,36 +305,31 @@ std::string Representation::EventToAml(const datamodel::Event* event)
     return stream.str();
 }
 
-
-
-datamodel::Event* Representation::ByteToEvent(const std::string byte)
+datamodel::Event* Representation::ByteToEvent(const std::string& byte)
 {
     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
     caex->ParseFromString(byte);
 
-    pugi::xml_document* xml_doc = new pugi::xml_document();
+    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc();
 
-    pugi::xml_node xml_decl = xml_doc->prepend_child(pugi::node_declaration);
-    xml_decl.append_attribute("version") = "1.0";
-    xml_decl.append_attribute("encoding") = "utf-8";
-    xml_decl.append_attribute("standalone") = "yes";
+    // update CAEX attributes
+    pugi::xml_node xml_caex = xml_doc->child(CAEX_FILE);
+    xml_caex.attribute("FileName")                      = caex->filename().c_str();
+    xml_caex.attribute("SchemaVersion")                 = caex->schemaversion().c_str();
+    xml_caex.attribute("xsi:noNamespaceSchemaLocation") = caex->xsi().c_str();
+    xml_caex.attribute("xmlns:xsi")                     = caex->xmlns().c_str();
 
-    pugi::xml_node xml_caex = xml_doc->append_child(CAEX_FILE);
-    xml_caex.append_attribute("FileName") = caex->filename().c_str();
-    xml_caex.append_attribute("SchemaVersion") = caex->schemaversion().c_str();
-    xml_caex.append_attribute("xsi:noNamespaceSchemaLocation") = caex->xsi().c_str();
-    xml_caex.append_attribute("xmlns:xsi") = caex->xmlns().c_str();
-
-    for(datamodel::InstanceHierarchy ih: caex->instancehierarchy()) {
+    for (datamodel::InstanceHierarchy ih: caex->instancehierarchy())
+    {
         pugi::xml_node xml_ih = xml_caex.append_child(INSTANCE_HIERARCHY);
         xml_ih.append_attribute(NAME) = ih.name().c_str();
 
         extractProtoInternalElement(xml_ih, &ih);
-
-
     }
 
     datamodel::Event *event = m_amlModel->constructEvent(xml_doc);
+
+    delete xml_doc;
 
     return event;
 }
@@ -353,10 +350,9 @@ std::string Representation::EventToByte(const datamodel::Event* event)
     caex->set_xsi(xml_caex.attribute("xsi:noNamespaceSchemaLocation").value());
     caex->set_xmlns(xml_caex.attribute("xmlns:xsi").value());
 
-    for (pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY); xml_ih; xml_ih = xml_ih.next_sibling(INSTANCE_HIERARCHY))
+    for (pugi::xml_node xml_ih = xml_caex.child(INSTANCE_HIERARCHY); xml_ih; xml_ih = xml_ih.next_sibling(INSTANCE_HIERARCHY))
     {
         datamodel::InstanceHierarchy* ih = caex->add_instancehierarchy();
-        //datamodel::InstanceHierarchy* ih = new datamodel::InstanceHierarchy();
 
         ih->set_name    (xml_ih.attribute(NAME).value());
       //ih->set_version (xml_ih.child_value(VERSION)); // @TODO: required?
@@ -365,7 +361,9 @@ std::string Representation::EventToByte(const datamodel::Event* event)
     }
 
     std::string binary;
-    caex->SerializeToString(&binary);  // @TODO: constructXmlDoc currently ensures that xml_doc has only one InstanceHierarchy.
+    caex->SerializeToString(&binary);
+
+    delete xml_doc;
 
     return binary;
 }
@@ -391,7 +389,8 @@ void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 template <class T>
 void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
 {
-    for (datamodel::InternalElement sie: ie->internalelement()) {
+    for (datamodel::InternalElement sie: ie->internalelement())
+    {
         pugi::xml_node xml_ie = xmlNode.append_child(INTERNAL_ELEMENT);
 
         xml_ie.append_attribute(NAME) = sie.name().c_str();
@@ -400,8 +399,10 @@ void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
         extractProtoAttribute(xml_ie, &sie);
         extractProtoInternalElement(xml_ie, &sie);
 
-        if(nullptr != &sie.supportedroleclass()) {
-            if(nullptr != &sie.supportedroleclass().refroleclasspath()) {
+        if (nullptr != &sie.supportedroleclass())
+        {
+            if (nullptr != &sie.supportedroleclass().refroleclasspath())
+             {
                 pugi::xml_node xml_src = xml_ie.append_child(SUPPORTED_ROLE_CLASS);
                 xml_src.append_attribute(REF_ROLE_CLASS_PATH) = sie.supportedroleclass().refroleclasspath().c_str();
             }
