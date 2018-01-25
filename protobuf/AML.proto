@@ -5,6 +5,14 @@ package datamodel;
 option java_package = "edge.datamodel.protobuf.aml";
 option java_outer_classname = "ProtoAML";
 
+message CAEXFile {
+	required string FileName = 1;
+	required string SchemaVersion = 2;
+	required string xsi = 3;
+	required string xmlns = 4;
+	repeated InstanceHierarchy InstanceHierarchy= 5;
+}
+
 message RoleClassLib {
 	required string Name = 1;
 	optional string Description = 2;
