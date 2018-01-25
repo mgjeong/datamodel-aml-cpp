@@ -173,7 +173,7 @@ public:
         {
             datamodel::Reading reading = event->reading(i);
 
-            pugi::xml_node xml_data = addInternalElement(xml_ih, DATA);
+            pugi::xml_node xml_data = addInternalElement(xml_event, DATA);
 
             for (pugi::xml_node xml_attr = xml_data.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
             {
