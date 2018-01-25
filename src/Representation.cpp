@@ -16,6 +16,7 @@ static const char SYSTEM_UNIT_CLASS_LIB[]       = "SystemUnitClassLib";
 static const char SYSTEM_UNIT_CLASS[]           = "SystemUnitClass";
 static const char INTERNAL_ELEMENT[]            = "InternalElement";
 static const char ATTRIBUTE[]                   = "Attribute";
+static const char ADDITIONAL_INFORMATION[]      = "AdditionalInformation";
 
 static const char NAME[]                        = "Name";
 static const char VALUE[]                       = "Value";
@@ -40,7 +41,8 @@ static const char KEY_CREATED[]                 = "created";
 static const char KEY_MODIFIED[]                = "modified";
 static const char KEY_ORIGIN[]                  = "origin";
 
-#define IS_NAME(attr, name) (std::string((attr).attribute(NAME).value()) == (name))
+#define IS_NAME(node, name)     (std::string((node).attribute(NAME).value()) == (name))
+#define ADD_VALUE(node, value)  (node).append_child(VALUE).text().set((value).c_str())
 
 // for test ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define PRINT_NODE(node)    for (pugi::xml_node tool = (node).first_child(); tool; tool = tool.next_sibling()) \
@@ -90,7 +92,9 @@ public:
         m_systemUnitClassLib = xmlCaexFile.child(SYSTEM_UNIT_CLASS_LIB);
         if (NULL == m_systemUnitClassLib) {/*@TODO*/}
 
-        m_doc->remove_child(INSTANCE_HIERARCHY);
+        // remove unnecessary info
+        while (xmlCaexFile.child(INSTANCE_HIERARCHY))       xmlCaexFile.remove_child(INSTANCE_HIERARCHY);
+        while (xmlCaexFile.child(ADDITIONAL_INFORMATION))   xmlCaexFile.remove_child(ADDITIONAL_INFORMATION);
     }
     
     ~AMLModel()
@@ -112,12 +116,12 @@ public:
 
         for (pugi::xml_node xml_attr = xml_event.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
         {
-            if      (IS_NAME(xml_attr, KEY_DEVICE))     event->set_device   (xml_attr.child_value(VALUE));
-            else if (IS_NAME(xml_attr, KEY_ID))         event->set_id       (xml_attr.child_value(VALUE));
-            else if (IS_NAME(xml_attr, KEY_PUSHED))     event->set_pushed   (atoll(xml_attr.child_value(VALUE)));
-            else if (IS_NAME(xml_attr, KEY_CREATED))    event->set_created  (atoll(xml_attr.child_value(VALUE)));
-            else if (IS_NAME(xml_attr, KEY_MODIFIED))   event->set_modified (atoll(xml_attr.child_value(VALUE)));
-            else if (IS_NAME(xml_attr, KEY_ORIGIN))     event->set_origin   (atoll(xml_attr.child_value(VALUE)));
+            if      (IS_NAME(xml_attr, KEY_DEVICE))     event->set_device   (xml_attr.child(VALUE).text().as_string());
+            else if (IS_NAME(xml_attr, KEY_ID))         event->set_id       (xml_attr.child(VALUE).text().as_string());
+            else if (IS_NAME(xml_attr, KEY_PUSHED))     event->set_pushed   (xml_attr.child(VALUE).text().as_llong());
+            else if (IS_NAME(xml_attr, KEY_CREATED))    event->set_created  (xml_attr.child(VALUE).text().as_llong());
+            else if (IS_NAME(xml_attr, KEY_MODIFIED))   event->set_modified (xml_attr.child(VALUE).text().as_llong());
+            else if (IS_NAME(xml_attr, KEY_ORIGIN))     event->set_origin   (xml_attr.child(VALUE).text().as_llong());
         }
 
         pugi::xml_node xml_data;
@@ -129,14 +133,14 @@ public:
 
                 for (pugi::xml_node xml_attr = xml_data.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
                 {
-                    if      (IS_NAME(xml_attr, KEY_DEVICE))     reading->set_device   (xml_attr.child_value(VALUE));
-                    else if (IS_NAME(xml_attr, KEY_ID))         reading->set_id       (xml_attr.child_value(VALUE));
-                    else if (IS_NAME(xml_attr, KEY_NAME))       reading->set_name     (xml_attr.child_value(VALUE));
-                    else if (IS_NAME(xml_attr, KEY_VALUE))      reading->set_value    (xml_attr.child_value(VALUE));
-                    else if (IS_NAME(xml_attr, KEY_PUSHED))     reading->set_pushed   (atoll(xml_attr.child_value(VALUE)));
-                    else if (IS_NAME(xml_attr, KEY_CREATED))    reading->set_created  (atoll(xml_attr.child_value(VALUE)));
-                    else if (IS_NAME(xml_attr, KEY_MODIFIED))   reading->set_modified (atoll(xml_attr.child_value(VALUE)));
-                    else if (IS_NAME(xml_attr, KEY_ORIGIN))     reading->set_origin   (atoll(xml_attr.child_value(VALUE)));
+                    if      (IS_NAME(xml_attr, KEY_DEVICE))     reading->set_device   (xml_attr.child(VALUE).text().as_string());
+                    else if (IS_NAME(xml_attr, KEY_ID))         reading->set_id       (xml_attr.child(VALUE).text().as_string());
+                    else if (IS_NAME(xml_attr, KEY_NAME))       reading->set_name     (xml_attr.child(VALUE).text().as_string());
+                    else if (IS_NAME(xml_attr, KEY_VALUE))      reading->set_value    (xml_attr.child(VALUE).text().as_string());
+                    else if (IS_NAME(xml_attr, KEY_PUSHED))     reading->set_pushed   (xml_attr.child(VALUE).text().as_llong());
+                    else if (IS_NAME(xml_attr, KEY_CREATED))    reading->set_created  (xml_attr.child(VALUE).text().as_llong());
+                    else if (IS_NAME(xml_attr, KEY_MODIFIED))   reading->set_modified (xml_attr.child(VALUE).text().as_llong());
+                    else if (IS_NAME(xml_attr, KEY_ORIGIN))     reading->set_origin   (xml_attr.child(VALUE).text().as_llong());
                 }
             }
         }
@@ -160,12 +164,12 @@ public:
 
         for (pugi::xml_node xml_attr = xml_event.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
         {
-            if      (IS_NAME(xml_attr, KEY_DEVICE))     xml_attr.append_child(VALUE).text().set(event->device().c_str());
-            else if (IS_NAME(xml_attr, KEY_ID))         xml_attr.append_child(VALUE).text().set(event->id().c_str());
-            else if (IS_NAME(xml_attr, KEY_PUSHED))     xml_attr.append_child(VALUE).text().set(toString(event->pushed()).c_str());
-            else if (IS_NAME(xml_attr, KEY_CREATED))    xml_attr.append_child(VALUE).text().set(toString(event->created()).c_str());
-            else if (IS_NAME(xml_attr, KEY_MODIFIED))   xml_attr.append_child(VALUE).text().set(toString(event->modified()).c_str());
-            else if (IS_NAME(xml_attr, KEY_ORIGIN))     xml_attr.append_child(VALUE).text().set(toString(event->origin()).c_str());
+            if      (IS_NAME(xml_attr, KEY_DEVICE))     ADD_VALUE(xml_attr, event->device());
+            else if (IS_NAME(xml_attr, KEY_ID))         ADD_VALUE(xml_attr, event->id());
+            else if (IS_NAME(xml_attr, KEY_PUSHED))     ADD_VALUE(xml_attr, toString(event->pushed()));
+            else if (IS_NAME(xml_attr, KEY_CREATED))    ADD_VALUE(xml_attr, toString(event->created()));
+            else if (IS_NAME(xml_attr, KEY_MODIFIED))   ADD_VALUE(xml_attr, toString(event->modified()));
+            else if (IS_NAME(xml_attr, KEY_ORIGIN))     ADD_VALUE(xml_attr, toString(event->origin()));
         }
 
         // add Data(s) as InternalElement
@@ -177,14 +181,14 @@ public:
 
             for (pugi::xml_node xml_attr = xml_data.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
             {
-                if      (IS_NAME(xml_attr, KEY_DEVICE))     xml_attr.append_child(VALUE).text().set(reading.device().c_str());
-                else if (IS_NAME(xml_attr, KEY_NAME))       xml_attr.append_child(VALUE).text().set(reading.name().c_str());
-                else if (IS_NAME(xml_attr, KEY_ID))         xml_attr.append_child(VALUE).text().set(reading.id().c_str());
-                else if (IS_NAME(xml_attr, KEY_VALUE))      xml_attr.append_child(VALUE).text().set(reading.value().c_str());
-                else if (IS_NAME(xml_attr, KEY_PUSHED))     xml_attr.append_child(VALUE).text().set(toString(reading.pushed()).c_str());
-                else if (IS_NAME(xml_attr, KEY_CREATED))    xml_attr.append_child(VALUE).text().set(toString(reading.created()).c_str());
-                else if (IS_NAME(xml_attr, KEY_MODIFIED))   xml_attr.append_child(VALUE).text().set(toString(reading.modified()).c_str());
-                else if (IS_NAME(xml_attr, KEY_ORIGIN))     xml_attr.append_child(VALUE).text().set(toString(reading.origin()).c_str());
+                if      (IS_NAME(xml_attr, KEY_DEVICE))     ADD_VALUE(xml_attr, reading.device());
+                else if (IS_NAME(xml_attr, KEY_NAME))       ADD_VALUE(xml_attr, reading.name());
+                else if (IS_NAME(xml_attr, KEY_ID))         ADD_VALUE(xml_attr, reading.id());
+                else if (IS_NAME(xml_attr, KEY_VALUE))      ADD_VALUE(xml_attr, reading.value());
+                else if (IS_NAME(xml_attr, KEY_PUSHED))     ADD_VALUE(xml_attr, toString(reading.pushed()));
+                else if (IS_NAME(xml_attr, KEY_CREATED))    ADD_VALUE(xml_attr, toString(reading.created()));
+                else if (IS_NAME(xml_attr, KEY_MODIFIED))   ADD_VALUE(xml_attr, toString(reading.modified()));
+                else if (IS_NAME(xml_attr, KEY_ORIGIN))     ADD_VALUE(xml_attr, toString(reading.origin()));
             }
         }
        
@@ -323,28 +327,6 @@ std::string Representation::EventToByte(const datamodel::Event* event)
     return binary;
 }
 
-void extractSubAttribute(datamodel::Attribute* att, pugi::xml_node xmlNode)
-{
-    for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))    
-    {
-        datamodel::Attribute* attr = att->add_attribute();
-
-        attr->set_name              (xmlAttr.attribute(NAME).value());
-        attr->set_attributedatatype (xmlAttr.attribute(ATTRIBUTE_DATA_TYPE).value());
-      //attr->set_description       (xmlAttr.child_value(DESCRIPTION)); //@TODO: required?
-
-        extractSubAttribute(attr, xmlAttr);
-
-        pugi::xml_node xmlValue = xmlAttr.child(VALUE);
-        if (NULL != xmlValue)
-        {
-            attr->set_value(xmlValue.value());
-        }
-    }
-
-    return;
-}
-
 template <class T>
 void extractAttribute(T* attr, pugi::xml_node xmlNode)
 {
@@ -361,7 +343,7 @@ void extractAttribute(T* attr, pugi::xml_node xmlNode)
         pugi::xml_node xmlValue = xmlAttr.child(VALUE);
         if (NULL != xmlValue)
         {
-            attr_child->set_value(xmlValue.value());
+            attr_child->set_value(xmlValue.text().as_string());
         }
     }
 
@@ -393,230 +375,3 @@ void extractInternalElement(T* ie, pugi::xml_node xmlNode)
 
     return;
 }
-
-// std::vector<Attribute*> extractAttribute(pugi::xml_node xmlNode)
-// {
-//     std::vector<Attribute*> attrList;
-
-//     for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))    
-//     {
-//         Attribute* attr = new Attribute();
-
-//         attr->setName               (xmlAttr.attribute(NAME).value());
-//         attr->setAttributeDataType  (xmlAttr.attribute(ATTRIBUTE_DATA_TYPE).value());
-//         attr->setDescription        (xmlAttr.child_value(DESCRIPTION));
-//         attr->setAttribute          (extractAttribute(xmlAttr));
-
-//         pugi::xml_node xmlValue = xmlAttr.child(VALUE);
-//         if (NULL != xmlValue)
-//         {
-//             attr->setValue(xmlValue.value());
-//         }
-
-//         attrList.push_back(attr);
-//     }
-
-//     return attrList;
-// }
-
-// std::vector<InternalElement*> extractInternalElement(pugi::xml_node xmlNode)
-// {
-//     std::vector<InternalElement*> ieList;
-
-//     for (pugi::xml_node xmlIe = xmlNode.child(INTERNAL_ELEMENT); xmlIe; xmlIe = xmlIe.next_sibling(INTERNAL_ELEMENT))    
-//     {
-//         InternalElement* ie = new InternalElement();
-
-//         ie->setName                     (xmlIe.attribute(NAME).value());
-//         ie->setRefBaseSystemUnitPath    (xmlIe.attribute(REF_BASE_SYSTEM_UNIT_PATH).value());
-//         ie->setAttribute                (extractAttribute(xmlIe));
-//         ie->setInternalElement          (extractInternalElement(xmlIe));
-
-//         pugi::xml_node xmlSrc = xmlIe.child(SUPPORTED_ROLE_CLASS);
-//         if (NULL != xmlSrc)
-//         {
-//             SupportedRoleClass* src = new SupportedRoleClass();
-//             src->setRefRoleClassPath(xmlSrc.attribute(REF_ROLE_CLASS_PATH).value());
-
-//             ie->setSupportedRoleClass(src);
-//         }
-
-//         ieList.push_back(ie);
-//     }
-
-//     return ieList;
-// }
-
-// std::vector<RoleClass*> extractRoleClass(pugi::xml_node xmlNode)
-// {
-//     std::vector<RoleClass*> rcList;
-
-//     for (pugi::xml_node xmlRc = xmlNode.child(ROLE_CLASS); xmlRc; xmlRc = xmlRc.next_sibling(ROLE_CLASS))    
-//     {
-//         RoleClass* rc = new RoleClass();
-
-//         rc->setName             (xmlRc.attribute(NAME).value());
-//         rc->setRefBaseClassPath (xmlRc.attribute(REF_BASE_CLASS_PATH).value());
-//         rc->setDescription      (xmlRc.child_value(DESCRIPTION));
-//         rc->setAttribute        (extractAttribute(xmlRc));
-//         //rc->setRoleClass        (extractRoleClass(xmlRc));                   //@TODO: RoleClass should have a list of child RoleClasses
-
-//         rcList.push_back(rc);
-//     }
-
-//     return rcList;
-// }
-
-// std::vector<SystemUnitClass*> extractSystemUnitClass(pugi::xml_node xmlNode)
-// {
-//     std::vector<SystemUnitClass*> sucList;
-
-//     for (pugi::xml_node xmlSuc = xmlNode.child(SYSTEM_UNIT_CLASS); xmlSuc; xmlSuc = xmlSuc.next_sibling(SYSTEM_UNIT_CLASS))    
-//     {
-//         SystemUnitClass* suc = new SystemUnitClass();
-
-//         suc->setName             (xmlSuc.attribute(NAME).value());
-//         suc->setRefBaseClassPath (xmlSuc.attribute(REF_BASE_CLASS_PATH).value());
-//         //suc->setDescription      (xmlSuc.child_value(DESCRIPTION));
-//         suc->setInternalElement  (extractInternalElement(xmlSuc));
-//         suc->setAttribute        (extractAttribute(xmlSuc));
-//         //suc->setSystemUnitClass  (extractSystemUnitClass(xmlSuc));           //@TODO: SystemUnitClass  should have a list of child SystemUnitClasses
-        
-//         pugi::xml_node xmlSrc = xmlSuc.child(SUPPORTED_ROLE_CLASS);
-//         if (NULL != xmlSrc)
-//         {
-//             SupportedRoleClass* src = new SupportedRoleClass();
-//             src->setRefRoleClassPath(xmlSrc.attribute(REF_ROLE_CLASS_PATH).value());
-
-//             suc->setSupportedRoleClass(src);
-//         }
-
-//         sucList.push_back(suc);
-//     }
-
-//     return sucList;
-// }
-
-// std::vector<RoleClassLib*> extractRoleClassLib(pugi::xml_node xmlCaexFile)
-// {
-//     std::vector<RoleClassLib*> rclList;
-
-//     for (pugi::xml_node xmlRcl = xmlCaexFile.child(ROLE_CLASS_LIB); xmlRcl; xmlRcl = xmlRcl.next_sibling(ROLE_CLASS_LIB))
-//     {
-//         RoleClassLib* rcl = new RoleClassLib();
-
-//         rcl->setName        (xmlRcl.attribute(NAME).value());
-//         rcl->setDescription (xmlRcl.child_value(DESCRIPTION));
-//         rcl->setVersion     (xmlRcl.child_value(VERSION));
-//         rcl->setRoleClass   (extractRoleClass(xmlRcl));
-
-//         rclList.push_back(rcl);
-//     }
-
-//     return rclList;
-// }
-
-// std::vector<SystemUnitClassLib*> extractSystemUnitClassLib(pugi::xml_node xmlCaexFile)
-// {
-//     std::vector<SystemUnitClassLib*> suclList;
-
-//     for (pugi::xml_node xmlSucl = xmlCaexFile.child(SYSTEM_UNIT_CLASS_LIB); xmlSucl; xmlSucl = xmlSucl.next_sibling(SYSTEM_UNIT_CLASS_LIB))
-//     {
-//         SystemUnitClassLib* sucl = new SystemUnitClassLib();
-
-//         sucl->setName               (xmlSucl.attribute(NAME).value());
-//         //sucl->setDescription        (xmlSucl.child_value(DESCRIPTION));
-//         sucl->setVersion            (xmlSucl.child_value(VERSION));
-//         sucl->setSystemUnitClass    (extractSystemUnitClass(xmlSucl));
-
-//         suclList.push_back(sucl);
-//     }
-
-//     return suclList;
-// }
-
-// std::vector<InstanceHierarchy*> extractInstanceHierarchy(pugi::xml_node xmlCaexFile)
-// {
-//     std::vector<InstanceHierarchy*> ihList;
-
-//     for (pugi::xml_node xmlIh = xmlCaexFile.child(INSTANCE_HIERARCHY); xmlIh; xmlIh = xmlIh.next_sibling(INSTANCE_HIERARCHY))
-//     {
-//         InstanceHierarchy* ih = new InstanceHierarchy();
-
-//         ih->setName             (EDGE_COREDATA /* xmlIh.attribute(NAME).value() */ );
-//         ih->setVersion          (xmlIh.child_value(VERSION));
-//         ih->setInternalElement  (extractInternalElement(xmlIh));
-        
-//         ihList.push_back(ih);
-//     }
-
-//     return ihList;
-// }
-
-// AMLModel* constructAmlModel(pugi::xml_document* doc)
-// {
-//     AMLModel* model = new AMLModel();
-    
-//     pugi::xml_node xmlCaexFile = doc->child(CAEX_FILE);
-
-//     // extract RoleClassLib
-//     std::vector<RoleClassLib*> rclList = extractRoleClassLib(xmlCaexFile);
-//     model->setRoleClassLib(rclList.front()); // model->setRoleClassLib(rclList);                //@TODO: AMLModel should have RoleClassLib as a list
-
-//     // extract SystemUnitClassLib
-//     std::vector<SystemUnitClassLib*> suclList = extractSystemUnitClassLib(xmlCaexFile);
-//     model->setSystemUnitClassLib(suclList.front()); //model->setSystemUnitClassLib(suclList);   //@TODO: AMLModel should have SystemUnitClassLib as a list
-
-//     return model;
-// }
-
-
-// datamodel::Event* constructEvent(InternalElement* ie)
-// {
-//     datamodel::Event* event = new datamodel::Event();
-
-//     event->set_device   (ie->getAttributeValue(KEY_DEVICE));
-//     event->set_id       (ie->getAttributeValue(KEY_ID));
-//     event->set_pushed   (std::stoll(ie->getAttributeValue(KEY_PUSHED)));    
-//     event->set_created  (std::stoll(ie->getAttributeValue(KEY_CREATED)));
-//     event->set_modified (std::stoll(ie->getAttributeValue(KEY_MODIFIED)));
-//     event->set_origin   (std::stoll(ie->getAttributeValue(KEY_ORIGIN)));
-
-//     return event;
-// }
-
-// datamodel::Event* convertObjectToEvent(AMLObject* object)
-// {
-//     InternalElement* ie = object->getInstanceHierarchy()->searchInternalElement(EVENT);
-//     if (nullptr == ie)
-//     {
-//         //@TODO
-//     }
-
-//     datamodel::Event* event = constructEvent(ie);
-//     if (nullptr == event)
-//     {
-//         //@TODO
-//     }
-
-//     std::vector<InternalElement*> ieList = ie->getInternalElement();
-//     std::vector<InternalElement*>::iterator iter, end;
-//     for (iter = ieList.begin(), end = ieList.end(); iter != end; iter++)
-//     {
-//         if (DATA == (*iter)->getName())
-//         {
-//             datamodel::Reading *reading = event->add_reading();
-
-//             reading->set_name       ((*iter)->getAttributeValue(KEY_NAME));
-//             reading->set_device     ((*iter)->getAttributeValue(KEY_DEVICE));
-//             reading->set_id         ((*iter)->getAttributeValue(KEY_ID));
-//             reading->set_value      ((*iter)->getAttributeValue(KEY_VALUE));
-//             reading->set_pushed     (std::stoll((*iter)->getAttributeValue(KEY_PUSHED)));
-//             reading->set_created    (std::stoll((*iter)->getAttributeValue(KEY_CREATED)));
-//             reading->set_modified   (std::stoll((*iter)->getAttributeValue(KEY_MODIFIED)));
-//             reading->set_origin     (std::stoll((*iter)->getAttributeValue(KEY_ORIGIN)));
-//         }
-//     }
-
-//     return event;
-// }
