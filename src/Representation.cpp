@@ -58,19 +58,19 @@ static const char KEY_ORIGIN[]                  = "origin";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <class T>
-void extractAttribute(T* attr, pugi::xml_node xmlNode);
+static void extractAttribute(T* attr, pugi::xml_node xmlNode);
 
 template <class T>
-void extractInternalElement(T* ie, pugi::xml_node xmlNode);
+static void extractInternalElement(T* ie, pugi::xml_node xmlNode);
 
 template <class T>
-void extractProtoAttribute(pugi::xml_node xmlNode, T* attr);
+static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr);
 
 template <class T>
-void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie);
+static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie);
 
 template <typename T>
-std::string toString(const T& t)
+static std::string toString(const T& t)
 {
     std::ostringstream ss;
     ss << t;
@@ -82,12 +82,10 @@ class Representation::AMLModel
 public:
     AMLModel (const std::string& amlFilePath)
     {
-        pugi::xml_document doc;
-        pugi::xml_parse_result result = doc.load_file(amlFilePath.c_str());
-        if (pugi::status_ok != result.status) {/*@TODO*/}
-    
         m_doc = new pugi::xml_document(); // @TODO: try{}catch(std::bad_alloc& ba){printf("bad_alloc caught: %s ", ba.what());}
-        m_doc->reset(doc);
+
+        pugi::xml_parse_result result = m_doc->load_file(amlFilePath.c_str());
+        if (pugi::status_ok != result.status) {/*@TODO*/ delete m_doc;}
 
         pugi::xml_node xmlCaexFile = m_doc->child(CAEX_FILE);
         if (NULL == xmlCaexFile) {/*@TODO*/}
@@ -98,9 +96,9 @@ public:
         m_systemUnitClassLib = xmlCaexFile.child(SYSTEM_UNIT_CLASS_LIB);
         if (NULL == m_systemUnitClassLib) {/*@TODO*/}
 
-        // remove unnecessary info
-        while (xmlCaexFile.child(INSTANCE_HIERARCHY))       xmlCaexFile.remove_child(INSTANCE_HIERARCHY);
+        // remove "AdditionalInformation" and "InstanceHierarchy" data
         while (xmlCaexFile.child(ADDITIONAL_INFORMATION))   xmlCaexFile.remove_child(ADDITIONAL_INFORMATION);
+        while (xmlCaexFile.child(INSTANCE_HIERARCHY))       xmlCaexFile.remove_child(INSTANCE_HIERARCHY);
     }
     
     ~AMLModel()
@@ -368,9 +366,8 @@ std::string Representation::EventToByte(const datamodel::Event* event)
     return binary;
 }
 
-
 template <class T>
-void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
+static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 {   
     for (datamodel::Attribute att: attr->attribute()) {
         pugi::xml_node xml_attr = xmlNode.append_child(ATTRIBUTE);
@@ -387,7 +384,7 @@ void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 }
 
 template <class T>
-void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
+static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
 {
     for (datamodel::InternalElement sie: ie->internalelement())
     {
@@ -412,9 +409,8 @@ void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
     return;
 }
 
-
 template <class T>
-void extractAttribute(T* attr, pugi::xml_node xmlNode)
+static void extractAttribute(T* attr, pugi::xml_node xmlNode)
 {
     for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))
     {
@@ -437,7 +433,7 @@ void extractAttribute(T* attr, pugi::xml_node xmlNode)
 }
 
 template <class T>
-void extractInternalElement(T* ie, pugi::xml_node xmlNode)
+static void extractInternalElement(T* ie, pugi::xml_node xmlNode)
 {
     for (pugi::xml_node xmlIe = xmlNode.child(INTERNAL_ELEMENT); xmlIe; xmlIe = xmlIe.next_sibling(INTERNAL_ELEMENT))    
     {
