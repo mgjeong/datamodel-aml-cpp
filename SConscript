@@ -65,8 +65,7 @@ amlstatic = aml_env.StaticLibrary('aml', aml_env.get('aml_src'))
 if target_os == 'linux':
        SConscript('samples/SConscript')
 
-###################################################### TODO ##########################################################
 # Go to build AML DataModel unit test cases
-#if target_os == 'linux':
-#    if target_arch in ['x86', 'x86_64']:
-#        SConscript('unittests/SConscript')
+if target_os == 'linux':
+    if target_arch in ['x86', 'x86_64']:
+        SConscript('unittests/SConscript')

@@ -28,3 +28,6 @@ build_dir = env.get('BUILD_DIR')
 # Build AML DataModel library
 SConscript(build_dir + 'SConscript')
 
+# Delete temp file for unittest
+if env.get('TEST') == '1':
+	Command("delete_tmp_file", "", Delete("TEST_DataModel.aml"))
