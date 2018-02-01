@@ -46,6 +46,9 @@ out/
 extlibs/gtest/googletest-*
 extlibs/pugixml/pugixml-*
 
+# Ignore byte-compiled Python scripts
+*.pyc
+
 # Ignore Valgrind generated files
 *.memcheck
 
