@@ -17,4 +17,4 @@
 
 #!/bin/bash
 
-scons TARGET_OS=linux TARGET_ARCH=x86_64
+scons TARGET_OS=linux TARGET_ARCH=armhf
