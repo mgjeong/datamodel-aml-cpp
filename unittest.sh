@@ -15,19 +15,33 @@
 #
 ###############################################################################
 
-# ==================== Entry point for scons ======================
+#!/bin/bash
 
-# Load common build config
-SConscript('build_common/SConscript')
+AML_TARGET_ARCH=x86_64
 
-Import('env')
+function build(){
+    scons TARGET_OS=linux TARGET_ARCH=${AML_TARGET_ARCH}
+    if [ $? -ne 0 ]; then 
+        echo -e "\033[31m"Build failed"\033[0m" 
+        exit 1 
+    fi
+}
 
-# Get the build directory prefix
-build_dir = env.get('BUILD_DIR')
+function run_test(){
+    cd out/linux/${AML_TARGET_ARCH}/release/unittests
+    ./aml_rep_test
+    if [ $? -ne 0 ]; then 
+        echo -e "\033[31m"Unittests failed"\033[0m" 
+        exit 1 
+    fi
+}
 
-# Build AML DataModel library
-SConscript(build_dir + 'SConscript')
+echo -e "Building AML DataModel library("${AML_TARGET_ARCH}").."
+build
+echo -e "Done building AML DataModel library("${AML_TARGET_ARCH}")"
 
-## Delete temp file for unittest
-#if env.get('TEST') == '1':
-#	Command("delete_tmp_file", "", Delete("TEST_DataModel.aml"))
+echo -e "Running AML DataModel Unittests"
+run_test
+echo -e "Done Unittests"
+
+exit 0

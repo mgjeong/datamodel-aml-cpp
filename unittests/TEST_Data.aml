@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<CAEXFile FileName="test.aml" SchemaVersion="2.15" xsi:noNamespaceSchemaLocation="CAEX_ClassModel_V2.15.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<InstanceHierarchy Name="Edge_CoreData">
+		<InternalElement Name="Event" RefBaseSystemUnitPath="Edge_CoreDataClassLib/Event">
+			<Attribute Name="device" AttributeDataType="xs:string">
+				<Description>Device Name</Description>
+				<Value>Robot1</Value>
+			</Attribute>
+			<Attribute Name="pushed" AttributeDataType="xs:long">
+				<Description>Event's timestamp</Description>
+				<Value>30</Value>
+			</Attribute>
+			<Attribute Name="id" AttributeDataType="xs:string">
+				<Description>database generated identifier</Description>
+				<Value>id</Value>
+			</Attribute>
+			<Attribute Name="created" AttributeDataType="xs:long">
+				<Description>Timestamp of the record was added to DB</Description>
+				<Value>10</Value>
+			</Attribute>
+			<Attribute Name="modified" AttributeDataType="xs:long">
+				<Description>Timestamp of the last modification to the record</Description>
+				<Value>20</Value>
+			</Attribute>
+			<Attribute Name="origin" AttributeDataType="xs:long">
+				<Description>Timestamp of the record was created</Description>
+				<Value>40</Value>
+			</Attribute>
+			<InternalElement Name="Data" RefBaseSystemUnitPath="Edge_CoreDataClassLib/Data">
+				<Attribute Name="name" AttributeDataType="xs:string">
+					<Description>ValueDescriptor Name</Description>
+					<Value>Robot_Model</Value>
+				</Attribute>
+				<Attribute Name="pushed" AttributeDataType="xs:long">
+					<Description>Data's timestamp</Description>
+					<Value>53</Value>
+				</Attribute>
+				<Attribute Name="value" AttributeDataType="xs:string">
+					<Description>Data's data value</Description>
+					<Value>SR-P7-R970</Value>
+				</Attribute>
+				<Attribute Name="device" AttributeDataType="xs:string">
+					<Description>Device Name</Description>
+					<Value>Robot1</Value>
+				</Attribute>
+				<Attribute Name="id" AttributeDataType="xs:string">
+					<Description>database generated identifier</Description>
+					<Value>id1</Value>
+				</Attribute>
+				<Attribute Name="created" AttributeDataType="xs:long">
+					<Description>Timestamp of the record was added to DB</Description>
+					<Value>50</Value>
+				</Attribute>
+				<Attribute Name="modified" AttributeDataType="xs:long">
+					<Description>Timestamp of the last modification to the record</Description>
+					<Value>51</Value>
+				</Attribute>
+				<Attribute Name="origin" AttributeDataType="xs:long">
+					<Description>Timestamp of the record was created</Description>
+					<Value>52</Value>
+				</Attribute>
+				<SupportedRoleClass RefRoleClassPath="ValueDescriptorLib/ValueDescriptor" />
+			</InternalElement>
+			<InternalElement Name="Data" RefBaseSystemUnitPath="Edge_CoreDataClassLib/Data">
+				<Attribute Name="name" AttributeDataType="xs:string">
+					<Description>ValueDescriptor Name</Description>
+					<Value>Robot_SW_Version</Value>
+				</Attribute>
+				<Attribute Name="pushed" AttributeDataType="xs:long">
+					<Description>Data's timestamp</Description>
+					<Value>64</Value>
+				</Attribute>
+				<Attribute Name="value" AttributeDataType="xs:string">
+					<Description>Data's data value</Description>
+					<Value>0.0.1</Value>
+				</Attribute>
+				<Attribute Name="device" AttributeDataType="xs:string">
+					<Description>Device Name</Description>
+					<Value>Robot1</Value>
+				</Attribute>
+				<Attribute Name="id" AttributeDataType="xs:string">
+					<Description>database generated identifier</Description>
+					<Value>id2</Value>
+				</Attribute>
+				<Attribute Name="created" AttributeDataType="xs:long">
+					<Description>Timestamp of the record was added to DB</Description>
+					<Value>61</Value>
+				</Attribute>
+				<Attribute Name="modified" AttributeDataType="xs:long">
+					<Description>Timestamp of the last modification to the record</Description>
+					<Value>62</Value>
+				</Attribute>
+				<Attribute Name="origin" AttributeDataType="xs:long">
+					<Description>Timestamp of the record was created</Description>
+					<Value>63</Value>
+				</Attribute>
+				<SupportedRoleClass RefRoleClassPath="ValueDescriptorLib/ValueDescriptor" />
+			</InternalElement>
+		</InternalElement>
+	</InstanceHierarchy>
+	<RoleClassLib Name="ValueDescriptorLib">
+		<Description>Library about Value Descriptor</Description>
+		<Version>1.0.0</Version>
+		<RoleClass Name="ValueDescriptor">
+			<Description>Description of reading's value</Description>
+			<Attribute Name="name" AttributeDataType="xs:string">
+				<Description>Device Name</Description>
+			</Attribute>
+			<Attribute Name="min" AttributeDataType="Object" />
+			<Attribute Name="max" AttributeDataType="Object" />
+			<Attribute Name="type" AttributeDataType="IoTType">
+				<Description>Reading data's value type</Description>
+			</Attribute>
+			<Attribute Name="uomLabel" AttributeDataType="xs:string" />
+			<Attribute Name="defaultValue" AttributeDataType="Object" />
+			<Attribute Name="formatting" AttributeDataType="xs:string" />
+			<Attribute Name="labels" AttributeDataType="xs:string[]">
+				<Description>Array of Label</Description>
+			</Attribute>
+		</RoleClass>
+	</RoleClassLib>
+	<SystemUnitClassLib Name="Edge_CoreDataClassLib">
+		<Version>0.0.1</Version>
+		<SystemUnitClass Name="Data">
+			<Attribute Name="name" AttributeDataType="xs:string">
+				<Description>ValueDescriptor Name</Description>
+			</Attribute>
+			<Attribute Name="pushed" AttributeDataType="xs:long">
+				<Description>Data's timestamp</Description>
+			</Attribute>
+			<Attribute Name="value" AttributeDataType="xs:string">
+				<Description>Data's data value</Description>
+			</Attribute>
+			<Attribute Name="device" AttributeDataType="xs:string">
+				<Description>Device Name</Description>
+			</Attribute>
+			<Attribute Name="id" AttributeDataType="xs:string">
+				<Description>database generated identifier</Description>
+			</Attribute>
+			<Attribute Name="created" AttributeDataType="xs:long">
+				<Description>Timestamp of the record was added to DB</Description>
+			</Attribute>
+			<Attribute Name="modified" AttributeDataType="xs:long">
+				<Description>Timestamp of the last modification to the record</Description>
+			</Attribute>
+			<Attribute Name="origin" AttributeDataType="xs:long">
+				<Description>Timestamp of the record was created</Description>
+			</Attribute>
+			<SupportedRoleClass RefRoleClassPath="ValueDescriptorLib/ValueDescriptor" />
+		</SystemUnitClass>
+		<SystemUnitClass Name="Event">
+			<Attribute Name="device" AttributeDataType="xs:string">
+				<Description>Device Name</Description>
+			</Attribute>
+			<Attribute Name="pushed" AttributeDataType="xs:long">
+				<Description>Event's timestamp</Description>
+			</Attribute>
+			<Attribute Name="id" AttributeDataType="xs:string">
+				<Description>database generated identifier</Description>
+			</Attribute>
+			<Attribute Name="created" AttributeDataType="xs:long">
+				<Description>Timestamp of the record was added to DB</Description>
+			</Attribute>
+			<Attribute Name="modified" AttributeDataType="xs:long">
+				<Description>Timestamp of the last modification to the record</Description>
+			</Attribute>
+			<Attribute Name="origin" AttributeDataType="xs:long">
+				<Description>Timestamp of the record was created</Description>
+			</Attribute>
+			<InternalElement Name="Data" RefBaseSystemUnitPath="Edge_CoreDataClassLib/Data" ID="e9f02757-cf9d-4503-b54c-77743a277df6">
+				<Attribute Name="name" AttributeDataType="xs:string">
+					<Description>ValueDescriptor Name</Description>
+				</Attribute>
+				<Attribute Name="pushed" AttributeDataType="xs:long">
+					<Description>Data's timestamp</Description>
+				</Attribute>
+				<Attribute Name="value" AttributeDataType="xs:string">
+					<Description>Data's data value</Description>
+				</Attribute>
+				<Attribute Name="device" AttributeDataType="xs:string">
+					<Description>Device Name</Description>
+				</Attribute>
+				<Attribute Name="id" AttributeDataType="xs:string">
+					<Description>database generated identifier</Description>
+				</Attribute>
+				<Attribute Name="created" AttributeDataType="xs:long">
+					<Description>Timestamp of the record was added to DB</Description>
+				</Attribute>
+				<Attribute Name="modified" AttributeDataType="xs:long">
+					<Description>Timestamp of the last modification to the record</Description>
+				</Attribute>
+				<Attribute Name="origin" AttributeDataType="xs:long">
+					<Description>Timestamp of the record was created</Description>
+				</Attribute>
+				<SupportedRoleClass RefRoleClassPath="ValueDescriptorLib/ValueDescriptor" />
+			</InternalElement>
+		</SystemUnitClass>
+	</SystemUnitClassLib>
+</CAEXFile>
