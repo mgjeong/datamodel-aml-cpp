@@ -17,4 +17,18 @@
 
 #!/bin/bash
 
-scons TARGET_OS=linux TARGET_ARCH=armhf
+AML_TARGET_ARCH=armhf
+
+function build(){
+    scons TARGET_OS=linux TARGET_ARCH=${AML_TARGET_ARCH}
+    if [ $? -ne 0 ]; then 
+        echo -e "\033[31m"Build failed"\033[0m" 
+        exit 1 
+    fi
+}
+
+echo -e "Building AML DataModel library("${AML_TARGET_ARCH}").."
+build
+echo -e "Done building AML DataModel library("${AML_TARGET_ARCH}")"
+
+exit 0
