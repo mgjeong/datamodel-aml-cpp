@@ -2,11 +2,13 @@
 //#include <stdexcept>
 #include <sstream>
 
+#include "pugixml.hpp"
+
 #include "Representation.h"
 #include "Event.pb.h"
 #include "AML.pb.h"
 
-#include "pugixml.hpp"
+#include "AMLException.h"
 
 static const char CAEX_FILE[]                   = "CAEXFile";
 static const char INSTANCE_HIERARCHY[]          = "InstanceHierarchy";
@@ -85,17 +87,39 @@ public:
         m_doc = new pugi::xml_document(); // @TODO: try{}catch(std::bad_alloc& ba){printf("bad_alloc caught: %s ", ba.what());}
 
         pugi::xml_parse_result result = m_doc->load_file(amlFilePath.c_str());
-        if (pugi::status_ok != result.status) {/*@TODO*/ delete m_doc;}
+        if (pugi::status_ok != result.status) 
+        {
+            delete m_doc;
+            throw AMLException(Exception::INVALID_FILE_PATH);
+        }
 
         pugi::xml_node xmlCaexFile = m_doc->child(CAEX_FILE);
-        if (NULL == xmlCaexFile) {/*@TODO*/}
+        if (NULL == xmlCaexFile) 
+        {
+            delete m_doc;
+            throw AMLException(Exception::INVALID_SCHEMA);
+        }
 
+        if (NULL == xmlCaexFile.child(INSTANCE_HIERARCHY)) // @TODO: AMLModel do not need IH
+        {
+            delete m_doc;
+            throw AMLException(Exception::INVALID_SCHEMA);
+        }
+        
         m_roleClassLib = xmlCaexFile.child(ROLE_CLASS_LIB);
-        if (NULL == m_roleClassLib) {/*@TODO*/}
+        if (NULL == m_roleClassLib) 
+        {
+            delete m_doc;
+            throw AMLException(Exception::INVALID_SCHEMA);
+        }
         
         m_systemUnitClassLib = xmlCaexFile.child(SYSTEM_UNIT_CLASS_LIB);
-        if (NULL == m_systemUnitClassLib) {/*@TODO*/}
-
+        if (NULL == m_systemUnitClassLib) 
+        {
+            delete m_doc;
+            throw AMLException(Exception::INVALID_SCHEMA);
+        }
+         
         // remove "AdditionalInformation" and "InstanceHierarchy" data
         while (xmlCaexFile.child(ADDITIONAL_INFORMATION))   xmlCaexFile.remove_child(ADDITIONAL_INFORMATION);
         while (xmlCaexFile.child(INSTANCE_HIERARCHY))       xmlCaexFile.remove_child(INSTANCE_HIERARCHY);
@@ -108,6 +132,7 @@ public:
     
     datamodel::Event* constructEvent(pugi::xml_document* xml_doc)
     {
+        if(nullptr == xml_doc) throw AMLException(Exception::INVALID_PARAM);
         datamodel::Event* event = new datamodel::Event();
 
         pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY); // xml_ih might have next_sibling(INSTANCE_HIERARCHY)
@@ -116,6 +141,11 @@ public:
         for (xml_event = xml_ih.child(INTERNAL_ELEMENT); xml_event; xml_event = xml_event.next_sibling(INTERNAL_ELEMENT))
         {
             if (std::string(xml_event.attribute(NAME).value()) == EVENT) break; // What if there are more than 2 events?
+        }
+        if(NULL == xml_event) 
+        {
+            delete event;
+            throw AMLException(Exception::INVALID_SUC);
         }
 
         for (pugi::xml_node xml_attr = xml_event.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
@@ -154,7 +184,7 @@ public:
 
     pugi::xml_document* constructXmlDoc()
     {
-        pugi::xml_document* xml_doc = new pugi::xml_document();
+        pugi::xml_document* xml_doc = new pugi::xml_document(); // @TODO: try{}catch(std::bad_alloc& ba){printf("bad_alloc caught: %s ", ba.what());}
 
         initializeAML(xml_doc);
 
@@ -164,13 +194,14 @@ public:
     pugi::xml_document* constructXmlDoc(const datamodel::Event* event)
     {
         pugi::xml_document* xml_doc = constructXmlDoc();
-        
+        if(nullptr == xml_doc) throw AMLException(Exception::INIT_FAILED);
         // add InstanceHierarchy
         pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).append_child(INSTANCE_HIERARCHY);
         xml_ih.append_attribute(NAME) = EDGE_COREDATA;
 
         // add Event as InternalElement
         pugi::xml_node xml_event = addInternalElement(xml_ih, EVENT);
+        if(NULL == xml_event) throw AMLException(Exception:: ADD_IE_FAILED);
 
         for (pugi::xml_node xml_attr = xml_event.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
         {
@@ -188,6 +219,7 @@ public:
             datamodel::Reading reading = event->reading(i);
 
             pugi::xml_node xml_data = addInternalElement(xml_event, DATA);
+            if(NULL == xml_data) throw AMLException(Exception:: ADD_IE_FAILED);
 
             for (pugi::xml_node xml_attr = xml_data.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
             {
@@ -207,6 +239,8 @@ public:
 
     void appendModel(pugi::xml_document* xml_doc)    
     {
+        if(nullptr == xml_doc) throw AMLException(Exception::INVALID_PARAM);
+        if(NULL == xml_doc->child(CAEX_FILE)) throw AMLException(Exception::INVALID_PARAM);
         // append RoleClassLib and SystemUnitClassLib
         xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
         xml_doc->child(CAEX_FILE).append_copy(m_systemUnitClassLib);
@@ -217,24 +251,26 @@ private:
     pugi::xml_node m_roleClassLib;
     pugi::xml_node m_systemUnitClassLib;
 
-    pugi::xml_node initializeAML(pugi::xml_document* xml_doc)
-    {
+    void initializeAML(pugi::xml_document* xml_doc)
+    {   
+        if(nullptr == xml_doc) throw AMLException(Exception::INVALID_PARAM);
+
         pugi::xml_node xml_decl = xml_doc->prepend_child(pugi::node_declaration);
         xml_decl.append_attribute("version") = "1.0";
         xml_decl.append_attribute("encoding") = "utf-8";
         xml_decl.append_attribute("standalone") = "yes"; // @TODO: required?
 
         pugi::xml_node xml_caexFile = xml_doc->append_child(CAEX_FILE);
+        if(NULL == xml_caexFile) throw AMLException(Exception::INVALID_SCHEMA);
         xml_caexFile.append_attribute("FileName") = "test.aml"; // @TODO: set by application? or randomly generated? or using time stamp of event
         xml_caexFile.append_attribute("SchemaVersion") = "2.15";
         xml_caexFile.append_attribute("xsi:noNamespaceSchemaLocation") = "CAEX_ClassModel_V2.15.xsd";
         xml_caexFile.append_attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
-
-        return xml_caexFile;
     }
 
     pugi::xml_node addInternalElement(pugi::xml_node xml_ih, const std::string suc_name)
     {
+        if(NULL == xml_ih) throw AMLException(Exception::INVALID_PARAM);
         pugi::xml_node xml_ie = xml_ih.append_child(INTERNAL_ELEMENT);
 
         for (pugi::xml_node xml_suc = m_systemUnitClassLib.child(SYSTEM_UNIT_CLASS); xml_suc; xml_suc = xml_suc.next_sibling(SYSTEM_UNIT_CLASS))
@@ -281,17 +317,20 @@ datamodel::Event* Representation::AmlToEvent(const std::string& xmlStr)
 {
     pugi::xml_document dataXml;
     pugi::xml_parse_result result = dataXml.load_string(xmlStr.c_str());
-    if (pugi::status_ok != result.status) {/*@TODO*/}
+    if (pugi::status_ok != result.status) throw AMLException(Exception::INVALID_XML_STR);
 
     datamodel::Event *event = m_amlModel->constructEvent(&dataXml);
-    if (NULL == event) {/*@TODO*/} //assert?
+    if (nullptr == event) throw AMLException(Exception::NOT_IMPL);
 
     return event;
 }
 
 std::string Representation::EventToAml(const datamodel::Event* event)
-{
+{   
+    if(nullptr == event) throw AMLException(Exception::INVALID_PARAM);
+
     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(event);
+    if(nullptr == xml_doc) throw AMLException(Exception::NOT_IMPL);
     
     m_amlModel->appendModel(xml_doc);
 
@@ -306,12 +345,17 @@ std::string Representation::EventToAml(const datamodel::Event* event)
 datamodel::Event* Representation::ByteToEvent(const std::string& byte)
 {
     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
-    caex->ParseFromString(byte);
+    if(false == caex->ParseFromString(byte)) {
+        delete caex;
+        throw AMLException(Exception::NOT_IMPL);
+    }
 
     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc();
+    if(nullptr == xml_doc) throw AMLException(Exception::INIT_FAILED);
 
     // update CAEX attributes
     pugi::xml_node xml_caex = xml_doc->child(CAEX_FILE);
+    if(NULL == xml_caex) throw AMLException(Exception::INVALID_SCHEMA);
     xml_caex.attribute("FileName")                      = caex->filename().c_str();
     xml_caex.attribute("SchemaVersion")                 = caex->schemaversion().c_str();
     xml_caex.attribute("xsi:noNamespaceSchemaLocation") = caex->xsi().c_str();
@@ -326,23 +370,29 @@ datamodel::Event* Representation::ByteToEvent(const std::string& byte)
     }
 
     datamodel::Event *event = m_amlModel->constructEvent(xml_doc);
+    if(nullptr == event) throw AMLException(Exception::NOT_IMPL);
 
     delete xml_doc;
+
+    caex->clear_instancehierarchy();
+    delete caex;
 
     return event;
 }
 
 std::string Representation::EventToByte(const datamodel::Event* event)
 {
+    if(nullptr == event) throw AMLException(Exception::INVALID_PARAM);
+    
     // convert Event to XML object
     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(event);
-    
+    if(nullptr == xml_doc) throw AMLException(Exception::NOT_IMPL);
+
     // convert XML object to AML proto object
-    std::vector<datamodel::InstanceHierarchy*> ihList;
-
-    datamodel::CAEXFile* caex = new datamodel::CAEXFile();
-
     pugi::xml_node xml_caex = xml_doc->child(CAEX_FILE);
+    if(nullptr == xml_caex) throw AMLException(Exception::INVALID_SCHEMA);
+    
+    datamodel::CAEXFile* caex = new datamodel::CAEXFile();
     caex->set_filename(xml_caex.attribute("FileName").value());
     caex->set_schemaversion(xml_caex.attribute("SchemaVersion").value());
     caex->set_xsi(xml_caex.attribute("xsi:noNamespaceSchemaLocation").value());
@@ -359,9 +409,16 @@ std::string Representation::EventToByte(const datamodel::Event* event)
     }
 
     std::string binary;
-    caex->SerializeToString(&binary);
+    if(false == caex->SerializeToString(&binary)) {
+        caex->clear_instancehierarchy();
+        delete caex;
+        throw AMLException(Exception::NOT_IMPL);
+    }
 
     delete xml_doc;
+
+    caex->clear_instancehierarchy();
+    delete caex;
 
     return binary;
 }
