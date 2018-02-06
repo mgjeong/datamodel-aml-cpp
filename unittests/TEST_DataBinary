@@ -1,0 +1,31 @@
+
+test.aml2.15CAEX_ClassModel_V2.15.xsd")http://www.w3.org/2001/XMLSchema-instance*Å
+Edge_CoreDataÔ
+EventEdge_CoreDataClassLib/Event"ö
+DataEdge_CoreDataClassLib/Data$
+"ValueDescriptorLib/ValueDescriptor*
+name	xs:stringRobot_Model*
+pushedxs:long53*
+value	xs:string
+SR-P7-R970*
+device	xs:stringRobot1*
+id	xs:stringid1*
+createdxs:long50*
+modifiedxs:long51*
+originxs:long52"ö
+DataEdge_CoreDataClassLib/Data$
+"ValueDescriptorLib/ValueDescriptor*#
+name	xs:stringRobot_SW_Version*
+pushedxs:long64*
+value	xs:string0.0.1*
+device	xs:stringRobot1*
+id	xs:stringid2*
+createdxs:long61*
+modifiedxs:long62*
+originxs:long63*
+device	xs:stringRobot1*
+pushedxs:long30*
+id	xs:stringid*
+createdxs:long10*
+modifiedxs:long20*
+originxs:long40

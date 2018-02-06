@@ -69,8 +69,14 @@ aml_rep_test = aml_test_env.Program('aml_rep_test', aml_rep_test_src)
 Alias("aml_rep_test", aml_rep_test)
 aml_test_env.AppendTarget('aml_rep_test')
 
+Command("TEST_Data.aml", File("TEST_Data.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
+Command("TEST_DataBinary", File("TEST_DataBinary").srcnode(), Copy("$TARGET", "$SOURCE"))
 Command("TEST_DataModel.aml", File("TEST_DataModel.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
+Command("TEST_DataModel_Invalid_NoCAEX.aml", File("TEST_DataModel_Invalid_NoCAEX.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
+Command("TEST_DataModel_Invalid_NoIH.aml", File("TEST_DataModel_Invalid_NoIH.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
+Command("TEST_DataModel_Invalid_NoRCL.aml", File("TEST_DataModel_Invalid_NoRCL.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
+Command("TEST_DataModel_Invalid_NoSUCL.aml", File("TEST_DataModel_Invalid_NoSUCL.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
 
 if env.get('TEST') == '1':
-	Command("copy_tmp_file", File("TEST_DataModel.aml").srcnode(), Copy("./", "$SOURCE"))
+	#Command("copy_tmp_file", File("TEST_DataModel.aml").srcnode(), Copy("./", "$SOURCE"))
 	run_test(aml_test_env, '', 'unittests/aml_rep_test', aml_rep_test)

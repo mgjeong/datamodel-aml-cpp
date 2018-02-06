@@ -64,27 +64,6 @@
 			</InternalElement>
 		</InternalElement>
 	</InstanceHierarchy>
-	<RoleClassLib Name="ValueDescriptorLib">
-		<Description>Library about Value Descriptor</Description>
-		<Version>1.0.0</Version>
-		<RoleClass Name="ValueDescriptor">
-			<Description>Description of reading's value</Description>
-			<Attribute Name="name" AttributeDataType="xs:string">
-				<Description>Device Name</Description>
-			</Attribute>
-			<Attribute Name="min" AttributeDataType="Object" />
-			<Attribute Name="max" AttributeDataType="Object" />
-			<Attribute Name="type" AttributeDataType="IoTType">
-				<Description>Reading data's value type</Description>
-			</Attribute>
-			<Attribute Name="uomLabel" AttributeDataType="xs:string" />
-			<Attribute Name="defaultValue" AttributeDataType="Object" />
-			<Attribute Name="formatting" AttributeDataType="xs:string" />
-			<Attribute Name="labels" AttributeDataType="xs:string[]">
-				<Description>Array of Label</Description>
-			</Attribute>
-		</RoleClass>
-	</RoleClassLib>
 	<SystemUnitClassLib Name="Edge_CoreDataClassLib">
 		<Version>0.0.1</Version>
 		<SystemUnitClass Name="Data">
