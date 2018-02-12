@@ -20,6 +20,7 @@
 #include <fstream>
 
 #include "Representation.h"
+#include "AMLException.h"
 #include "Event.pb.h"
 #include "gtest/gtest.h"
 
@@ -27,7 +28,6 @@ namespace AMLRepresentationTest
 {
     std::string amlModelFile                = "./TEST_DataModel.aml";
     std::string amlModelFile_invalid_NoCAEX = "./TEST_DataModel_Invalid_NoCAEX.aml";
-    std::string amlModelFile_invalid_NoIH   = "./TEST_DataModel_Invalid_NoIH.aml";
     std::string amlModelFile_invalid_NoRCL  = "./TEST_DataModel_Invalid_NoRCL.aml";
     std::string amlModelFile_invalid_NoSUCL = "./TEST_DataModel_Invalid_NoSUCL.aml";
     std::string amlDataFile                 = "./TEST_Data.aml";
@@ -122,27 +122,22 @@ namespace AMLRepresentationTest
 
     TEST(ConstructRepresentationTest, InvalidFilePath)
     {
-        EXPECT_ANY_THROW(Representation rep = Representation("NoExist.aml"));
+        EXPECT_THROW(Representation rep = Representation("NoExist.aml"), AMLException);
     }
 
     TEST(ConstructRepresentationTest, AMLwithoutCAEX)
     {
-        EXPECT_ANY_THROW(Representation rep = Representation(amlModelFile_invalid_NoCAEX));
-    }
-
-    TEST(ConstructRepresentationTest, AMLwithoutIH)
-    {
-        EXPECT_ANY_THROW(Representation rep = Representation(amlModelFile_invalid_NoIH));
+        EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoCAEX), AMLException);
     }
 
     TEST(ConstructRepresentationTest, AMLwithoutRCL)
     {
-        EXPECT_ANY_THROW(Representation rep = Representation(amlModelFile_invalid_NoRCL));
+        EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoRCL), AMLException);
     }
 
     TEST(ConstructRepresentationTest, AMLwithoutSUCL)
     {
-        EXPECT_ANY_THROW(Representation rep = Representation(amlModelFile_invalid_NoSUCL));
+        EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoSUCL), AMLException);
     }
 
     TEST(AmlToEventTest, ConvertValid)
@@ -164,7 +159,7 @@ namespace AMLRepresentationTest
         datamodel::Event* event = NULL;
         std::string invalidAmlStr("<invalid />");
 
-        EXPECT_ANY_THROW(event = rep.AmlToEvent(invalidAmlStr));
+        EXPECT_THROW(event = rep.AmlToEvent(invalidAmlStr), AMLException);
 
         if (NULL != event)  delete event;
     }
@@ -184,7 +179,7 @@ namespace AMLRepresentationTest
     {
         Representation rep = Representation(amlModelFile);
         std::string amlStr;
-        EXPECT_ANY_THROW(amlStr = rep.EventToAml(nullptr));
+        EXPECT_THROW(amlStr = rep.EventToAml(nullptr), AMLException);
     }
 
     //@TODO: Is this needed? If it is, what could be 'invalid event'?
@@ -209,7 +204,7 @@ namespace AMLRepresentationTest
         datamodel::Event* event = NULL;
         std::string amlBinary("invalidBinary");
         
-        EXPECT_ANY_THROW(event = rep.ByteToEvent(amlBinary));
+        EXPECT_THROW(event = rep.ByteToEvent(amlBinary), AMLException);
 
         if (NULL != event)  delete event;
     }
@@ -229,7 +224,7 @@ namespace AMLRepresentationTest
     {
         Representation rep = Representation(amlModelFile);
         std::string byteStr;
-        EXPECT_ANY_THROW(byteStr = rep.EventToByte(nullptr));
+        EXPECT_THROW(byteStr = rep.EventToByte(nullptr), AMLException);
     }
 
     //@TODO: Is this needed? If it is, what could be 'invalid event'?
