@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Event.pb.h"
+#include "AMLInterface.h"
 
 class Representation
 {
@@ -11,10 +11,11 @@ public:
     Representation(const std::string amlFilePath);
     virtual ~Representation(void);
 
-    datamodel::Event* AmlToEvent(const std::string& xmlStr);
-    std::string EventToAml(const datamodel::Event* event);
-    datamodel::Event* ByteToEvent(const std::string& byte);
-    std::string EventToByte(const datamodel::Event* event);
+    std::string DataToAml(const AMLObject* amlObject);
+    AMLObject* AmlToData(const std::string& xmlStr);
+
+    std::string DataToByte(const AMLObject* amlObject);
+    AMLObject* ByteToData(const std::string& byte);
 
 private:
     class AMLModel;
