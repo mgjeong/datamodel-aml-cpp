@@ -3,19 +3,7 @@
 
 #include <string>
 #include <vector>
-
-class AMLObject
-{
-    AMLObject(std::string deviceId, std::string timeStamp);
-    virtual ~AMLObject(void);
-
-    void                        addData(std::string name, AMLData data);
-
-    AMLData                     getData(std::string name);
-    std::vector<std::string>    getDataNames();
-    std::string                 getDeviceId();
-    std::string                 getTimeStamp();
-};
+#include <map>
 
 enum class AMLValueType
 {
@@ -26,6 +14,7 @@ enum class AMLValueType
  
 class AMLData
 {
+public:
     AMLData(void);
     virtual ~AMLData(void);
 
@@ -38,6 +27,27 @@ class AMLData
     AMLData                     getValueToAMLData(std::string key);
     std::vector<std::string>    getKeys();
     AMLValueType                getValueType(std::string key);
+};
+
+class AMLObject
+{
+public:
+    AMLObject(const std::string& deviceId, const std::string& timeStamp);
+    AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id);
+    virtual ~AMLObject(void);
+
+    void                        addData(const std::string& name, const AMLData& data);
+
+    AMLData                     getData(const std::string& name) const;
+    std::vector<std::string>    getDataNames() const;
+    std::string                 getDeviceId() const;
+    std::string                 getTimeStamp() const;
+
+private:
+    std::string m_deviceId;
+    std::string m_timeStamp;
+    std::string m_id;
+    mutable std::map<std::string, AMLData> m_amlDatas;
 };
 
 #endif // AML_INTERFACE_H_
