@@ -304,7 +304,7 @@ Representation::~Representation(void)
 {
     delete m_amlModel;
 }
-
+/*
 datamodel::Event* Representation::AmlToEvent(const std::string& xmlStr)
 {
     pugi::xml_document dataXml;
@@ -425,7 +425,7 @@ std::string Representation::EventToByte(const datamodel::Event* event)
     }
     return binary;
 }
-
+*/
 template <class T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 {   
