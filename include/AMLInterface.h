@@ -5,28 +5,17 @@
 #include <vector>
 #include <map>
 
+#include <boost/variant.hpp>
+
+class AMLData;
+
+typedef std::map<std::string, boost::variant<std::string, std::vector<std::string>, AMLData>> AMLMap;
+
 enum class AMLValueType
 {
-    String,
+    String = 0,
     StringArray,
     AMLData
-};
- 
-class AMLData
-{
-public:
-    AMLData(void);
-    virtual ~AMLData(void);
-
-    void                        setValue(std::string key, std::string value);
-    void                        setValue(std::string key, std::vector<std::string> value);
-    void                        setValue(std::string key, AMLData value);
-
-    std::string                 getValueToStr(std::string key);
-    std::vector<std::string>    getValueToStrArr(std::string key);
-    AMLData                     getValueToAMLData(std::string key);
-    std::vector<std::string>    getKeys();
-    AMLValueType                getValueType(std::string key);
 };
 
 class AMLObject
@@ -48,6 +37,26 @@ private:
     std::string m_timeStamp;
     std::string m_id;
     mutable std::map<std::string, AMLData> m_amlDatas;
+};
+
+class AMLData
+{
+public:
+    AMLData(void);
+    virtual ~AMLData(void);
+
+    void                        setValue(const std::string& key, const std::string& value);
+    void                        setValue(const std::string& key, const std::vector<std::string>& value); 
+    void                        setValue(const std::string& key, const AMLData& value);
+
+    std::string                 getValueToStr(const std::string& key) const;
+    std::vector<std::string>    getValueToStrArr(const std::string& key) const;
+    AMLData                     getValueToAMLData(const std::string& key) const;
+    std::vector<std::string>    getKeys() const;
+    AMLValueType                getValueType(const std::string& key) const;
+
+private:
+    AMLMap m_values;
 };
 
 #endif // AML_INTERFACE_H_

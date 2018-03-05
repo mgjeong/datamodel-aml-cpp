@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "AMLInterface.h"
+#include "AMLException.h"
 
 using namespace std;
 
@@ -30,7 +31,7 @@ void AMLObject::addData(const std::string& name, const AMLData& data)
     // Try to insert a new element into the map and if the key already exists, throw an exeption.
     if (!m_amlDatas.insert(make_pair(name, data)).second)
     {
-        // @TODO: throw exeption
+        throw AMLException(Exception::OBJECT_KEY_DUP);
     }
 }
 
@@ -40,7 +41,7 @@ AMLData AMLObject::getData(const std::string& name) const
     if (iter == m_amlDatas.end())
     {
         // The name does not exist.
-        // @TODO: throw exeption
+        throw AMLException(Exception::OBJECT_INVALID_KEY);
     }
 
     return iter->second;
