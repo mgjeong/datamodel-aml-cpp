@@ -11,10 +11,10 @@ public:
     Representation(const std::string amlFilePath);
     virtual ~Representation(void);
 
-    std::string DataToAml(const AMLObject* amlObject) const;
+    std::string DataToAml(const AMLObject& amlObject) const;
     AMLObject* AmlToData(const std::string& xmlStr) const;
 
-    std::string DataToByte(const AMLObject* amlObject) const;
+    std::string DataToByte(const AMLObject& amlObject) const;
     AMLObject* ByteToData(const std::string& byte) const;
 
 private:
