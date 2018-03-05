@@ -123,8 +123,8 @@ int main() {
     info.setValue("axis", axis);
 
     vector<string> appendix;
-    appendix.push_back("935");
     appendix.push_back("52303");
+    appendix.push_back("935");
     appendix.push_back("1442");
 
     AMLData sample;
@@ -140,7 +140,7 @@ int main() {
 
 
     // Convert AMLObject to AMLstring(XML)
-    string aml_string = rep->DataToAml(&amlObj);
+    string aml_string = rep->DataToAml(amlObj);
     cout << aml_string << endl;
     cout << "-------------------------------------------------------------" << endl;
 
@@ -150,7 +150,7 @@ int main() {
     cout << "-------------------------------------------------------------" << endl;
 
     // Convert AMLObject to Byte(string)
-    string byte_string = rep->DataToByte(data_from_aml);
+    string byte_string = rep->DataToByte(*data_from_aml);
     cout << byte_string << endl;
     cout << "-------------------------------------------------------------" << endl;
 
