@@ -136,6 +136,8 @@ int main() {
     amlObj.addData("Model", model);
     amlObj.addData("Sample", sample);
 
+    printAMLObject(amlObj);
+
 
     // Convert AMLObject to AMLstring(XML)
     string aml_string = rep->DataToAml(&amlObj);
@@ -147,5 +149,16 @@ int main() {
     printAMLObject(*data_from_aml);
     cout << "-------------------------------------------------------------" << endl;
 
+    // Convert AMLObject to Byte(string)
+    string byte_string = rep->DataToByte(data_from_aml);
+    cout << byte_string << endl;
+    cout << "-------------------------------------------------------------" << endl;
+
+    // Convert Byte(string) to AMLObject
+    AMLObject* data_from_byte = rep->ByteToData(byte_string);
+    printAMLObject(*data_from_byte);
+    cout << "-------------------------------------------------------------" << endl;
+
     delete data_from_aml;
+    delete data_from_byte;
 }

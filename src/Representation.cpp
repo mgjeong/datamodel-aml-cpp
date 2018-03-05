@@ -176,7 +176,6 @@ public:
 
 /*
         datamodel::Event* event = new datamodel::Event();
-
         for (pugi::xml_node xml_attr = xml_event.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
         {
             if      (IS_NAME(xml_attr, KEY_DEVICE))     event->set_device   (xml_attr.child(VALUE).text().as_string());
@@ -186,14 +185,12 @@ public:
             else if (IS_NAME(xml_attr, KEY_MODIFIED))   event->set_modified (xml_attr.child(VALUE).text().as_llong());
             else if (IS_NAME(xml_attr, KEY_ORIGIN))     event->set_origin   (xml_attr.child(VALUE).text().as_llong());
         }
-
         pugi::xml_node xml_data;
         for (xml_data = xml_event.child(INTERNAL_ELEMENT) ; xml_data; xml_data = xml_data.next_sibling(INTERNAL_ELEMENT))
         {
             if (std::string(xml_data.attribute(NAME).value()) == DATA)
             {
                 datamodel::Reading *reading = event->add_reading();
-
                 for (pugi::xml_node xml_attr = xml_data.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
                 {
                     if      (IS_NAME(xml_attr, KEY_DEVICE))     reading->set_device   (xml_attr.child(VALUE).text().as_string());
@@ -454,185 +451,187 @@ AMLObject* Representation::AmlToData(const std::string& xmlStr) const
     return amlObj;
 }
 
-// datamodel::Event* Representation::ByteToEvent(const std::string& byte)
-// {
-//     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
+AMLObject* Representation::ByteToData(const std::string& byte) const
+{
+    datamodel::CAEXFile* caex = new datamodel::CAEXFile();
 
-//     if (false == caex->ParseFromString(byte))
-//     {
-//         delete caex;
-//         throw AMLException(Exception::NOT_IMPL); //@TODO: 'Invalid byte' or 'failed to deserialize' ?
-//     }
+    if (false == caex->ParseFromString(byte))
+    {
+        delete caex;
+        throw AMLException(Exception::NOT_IMPL); //@TODO: 'Invalid byte' or 'failed to deserialize' ?
+    }
 
-//     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc();
-//     assert(nullptr != xml_doc);
+    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc();
+    assert(nullptr != xml_doc);
 
-//     // update CAEX attributes
-//     pugi::xml_node xml_caex = xml_doc->child(CAEX_FILE);
-//     xml_caex.attribute("FileName")                      = caex->filename().c_str();
-//     xml_caex.attribute("SchemaVersion")                 = caex->schemaversion().c_str();
-//     xml_caex.attribute("xsi:noNamespaceSchemaLocation") = caex->xsi().c_str();
-//     xml_caex.attribute("xmlns:xsi")                     = caex->xmlns().c_str();
+    // update CAEX attributes
+    pugi::xml_node xml_caex = xml_doc->child(CAEX_FILE);
+    xml_caex.attribute("FileName")                      = caex->filename().c_str();
+    xml_caex.attribute("SchemaVersion")                 = caex->schemaversion().c_str();
+    xml_caex.attribute("xsi:noNamespaceSchemaLocation") = caex->xsi().c_str();
+    xml_caex.attribute("xmlns:xsi")                     = caex->xmlns().c_str();
 
-//     for (datamodel::InstanceHierarchy ih : caex->instancehierarchy())
-//     {
-//         pugi::xml_node xml_ih = xml_caex.append_child(INSTANCE_HIERARCHY);
-//         VERIFY_NON_NULL_THROW_EXCEPTION(xml_ih);
+    for (datamodel::InstanceHierarchy ih : caex->instancehierarchy())
+    {
+        pugi::xml_node xml_ih = xml_caex.append_child(INSTANCE_HIERARCHY);
+        VERIFY_NON_NULL_THROW_EXCEPTION(xml_ih);
 
-//         xml_ih.append_attribute(NAME) = ih.name().c_str();
+        xml_ih.append_attribute(NAME) = ih.name().c_str();
 
-//         extractProtoInternalElement(xml_ih, &ih);
-//     }
+        extractProtoInternalElement(xml_ih, &ih);
+    }
 
-//     caex->clear_instancehierarchy();
-//     delete caex;
+    caex->clear_instancehierarchy();
+    delete caex;
 
-//     datamodel::Event *event = m_amlModel->constructAmlObject(xml_doc);
-//     assert(nullptr != event);
+    AMLObject* amlObj = m_amlModel->constructAmlObject(xml_doc);
+    assert(nullptr != amlObj);
 
-//     delete xml_doc;
+    delete xml_doc;
 
-//     return event;
-// }
+    return amlObj;
+}
 
-// std::string Representation::EventToByte(const datamodel::Event* event)
-// {
-//     if (nullptr == event)
-//     {
-//         throw AMLException(Exception::INVALID_PARAM);
-//     }
+std::string Representation::DataToByte(const AMLObject* amlObject) const
+{
+    if (nullptr == amlObject)
+    {
+        throw AMLException(Exception::INVALID_PARAM);
+    }
     
-//     // convert Event to XML object
-//     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(event);
-//     assert(nullptr != xml_doc);
+    // convert Event to XML object
+    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(amlObject);
+    assert(nullptr != xml_doc);
 
-//     // convert XML object to AML proto object
-//     pugi::xml_node xml_caex = xml_doc->child(CAEX_FILE);
+    // convert XML object to AML proto object
+    pugi::xml_node xml_caex = xml_doc->child(CAEX_FILE);
     
-//     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
+    datamodel::CAEXFile* caex = new datamodel::CAEXFile();
 
-//     caex->set_filename(xml_caex.attribute("FileName").value());
-//     caex->set_schemaversion(xml_caex.attribute("SchemaVersion").value());
-//     caex->set_xsi(xml_caex.attribute("xsi:noNamespaceSchemaLocation").value());
-//     caex->set_xmlns(xml_caex.attribute("xmlns:xsi").value());
+    caex->set_filename(xml_caex.attribute("FileName").value());
+    caex->set_schemaversion(xml_caex.attribute("SchemaVersion").value());
+    caex->set_xsi(xml_caex.attribute("xsi:noNamespaceSchemaLocation").value());
+    caex->set_xmlns(xml_caex.attribute("xmlns:xsi").value());
 
-//     for (pugi::xml_node xml_ih = xml_caex.child(INSTANCE_HIERARCHY); xml_ih; xml_ih = xml_ih.next_sibling(INSTANCE_HIERARCHY))
-//     {
-//         datamodel::InstanceHierarchy* ih = caex->add_instancehierarchy();
+    for (pugi::xml_node xml_ih = xml_caex.child(INSTANCE_HIERARCHY); xml_ih; xml_ih = xml_ih.next_sibling(INSTANCE_HIERARCHY))
+    {
+        datamodel::InstanceHierarchy* ih = caex->add_instancehierarchy();
 
-//         ih->set_name    (xml_ih.attribute(NAME).value());
-//       //ih->set_version (xml_ih.child_value(VERSION)); // @TODO: required?
+        ih->set_name    (xml_ih.attribute(NAME).value());
+      //ih->set_version (xml_ih.child_value(VERSION)); // @TODO: required?
 
-//         extractInternalElement<datamodel::InstanceHierarchy>(ih, xml_ih);
-//     }
+        extractInternalElement<datamodel::InstanceHierarchy>(ih, xml_ih);
+    }
 
-//     delete xml_doc;
+    delete xml_doc;
 
-//     std::string binary;
-//     bool isSuccess = caex->SerializeToString(&binary);
+    std::string binary;
+    bool isSuccess = caex->SerializeToString(&binary);
 
-//     caex->clear_instancehierarchy();
-//     delete caex;
+    caex->clear_instancehierarchy();
+    delete caex;
 
-//     if (false == isSuccess)
-//     {
-//         throw AMLException(Exception::NOT_IMPL); //@TODO: 'failed to serialize' ?
-//     }
-//     return binary;
-// }
+    if (false == isSuccess)
+    {
+        throw AMLException(Exception::NOT_IMPL); //@TODO: 'failed to serialize' ?
+    }
+    return binary;
+}
 
-// template <class T>
-// static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
-// {   
-//     for (datamodel::Attribute att: attr->attribute()) {
-//         pugi::xml_node xml_attr = xmlNode.append_child(ATTRIBUTE);
-//         VERIFY_NON_NULL_THROW_EXCEPTION(xml_attr);
+template <class T>
+static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
+{
+    for (datamodel::Attribute att : attr->attribute())
+    {
+        pugi::xml_node xml_attr = xmlNode.append_child(ATTRIBUTE);
+        VERIFY_NON_NULL_THROW_EXCEPTION(xml_attr);
 
-//         xml_attr.append_attribute(NAME) = att.name().c_str();
-//         xml_attr.append_attribute(ATTRIBUTE_DATA_TYPE) = att.attributedatatype().c_str();
+        xml_attr.append_attribute(NAME) = att.name().c_str();
+        xml_attr.append_attribute(ATTRIBUTE_DATA_TYPE) = att.attributedatatype().c_str();
 
-//         extractProtoAttribute(xml_attr, &att);
+        extractProtoAttribute(xml_attr, &att);
 
-//         xml_attr.append_child(VALUE).text().set(att.value().c_str());
-//     }
+        if (att.has_value())
+        {
+            xml_attr.append_child(VALUE).text().set(att.value().c_str());
+        }
+    }
 
-//     return;
-// }
+    return;
+}
 
-// template <class T>
-// static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
-// {
-//     for (datamodel::InternalElement sie: ie->internalelement())
-//     {
-//         pugi::xml_node xml_ie = xmlNode.append_child(INTERNAL_ELEMENT);
-//         VERIFY_NON_NULL_THROW_EXCEPTION(xml_ie);
+template <class T>
+static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
+{
+    for (datamodel::InternalElement sie : ie->internalelement())
+    {
+        pugi::xml_node xml_ie = xmlNode.append_child(INTERNAL_ELEMENT);
+        VERIFY_NON_NULL_THROW_EXCEPTION(xml_ie);
 
-//         xml_ie.append_attribute(NAME) = sie.name().c_str();
-//         xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = sie.refbasesystemunitpath().c_str();
+        xml_ie.append_attribute(NAME) = sie.name().c_str();
+        xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = sie.refbasesystemunitpath().c_str();
 
-//         extractProtoAttribute(xml_ie, &sie);
-//         extractProtoInternalElement(xml_ie, &sie);
+        extractProtoAttribute(xml_ie, &sie);
+        extractProtoInternalElement(xml_ie, &sie);
 
-//         if (nullptr != &sie.supportedroleclass())
-//         {
-//             if (nullptr != &sie.supportedroleclass().refroleclasspath())
-//              {
-//                 pugi::xml_node xml_src = xml_ie.append_child(SUPPORTED_ROLE_CLASS);
-//                 VERIFY_NON_NULL_THROW_EXCEPTION(xml_src);
+        if (nullptr != &sie.supportedroleclass() && 
+            nullptr != &sie.supportedroleclass().refroleclasspath())
+        {
+            pugi::xml_node xml_src = xml_ie.append_child(SUPPORTED_ROLE_CLASS);
+            VERIFY_NON_NULL_THROW_EXCEPTION(xml_src);
 
-//                 xml_src.append_attribute(REF_ROLE_CLASS_PATH) = sie.supportedroleclass().refroleclasspath().c_str();
-//             }
-//         }
-//     }
-    
-//     return;
-// }
+            xml_src.append_attribute(REF_ROLE_CLASS_PATH) = sie.supportedroleclass().refroleclasspath().c_str();
+        }
+    }
 
-// template <class T>
-// static void extractAttribute(T* attr, pugi::xml_node xmlNode)
-// {
-//     for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))
-//     {
-//         datamodel::Attribute* attr_child = attr->add_attribute();
+    return;
+}
 
-//         attr_child->set_name              (xmlAttr.attribute(NAME).value());
-//         attr_child->set_attributedatatype (xmlAttr.attribute(ATTRIBUTE_DATA_TYPE).value());
-//       //attr->set_description       (xmlAttr.child_value(DESCRIPTION)); //@TODO: required?
+template <class T>
+static void extractAttribute(T* attr, pugi::xml_node xmlNode)
+{
+    for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))
+    {
+        datamodel::Attribute* attr_child = attr->add_attribute();
 
-//         extractAttribute<datamodel::Attribute>(attr_child, xmlAttr);
+        attr_child->set_name              (xmlAttr.attribute(NAME).value());
+        attr_child->set_attributedatatype (xmlAttr.attribute(ATTRIBUTE_DATA_TYPE).value());
+      //attr->set_description       (xmlAttr.child_value(DESCRIPTION)); //@TODO: required?
 
-//         pugi::xml_node xmlValue = xmlAttr.child(VALUE);
-//         if (NULL != xmlValue)
-//         {
-//             attr_child->set_value(xmlValue.text().as_string());
-//         }
-//     }
+        extractAttribute<datamodel::Attribute>(attr_child, xmlAttr);
 
-//     return;
-// }
+        pugi::xml_node xmlValue = xmlAttr.child(VALUE);
+        if (NULL != xmlValue)
+        {
+            attr_child->set_value(xmlValue.text().as_string());
+        }
+    }
 
-// template <class T>
-// static void extractInternalElement(T* ie, pugi::xml_node xmlNode)
-// {
-//     for (pugi::xml_node xmlIe = xmlNode.child(INTERNAL_ELEMENT); xmlIe; xmlIe = xmlIe.next_sibling(INTERNAL_ELEMENT))    
-//     {
-//         datamodel::InternalElement* ie_child = ie->add_internalelement();
+    return;
+}
 
-//         ie_child->set_name                    (xmlIe.attribute(NAME).value());
-//         ie_child->set_refbasesystemunitpath   (xmlIe.attribute(REF_BASE_SYSTEM_UNIT_PATH).value());
+template <class T>
+static void extractInternalElement(T* ie, pugi::xml_node xmlNode)
+{
+    for (pugi::xml_node xmlIe = xmlNode.child(INTERNAL_ELEMENT); xmlIe; xmlIe = xmlIe.next_sibling(INTERNAL_ELEMENT))    
+    {
+        datamodel::InternalElement* ie_child = ie->add_internalelement();
+
+        ie_child->set_name                    (xmlIe.attribute(NAME).value());
+        ie_child->set_refbasesystemunitpath   (xmlIe.attribute(REF_BASE_SYSTEM_UNIT_PATH).value());
         
-//         extractAttribute<datamodel::InternalElement>(ie_child, xmlIe);
-//         extractInternalElement<datamodel::InternalElement>(ie_child, xmlIe);
+        extractAttribute<datamodel::InternalElement>(ie_child, xmlIe);
+        extractInternalElement<datamodel::InternalElement>(ie_child, xmlIe);
 
-//         pugi::xml_node xmlSrc = xmlIe.child(SUPPORTED_ROLE_CLASS);
-//         if (NULL != xmlSrc)
-//         {
-//             datamodel::SupportedRoleClass* src = new datamodel::SupportedRoleClass();
-//             src->set_refroleclasspath(xmlSrc.attribute(REF_ROLE_CLASS_PATH).value());
+        pugi::xml_node xmlSrc = xmlIe.child(SUPPORTED_ROLE_CLASS);
+        if (NULL != xmlSrc)
+        {
+            datamodel::SupportedRoleClass* src = new datamodel::SupportedRoleClass();
+            src->set_refroleclasspath(xmlSrc.attribute(REF_ROLE_CLASS_PATH).value());
 
-//             ie_child->set_allocated_supportedroleclass(src);
-//         }
-//     }
+            ie_child->set_allocated_supportedroleclass(src);
+        }
+    }
 
-//     return;
-// }
+    return;
+}

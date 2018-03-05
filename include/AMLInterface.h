@@ -13,7 +13,7 @@ typedef std::map<std::string, boost::variant<std::string, std::vector<std::strin
 
 enum class AMLValueType
 {
-    String = 0,
+    String,
     StringArray,
     AMLData
 };

@@ -62,7 +62,7 @@ message SupportedRoleClass {
 message Attribute {
 	required string Name = 1;
 	required string AttributeDataType = 2;
-	required string Value = 3;
+	optional string Value = 3;
 	repeated Attribute Attribute = 4;
 }
 
