@@ -31,11 +31,12 @@ public:
     std::vector<std::string>    getDataNames() const;
     std::string                 getDeviceId() const;
     std::string                 getTimeStamp() const;
+    std::string                 getId() const;
 
 private:
-    std::string m_deviceId;
-    std::string m_timeStamp;
-    std::string m_id;
+    const std::string m_deviceId;
+    const std::string m_timeStamp;
+    const std::string m_id;
     mutable std::map<std::string, AMLData> m_amlDatas;
 };
 

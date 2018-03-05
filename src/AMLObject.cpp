@@ -7,17 +7,18 @@
 
 using namespace std;
 
+/*
+ * "id" is automatically created using "deviceId" and "timeStamp".
+ * e.g.) "deviceId" : "Robot", "timeStamp" : "001" -> "id" : "Robot_001"
+ */
 AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp)
+ : m_deviceId(deviceId), m_timeStamp(timeStamp), m_id(deviceId + "_" + timeStamp)
 {
-    std::string id = deviceId + "_" + timeStamp; // @TODO: just like this?
-    AMLObject(deviceId, timeStamp, id);
 }
 
 AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id)
+ : m_deviceId(deviceId), m_timeStamp(timeStamp), m_id(id)
 {
-    m_deviceId = deviceId;
-    m_timeStamp = timeStamp;
-    m_id = id;
 }
 
 AMLObject::~AMLObject(void)
@@ -26,8 +27,6 @@ AMLObject::~AMLObject(void)
 
 void AMLObject::addData(const std::string& name, const AMLData& data)
 {
-    //m_amlDatas.insert( map<string, AMLData>::value_type(name, data) ); // This will be removed after verifying the below works fine.
-
     // Try to insert a new element into the map and if the key already exists, throw an exeption.
     if (!m_amlDatas.insert(make_pair(name, data)).second)
     {
@@ -66,4 +65,9 @@ std::string AMLObject::getDeviceId() const
 std::string AMLObject::getTimeStamp() const
 {
     return m_timeStamp;
+}
+
+std::string AMLObject::getId() const
+{
+    return m_id;
 }

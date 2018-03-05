@@ -6,273 +6,146 @@
 
 using namespace std;
 
-datamodel::Event createSampleEvent()
+// helper methods
+void printAMLData(AMLData amlData, int depth)
 {
-    datamodel::Event event;
-    event.set_device("Robot1");
-    event.set_created(10);
-    event.set_modified(20);
-    event.set_id("id");
-    event.set_pushed(10);
-    event.set_origin(20);
+    string indent;
+    for (int i = 0; i < depth; i++) indent += "    ";
 
-    datamodel::Reading *reading1 = event.add_reading();
-    reading1->set_name("Robot_Model");
-    reading1->set_value("SR-P7-R970");
-    reading1->set_created(25);
-    reading1->set_device("Robot1");
-    reading1->set_modified(20);
-    reading1->set_id("id1");
-    reading1->set_origin(25);
-    reading1->set_pushed(1);
+    cout << indent << "{" << endl;
 
-    datamodel::Reading *reading2 = event.add_reading();
-    reading2->set_name("Robot_SW_Version");
-    reading2->set_value("0.0.1");
-    reading2->set_created(30);
-    reading2->set_device("Robot1");
-    reading2->set_modified(20);
-    reading2->set_id("id2");
-    reading2->set_origin(25);
-    reading2->set_pushed(1);
-
-    datamodel::Reading *reading3 = event.add_reading();
-    reading3->set_name("Robot_Servo_Status");
-    reading3->set_value("5");
-    reading3->set_created(30);
-    reading3->set_device("Robot1");
-    reading3->set_modified(20);
-    reading3->set_id("id3");
-    reading3->set_origin(25);
-    reading3->set_pushed(1);
-
-    datamodel::Reading *reading4 = event.add_reading();
-    reading4->set_name("Robot_Log");
-    reading4->set_value("[2,Reconfigure Request]");
-    reading4->set_created(30);
-    reading4->set_device("Robot1");
-    reading4->set_modified(20);
-    reading4->set_id("id4");
-    reading4->set_origin(25);
-    reading4->set_pushed(1);
-
-    return event;
-}
-
-void printEvent(datamodel::Event* event)
-{
-    cout << "  Event" << endl;
-    cout << "Event device : " << event->device() << endl;
-    cout << "Event pushed : " << event->pushed() << endl;
-    cout << "Event id : " << event->id() << endl;
-    cout << "Event created : " << event->created() << endl;
-    cout << "Event modified : " << event->modified() << endl;
-    cout << "Event origin : " << event->origin() << endl;
-
-    for (int i = 0, size = event->reading_size(); i < size; i++)
+    vector<string> keys = amlData.getKeys();
+    for (string key : keys)
     {
-        datamodel::Reading reading = event->reading(i);
-        cout << "  Data" << endl;
-        cout << "Data device : " << reading.device() << endl;
-        cout << "Data pushed : " << reading.pushed() << endl;
-        cout << "Data name : " << reading.name() << endl;
-        cout << "Data value : " << reading.value() << endl;
-        cout << "Data id : " << reading.id() << endl;
-        cout << "Data created : " << reading.created() << endl;
-        cout << "Data modified : " << reading.modified() << endl;
-        cout << "Data origin : " << reading.origin() << endl;
+        cout << indent << "    \"" << key << "\" : ";
+
+        AMLValueType type = amlData.getValueType(key);
+        if (AMLValueType::String == type)
+        {
+            string valStr = amlData.getValueToStr(key);
+            cout << valStr;
+        }
+        else if (AMLValueType::StringArray == type)
+        {
+            vector<string> valStrArr = amlData.getValueToStrArr(key);
+            cout << "[";
+            for (string val : valStrArr)
+            {
+                cout << val;
+                if (val != valStrArr.back()) cout << ", ";
+            }
+            cout << "]";
+        }
+        else if (AMLValueType::AMLData == type)
+        {
+            AMLData valAMLData = amlData.getValueToAMLData(key);
+            cout << endl;
+            printAMLData(valAMLData, depth + 1);
+        }
+
+        if (key != keys.back()) cout << ",";
+        cout << endl;
     }
+    cout << indent << "}";
 }
 
-bool isSameEvent(datamodel::Event* event1, datamodel::Event* event2)
+void printAMLObject(AMLObject amlObj)
 {
-    if (!event1 || !event2)                       return false;
+    cout << "{" << endl;
+    cout << "    \"device\" : " << amlObj.getDeviceId() << "," << endl;
+    cout << "    \"timestamp\" : " << amlObj.getTimeStamp() << "," << endl;
+    cout << "    \"id\" : " << amlObj.getId() << "," << endl;
 
-    if (event1->device() != event2->device())     return false;
-    if (event1->pushed() != event2->pushed())     return false;
-    if (event1->id() != event2->id())             return false;
-    if (event1->created() != event2->created())   return false;
-    if (event1->modified() != event2->modified()) return false;
-    if (event1->origin() != event2->origin())     return false;
-    
-    int size1 = event1->reading_size();
-    int size2 = event2->reading_size();
-    if (size1 != size2) return false;
+    vector<string> dataNames = amlObj.getDataNames();
 
-    for (int i = 0; i < size1; i++)
+    for (string n : dataNames)
     {
-        datamodel::Reading reading1 = event1->reading(i);
-        datamodel::Reading reading2 = event2->reading(i);
+        AMLData data = amlObj.getData(n);
 
-        if (reading1.device() != reading2.device())     return false;
-        if (reading1.pushed() != reading2.pushed())     return false;
-        if (reading1.name() != reading2.name())         return false;
-        if (reading1.value() != reading2.value())       return false;
-        if (reading1.id() != reading2.id())             return false;
-        if (reading1.created() != reading2.created())   return false;
-        if (reading1.modified() != reading2.modified()) return false;
-        if (reading1.origin() != reading2.origin())     return false;
+        cout << "    \"" << n << "\" : " << endl;
+        printAMLData(data, 1);
+        if (n != dataNames.back()) cout << "," << endl;
     }
-    
-    return true;
+
+    cout << "\n}" << endl;
 }
+
+/*
+    Raw Data1 (name : "Model")
+    {
+        "ctname": "Model_107.113.97.248",
+        "con": "SR-P7-970"
+    }
+
+    Raw Data2 (name : "Sample")
+    {
+        "info": {
+            "id": "f437da3b",
+            "axis": {
+                "x": "20",
+                "y": "110"
+                "z": "80"
+            }
+        },
+        "appendix": [
+            "935",
+            "52303",
+            "1442"
+        ]
+    }
+*/
 
 int main() {
-    datamodel::Event sample_event = createSampleEvent();
-    
-    printEvent(&sample_event);
-    cout << "-------------------------------------------------------------" << endl;
-
+    // construct Representation object
     Representation* rep = new Representation("data_modeling.aml");
 
-    // convert 'Event' to 'AML string'
-    string aml_string = rep->EventToAml(&sample_event);
+
+    // create AMLObject
+    string deviceId = "GTC001";
+    string timeStamp = "123456789";
+
+    AMLObject amlObj(deviceId, timeStamp);
+
+
+    // create "Model" data
+    AMLData model;
+    model.setValue("ctname", "Model_107.113.97.248");
+    model.setValue("con", "SR-P7-970");
+
+    // create "Sample" data
+    AMLData axis;
+    axis.setValue("x", "20");
+    axis.setValue("y", "110");
+    axis.setValue("z", "80");
+
+    AMLData info;
+    info.setValue("id", "f437da3b");
+    info.setValue("axis", axis);
+
+    vector<string> appendix;
+    appendix.push_back("935");
+    appendix.push_back("52303");
+    appendix.push_back("1442");
+
+    AMLData sample;
+    sample.setValue("info", info);
+    sample.setValue("appendix", appendix);
+
+
+    // Add Datas to AMLObject
+    amlObj.addData("Model", model);
+    amlObj.addData("Sample", sample);
+
+
+    // Convert AMLObject to AMLstring(XML)
+    string aml_string = rep->DataToAml(&amlObj);
     cout << aml_string << endl;
     cout << "-------------------------------------------------------------" << endl;
 
-    // convert 'AML string' to 'Event'
-    datamodel::Event* event_from_aml = rep->AmlToEvent(aml_string);
-    bool result = isSameEvent(&sample_event, event_from_aml);
-    cout << "sample_event == event_from_aml : " << (result?"TRUE":"FALSE") << endl;
-    cout << "-------------------------------------------------------------" << endl;
-    delete event_from_aml;
-
-    // convert 'Event' to 'Byte(Binary) string'
-    string byte_string = rep->EventToByte(&sample_event);
-    cout << byte_string << endl;
+    // Convert AMLstring(XML) to AMLObject
+    AMLObject* data_from_aml = rep->AmlToData(aml_string);
+    printAMLObject(*data_from_aml);
     cout << "-------------------------------------------------------------" << endl;
 
-    // convert 'Byte(Binary) string' to 'Event'
-    datamodel::Event* event_from_byte = rep->ByteToEvent(byte_string);
-    result = isSameEvent(&sample_event, event_from_byte);
-    cout << "sample_event == event_from_byte : " << (result?"TRUE":"FALSE") << endl;
-    cout << "-------------------------------------------------------------" << endl;
-    delete event_from_byte;
-
-    delete rep;
-
-    return 0;
+    delete data_from_aml;
 }
-
-
-/*
-void toProtoAtt(datamodel::Attribute *protoatt, Attribute *att) {
-    protoatt->set_name(att->getName());
-    protoatt->set_attributedatatype(att->getAttributeDataType());
-    protoatt->set_value(att->getValue());
-
-    
-    for(Attribute *satt: att->getAttribute()) {
-        datamodel::Attribute *subprotoatt = protoatt->add_attribute();
-        toProtoAtt(subprotoatt, satt);
-    }
-
-    return;
-}
-
-void toProtoIe(datamodel::InternalElement *protoie, InternalElement *ie){
-    protoie->set_name(ie->getName());
-    protoie->set_refbasesystemunitpath(ie->getRefBaseSystemUnitPath());
-    
-    datamodel::SupportedRoleClass *src;
-    src->set_refroleclasspath(ie->getSupportedRoleClass()->getRefRoleClassPath());
-    protoie->set_allocated_supportedroleclass(src);
-    
-    for(InternalElement *subie: ie->getInternalElement()) {
-        datamodel::InternalElement *subprotoie = protoie->add_internalelement();
-        toProtoIe(subprotoie, subie);
-    }   
-
-    for(Attribute *att: ie->getAttribute()) {
-        datamodel::Attribute *protoatt = protoie->add_attribute();
-        toProtoAtt(protoatt, att);
-    }
-
-    return;
-}
-
-std::string toProtoBuf(InstanceHierarchy* ih) {
-    if(ih == nullptr) {
-        cout << ("ih == nullptr") << endl;
-        return nullptr;
-    }
-
-    datamodel::InstanceHierarchy protoih;
-    
-    protoih.set_name(ih->getName());
-    protoih.set_version(ih->getVersion());
-
-    for(InternalElement *ie: ih->getInternalElement()) {
-        datamodel::InternalElement *protoie = protoih.add_internalelement();
-        toProtoIe(protoie, ie);
-    }
-
-    if(&protoih == nullptr) {
-        return nullptr;
-    }
-    
-    std::string ret;
-    bool chk = protoih.SerializeToString(&ret);
-    
-    if(chk == false) {
-        cout << "serialize err" << endl;
-    }
-    
-    return ret;
-}   
-
-Attribute* toAMLAtt(datamodel::Attribute *protoatt) {
-    Attribute* att = new Attribute();
-    att->setName(protoatt->name());
-    att->setAttributeDataType(protoatt->attributedatatype());
-    att->setValue(protoatt->value());
-
-    for(datamodel::Attribute subprotoatt: protoatt->attribute()) {
-        Attribute *subatt = toAMLAtt(&subprotoatt);
-        att->getAttribute().push_back(subatt);
-    }
-
-    return att;
-}
-
-InternalElement* toAMLIe(datamodel::InternalElement *protoie) {
-    InternalElement* ie = new InternalElement();
-    ie->setName(protoie->name());
-    ie->setRefBaseSystemUnitPath(protoie->refbasesystemunitpath());
-
-    SupportedRoleClass *src = new SupportedRoleClass();
-    src->setRefRoleClassPath(protoie->supportedroleclass().refroleclasspath());
-
-    for(datamodel::InternalElement subprotoie: protoie->internalelement()) {
-        InternalElement *subie = toAMLIe(&subprotoie);
-        ie->getInternalElement().push_back(subie);
-    }
-
-    for(datamodel::Attribute protoatt: protoie->attribute()) {
-        Attribute *att = toAMLAtt(&protoatt);
-        ie->getAttribute().push_back(att);
-    }
-
-    return ie;
-}
-
-AMLObject* toAMLObj(std::string str) {
-    datamodel::InstanceHierarchy protoih;
-    protoih.ParseFromString(str);
-
-    AMLObject* ret = new AMLObject();
-
-    InstanceHierarchy* ih = new InstanceHierarchy();
-    ih->setName(protoih.name());
-    ih->setVersion(protoih.version());
-
-    for(datamodel::InternalElement protoie: protoih.internalelement()) {
-        InternalElement* ie = toAMLIe(&protoie);
-        ih->getInternalElement().push_back(ie);
-    }
-
-    ret->setInstanceHierarchy(ih);
-
-    return ret;
-}
-*/
