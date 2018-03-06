@@ -4,7 +4,12 @@
 #include <stdexcept>
 #include <string>
 
-typedef enum 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+typedef enum
 {
     AML_RESULT_OK = 0,
 
@@ -67,5 +72,9 @@ class AMLException : public std::runtime_error
     private:
         AMLResult m_reason;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AML_EXCEPTION_H_

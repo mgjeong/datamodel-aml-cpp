@@ -43,6 +43,9 @@ extern InstanceHierarchyDefaultTypeInternal _InstanceHierarchy_default_instance_
 class InternalElement;
 class InternalElementDefaultTypeInternal;
 extern InternalElementDefaultTypeInternal _InternalElement_default_instance_;
+class RefSemantic;
+class RefSemanticDefaultTypeInternal;
+extern RefSemanticDefaultTypeInternal _RefSemantic_default_instance_;
 class RoleClass;
 class RoleClassDefaultTypeInternal;
 extern RoleClassDefaultTypeInternal _RoleClass_default_instance_;
@@ -1349,6 +1352,122 @@ class SupportedRoleClass : public ::google::protobuf::Message /* @@protoc_insert
 };
 // -------------------------------------------------------------------
 
+class RefSemantic : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:datamodel.RefSemantic) */ {
+ public:
+  RefSemantic();
+  virtual ~RefSemantic();
+
+  RefSemantic(const RefSemantic& from);
+
+  inline RefSemantic& operator=(const RefSemantic& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  RefSemantic(RefSemantic&& from) noexcept
+    : RefSemantic() {
+    *this = ::std::move(from);
+  }
+
+  inline RefSemantic& operator=(RefSemantic&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RefSemantic& default_instance();
+
+  static inline const RefSemantic* internal_default_instance() {
+    return reinterpret_cast<const RefSemantic*>(
+               &_RefSemantic_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    8;
+
+  void Swap(RefSemantic* other);
+  friend void swap(RefSemantic& a, RefSemantic& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline RefSemantic* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  RefSemantic* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const RefSemantic& from);
+  void MergeFrom(const RefSemantic& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(RefSemantic* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string CorrespondingAttributePath = 1;
+  bool has_correspondingattributepath() const;
+  void clear_correspondingattributepath();
+  static const int kCorrespondingAttributePathFieldNumber = 1;
+  const ::std::string& correspondingattributepath() const;
+  void set_correspondingattributepath(const ::std::string& value);
+  #if LANG_CXX11
+  void set_correspondingattributepath(::std::string&& value);
+  #endif
+  void set_correspondingattributepath(const char* value);
+  void set_correspondingattributepath(const char* value, size_t size);
+  ::std::string* mutable_correspondingattributepath();
+  ::std::string* release_correspondingattributepath();
+  void set_allocated_correspondingattributepath(::std::string* correspondingattributepath);
+
+  // @@protoc_insertion_point(class_scope:datamodel.RefSemantic)
+ private:
+  void set_has_correspondingattributepath();
+  void clear_has_correspondingattributepath();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable int _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr correspondingattributepath_;
+  friend struct protobuf_AML_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:datamodel.Attribute) */ {
  public:
   Attribute();
@@ -1390,7 +1509,7 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
                &_Attribute_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    8;
+    9;
 
   void Swap(Attribute* other);
   friend void swap(Attribute& a, Attribute& b) {
@@ -1437,10 +1556,10 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
 
   // accessors -------------------------------------------------------
 
-  // repeated .datamodel.Attribute Attribute = 4;
+  // repeated .datamodel.Attribute Attribute = 5;
   int attribute_size() const;
   void clear_attribute();
-  static const int kAttributeFieldNumber = 4;
+  static const int kAttributeFieldNumber = 5;
   const ::datamodel::Attribute& attribute(int index) const;
   ::datamodel::Attribute* mutable_attribute(int index);
   ::datamodel::Attribute* add_attribute();
@@ -1494,6 +1613,15 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::std::string* release_value();
   void set_allocated_value(::std::string* value);
 
+  // optional .datamodel.RefSemantic RefSemantic = 4;
+  bool has_refsemantic() const;
+  void clear_refsemantic();
+  static const int kRefSemanticFieldNumber = 4;
+  const ::datamodel::RefSemantic& refsemantic() const;
+  ::datamodel::RefSemantic* mutable_refsemantic();
+  ::datamodel::RefSemantic* release_refsemantic();
+  void set_allocated_refsemantic(::datamodel::RefSemantic* refsemantic);
+
   // @@protoc_insertion_point(class_scope:datamodel.Attribute)
  private:
   void set_has_name();
@@ -1502,6 +1630,8 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
   void clear_has_attributedatatype();
   void set_has_value();
   void clear_has_value();
+  void set_has_refsemantic();
+  void clear_has_refsemantic();
 
   // helper for ByteSizeLong()
   size_t RequiredFieldsByteSizeFallback() const;
@@ -1513,6 +1643,7 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::internal::ArenaStringPtr attributedatatype_;
   ::google::protobuf::internal::ArenaStringPtr value_;
+  ::datamodel::RefSemantic* refsemantic_;
   friend struct protobuf_AML_2eproto::TableStruct;
 };
 // ===================================================================
@@ -3116,6 +3247,73 @@ inline void SupportedRoleClass::set_allocated_refroleclasspath(::std::string* re
 
 // -------------------------------------------------------------------
 
+// RefSemantic
+
+// required string CorrespondingAttributePath = 1;
+inline bool RefSemantic::has_correspondingattributepath() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void RefSemantic::set_has_correspondingattributepath() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void RefSemantic::clear_has_correspondingattributepath() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void RefSemantic::clear_correspondingattributepath() {
+  correspondingattributepath_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_correspondingattributepath();
+}
+inline const ::std::string& RefSemantic::correspondingattributepath() const {
+  // @@protoc_insertion_point(field_get:datamodel.RefSemantic.CorrespondingAttributePath)
+  return correspondingattributepath_.GetNoArena();
+}
+inline void RefSemantic::set_correspondingattributepath(const ::std::string& value) {
+  set_has_correspondingattributepath();
+  correspondingattributepath_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:datamodel.RefSemantic.CorrespondingAttributePath)
+}
+#if LANG_CXX11
+inline void RefSemantic::set_correspondingattributepath(::std::string&& value) {
+  set_has_correspondingattributepath();
+  correspondingattributepath_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:datamodel.RefSemantic.CorrespondingAttributePath)
+}
+#endif
+inline void RefSemantic::set_correspondingattributepath(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_correspondingattributepath();
+  correspondingattributepath_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:datamodel.RefSemantic.CorrespondingAttributePath)
+}
+inline void RefSemantic::set_correspondingattributepath(const char* value, size_t size) {
+  set_has_correspondingattributepath();
+  correspondingattributepath_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:datamodel.RefSemantic.CorrespondingAttributePath)
+}
+inline ::std::string* RefSemantic::mutable_correspondingattributepath() {
+  set_has_correspondingattributepath();
+  // @@protoc_insertion_point(field_mutable:datamodel.RefSemantic.CorrespondingAttributePath)
+  return correspondingattributepath_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* RefSemantic::release_correspondingattributepath() {
+  // @@protoc_insertion_point(field_release:datamodel.RefSemantic.CorrespondingAttributePath)
+  clear_has_correspondingattributepath();
+  return correspondingattributepath_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void RefSemantic::set_allocated_correspondingattributepath(::std::string* correspondingattributepath) {
+  if (correspondingattributepath != NULL) {
+    set_has_correspondingattributepath();
+  } else {
+    clear_has_correspondingattributepath();
+  }
+  correspondingattributepath_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), correspondingattributepath);
+  // @@protoc_insertion_point(field_set_allocated:datamodel.RefSemantic.CorrespondingAttributePath)
+}
+
+// -------------------------------------------------------------------
+
 // Attribute
 
 // required string Name = 1;
@@ -3307,7 +3505,53 @@ inline void Attribute::set_allocated_value(::std::string* value) {
   // @@protoc_insertion_point(field_set_allocated:datamodel.Attribute.Value)
 }
 
-// repeated .datamodel.Attribute Attribute = 4;
+// optional .datamodel.RefSemantic RefSemantic = 4;
+inline bool Attribute::has_refsemantic() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Attribute::set_has_refsemantic() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Attribute::clear_has_refsemantic() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Attribute::clear_refsemantic() {
+  if (refsemantic_ != NULL) refsemantic_->::datamodel::RefSemantic::Clear();
+  clear_has_refsemantic();
+}
+inline const ::datamodel::RefSemantic& Attribute::refsemantic() const {
+  const ::datamodel::RefSemantic* p = refsemantic_;
+  // @@protoc_insertion_point(field_get:datamodel.Attribute.RefSemantic)
+  return p != NULL ? *p : *reinterpret_cast<const ::datamodel::RefSemantic*>(
+      &::datamodel::_RefSemantic_default_instance_);
+}
+inline ::datamodel::RefSemantic* Attribute::mutable_refsemantic() {
+  set_has_refsemantic();
+  if (refsemantic_ == NULL) {
+    refsemantic_ = new ::datamodel::RefSemantic;
+  }
+  // @@protoc_insertion_point(field_mutable:datamodel.Attribute.RefSemantic)
+  return refsemantic_;
+}
+inline ::datamodel::RefSemantic* Attribute::release_refsemantic() {
+  // @@protoc_insertion_point(field_release:datamodel.Attribute.RefSemantic)
+  clear_has_refsemantic();
+  ::datamodel::RefSemantic* temp = refsemantic_;
+  refsemantic_ = NULL;
+  return temp;
+}
+inline void Attribute::set_allocated_refsemantic(::datamodel::RefSemantic* refsemantic) {
+  delete refsemantic_;
+  refsemantic_ = refsemantic;
+  if (refsemantic) {
+    set_has_refsemantic();
+  } else {
+    clear_has_refsemantic();
+  }
+  // @@protoc_insertion_point(field_set_allocated:datamodel.Attribute.RefSemantic)
+}
+
+// repeated .datamodel.Attribute Attribute = 5;
 inline int Attribute::attribute_size() const {
   return attribute_.size();
 }
@@ -3341,6 +3585,8 @@ Attribute::attribute() const {
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

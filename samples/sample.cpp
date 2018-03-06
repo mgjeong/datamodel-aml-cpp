@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-
+#include <fstream>
 #include "Representation.h"
 #include "AMLInterface.h"
 #include "AMLException.h"
@@ -160,6 +160,10 @@ int main() {
         printAMLObject(*data_from_byte);
         cout << "-------------------------------------------------------------" << endl;
 
+    std::ofstream out("output.txt");
+    out << byte_string;
+    out.close();
+    
         delete data_from_aml;
         delete data_from_byte;
     }

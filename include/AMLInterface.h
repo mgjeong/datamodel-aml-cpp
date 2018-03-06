@@ -7,6 +7,11 @@
 
 #include <boost/variant.hpp>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 class AMLData;
 
 typedef std::map<std::string, boost::variant<std::string, std::vector<std::string>, AMLData>> AMLMap;
@@ -59,5 +64,9 @@ public:
 private:
     AMLMap m_values;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AML_INTERFACE_H_

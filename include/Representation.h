@@ -5,6 +5,11 @@
 
 #include "AMLInterface.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 class Representation
 {
 public:
@@ -21,5 +26,9 @@ private:
     class AMLModel;
     AMLModel* m_amlModel;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // REPRESENTAITON_H_

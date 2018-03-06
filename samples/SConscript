@@ -43,6 +43,6 @@ aml_sample_env.AppendUnique(LIBS=['aml', 'protobuf'])
 ####################################################################
 # Source files and Targets
 ######################################################################
-amlsample = aml_sample_env.Program('sample', ['sample.cpp', '../protobuf/Event.pb.o'])
+amlsample = aml_sample_env.Program('sample', ['sample.cpp'])
 
 Command("data_modeling.aml", File("data_modeling.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
