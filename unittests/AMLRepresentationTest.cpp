@@ -23,48 +23,57 @@
 #include "AMLException.h"
 #include "gtest/gtest.h"
 
+using namespace std;
+
 namespace AMLRepresentationTest
 {
     std::string amlModelFile                = "./TEST_DataModel.aml";
     std::string amlModelFile_invalid_NoCAEX = "./TEST_DataModel_Invalid_NoCAEX.aml";
-    std::string amlModelFile_invalid_NoRCL  = "./TEST_DataModel_Invalid_NoRCL.aml";
     std::string amlModelFile_invalid_NoSUCL = "./TEST_DataModel_Invalid_NoSUCL.aml";
     std::string amlDataFile                 = "./TEST_Data.aml";
     std::string dataBinaryFile              = "./TEST_DataBinary";
 
     // Helper method
-    // datamodel::Event TestEvent()
-    // {
-    //     datamodel::Event event;
-    //     event.set_device("Robot1");
-    //     event.set_created(10);
-    //     event.set_modified(20);
-    //     event.set_id("id");
-    //     event.set_pushed(30);
-    //     event.set_origin(40);
+    AMLObject TestAMLObject()
+    {
+        // create AMLObject
+        string deviceId = "GTC001";
+        string timeStamp = "123456789";
 
-    //     datamodel::Reading *reading1 = event.add_reading();
-    //     reading1->set_name("Robot_Model");
-    //     reading1->set_value("SR-P7-R970");
-    //     reading1->set_created(50);
-    //     reading1->set_device("Robot1");
-    //     reading1->set_modified(51);
-    //     reading1->set_id("id1");
-    //     reading1->set_origin(52);
-    //     reading1->set_pushed(53);
+        AMLObject amlObj(deviceId, timeStamp);
 
-    //     datamodel::Reading *reading2 = event.add_reading();
-    //     reading2->set_name("Robot_SW_Version");
-    //     reading2->set_value("0.0.1");
-    //     reading2->set_created(61);
-    //     reading2->set_device("Robot1");
-    //     reading2->set_modified(62);
-    //     reading2->set_id("id2");
-    //     reading2->set_origin(63);
-    //     reading2->set_pushed(64);
 
-    //     return event;
-    // }
+        // create "Model" data
+        AMLData model;
+        model.setValue("ctname", "Model_107.113.97.248");
+        model.setValue("con", "SR-P7-970");
+
+        // create "Sample" data
+        AMLData axis;
+        axis.setValue("x", "20");
+        axis.setValue("y", "110");
+        axis.setValue("z", "80");
+
+        AMLData info;
+        info.setValue("id", "f437da3b");
+        info.setValue("axis", axis);
+
+        vector<string> appendix;
+        appendix.push_back("52303");
+        appendix.push_back("935");
+        appendix.push_back("1442");
+
+        AMLData sample;
+        sample.setValue("info", info);
+        sample.setValue("appendix", appendix);
+
+
+        // Add Datas to AMLObject
+        amlObj.addData("Model", model);
+        amlObj.addData("Sample", sample);
+
+        return amlObj;
+    }
 
     std::string TestAML()
     {
@@ -80,45 +89,79 @@ namespace AMLRepresentationTest
         return str;
     }
 
-    // bool isEqual(datamodel::Event* event1, datamodel::Event* event2)
-    // {
-    //     if (!event1 || !event2)                       return false;
+    bool isEqual(vector<string>& vecStr1, vector<string>& vecStr2)
+    {
+        if (vecStr1.size() != vecStr2.size())     return false;
+        if (false == std::equal(vecStr1.begin(), vecStr1.end(), vecStr2.begin())) return false;
 
-    //     if (event1->device() != event2->device())     return false;
-    //     if (event1->pushed() != event2->pushed())     return false;
-    //     if (event1->id() != event2->id())             return false;
-    //     if (event1->created() != event2->created())   return false;
-    //     if (event1->modified() != event2->modified()) return false;
-    //     if (event1->origin() != event2->origin())     return false;
-        
-    //     int size1 = event1->reading_size();
-    //     int size2 = event2->reading_size();
-    //     if (size1 != size2) return false;
+        return true;
+    }
 
-    //     for (int i = 0; i < size1; i++)
-    //     {
-    //         datamodel::Reading reading1 = event1->reading(i);
-    //         datamodel::Reading reading2 = event2->reading(i);
+    bool isEqual(AMLData& data1, AMLData& data2)
+    {
+        vector<string> keys1 = data1.getKeys();
+        vector<string> keys2 = data2.getKeys();
 
-    //         if (reading1.device() != reading2.device())     return false;
-    //         if (reading1.pushed() != reading2.pushed())     return false;
-    //         if (reading1.name() != reading2.name())         return false;
-    //         if (reading1.value() != reading2.value())       return false;
-    //         if (reading1.id() != reading2.id())             return false;
-    //         if (reading1.created() != reading2.created())   return false;
-    //         if (reading1.modified() != reading2.modified()) return false;
-    //         if (reading1.origin() != reading2.origin())     return false;
-    //     }
-        
-    //     return true;
-    // }
+        if (false == isEqual(keys1, keys2)) return false;
+
+        for (string key : keys1)
+        {
+            AMLValueType type1 = data1.getValueType(key);
+            AMLValueType type2 = data2.getValueType(key);
+            if (type1 != type2)     return false;
+
+            if (AMLValueType::String == type1)
+            {
+                string valStr1 = data1.getValueToStr(key);
+                string valStr2 = data2.getValueToStr(key);
+                if (valStr1 != valStr2) return false;
+            }
+            else if (AMLValueType::StringArray == type1)
+            {
+                vector<string> valStrArr1 = data1.getValueToStrArr(key);
+                vector<string> valStrArr2 = data2.getValueToStrArr(key);
+
+                if (false == isEqual(valStrArr1, valStrArr2)) return false;
+            }
+            else if (AMLValueType::AMLData == type1)
+            {
+                AMLData valAMLData1 = data1.getValueToAMLData(key);
+                AMLData valAMLData2 = data2.getValueToAMLData(key);
+                
+                if (false == isEqual(valAMLData1, valAMLData2)) return false;
+            }
+        }
+        return true;
+    }
+
+    bool isEqual(AMLObject& obj1, AMLObject& obj2)
+    {
+        if (obj1.getDeviceId() != obj2.getDeviceId())   return false;
+        if (obj1.getTimeStamp() != obj2.getTimeStamp()) return false;
+        if (obj1.getId() != obj2.getId())               return false;
+
+        vector<string> dataNames1 = obj1.getDataNames();
+        vector<string> dataNames2 = obj2.getDataNames();
+
+        if (false == isEqual(dataNames1, dataNames2))   return false;
+
+        for (string n : dataNames1)
+        {
+            AMLData data1 = obj1.getData(n);
+            AMLData data2 = obj2.getData(n); // If obj2 does not have n??? -> return false
+
+            if (false == isEqual(data1, data2))         return false;
+        }
+
+        return true;
+    }
 
     // Test
     TEST(ConstructRepresentationTest, ValidAML)
     {
         EXPECT_NO_THROW(Representation rep = Representation(amlModelFile));
     }
-/*
+
     TEST(ConstructRepresentationTest, InvalidFilePath)
     {
         EXPECT_THROW(Representation rep = Representation("NoExist.aml"), AMLException);
@@ -129,103 +172,78 @@ namespace AMLRepresentationTest
         EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoCAEX), AMLException);
     }
 
-    TEST(ConstructRepresentationTest, AMLwithoutRCL)
-    {
-        EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoRCL), AMLException);
-    }
-
     TEST(ConstructRepresentationTest, AMLwithoutSUCL)
     {
         EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoSUCL), AMLException);
     }
 
-    TEST(AmlToEventTest, ConvertValid)
+    TEST(AmlToDataTest, ConvertValid)
     {
         Representation rep = Representation(amlModelFile);
-        datamodel::Event* event = NULL;
+        AMLObject* amlObj = NULL;
         std::string amlStr = TestAML();
-        EXPECT_NO_THROW(event = rep.AmlToEvent(amlStr));
+        EXPECT_NO_THROW(amlObj = rep.AmlToData(amlStr));
 
-        datamodel::Event varify = TestEvent();
-        EXPECT_TRUE(isEqual(event, &varify));
+        AMLObject varify = TestAMLObject();
+        EXPECT_TRUE(isEqual(*amlObj, varify));
 
-        if (NULL != event)  delete event;
+        if (NULL != amlObj) delete amlObj;
     }
 
-    TEST(AmlToEventTest, InvalidAml)
+    TEST(AmlToDataTest, InvalidAml)
     {
         Representation rep = Representation(amlModelFile);
-        datamodel::Event* event = NULL;
+        AMLObject* amlObj = NULL;
         std::string invalidAmlStr("<invalid />");
 
-        EXPECT_THROW(event = rep.AmlToEvent(invalidAmlStr), AMLException);
+        EXPECT_THROW(amlObj = rep.AmlToData(invalidAmlStr), AMLException);
 
-        if (NULL != event)  delete event;
+        if (NULL != amlObj)  delete amlObj;
     }
 
-    TEST(EventToAmlTest, ConvertValid)
+//     TEST(DataToAmlTest, ConvertValid)
+//     {
+//         Representation rep = Representation(amlModelFile);
+//         AMLObject amlObj = TestAMLObject();
+//         std::string amlStr;
+//         EXPECT_NO_THROW(amlStr = rep.DataToAml(amlObj));
+
+//         std::string varify = TestAML();
+//         EXPECT_EQ(varify.compare(amlStr), 0); //@TODO: issue - it does not return 0 though they are same string 
+//     }
+
+    TEST(ByteToDataTest, ConvertValid)
     {
         Representation rep = Representation(amlModelFile);
-        datamodel::Event event = TestEvent();
-        std::string amlStr;
-        EXPECT_NO_THROW(amlStr = rep.EventToAml(&event));
-
-        std::string varify = TestAML();
-        EXPECT_EQ(varify.compare(amlStr), 0);
-    }
-
-    TEST(EventToAmlTest, NullParam)
-    {
-        Representation rep = Representation(amlModelFile);
-        std::string amlStr;
-        EXPECT_THROW(amlStr = rep.EventToAml(nullptr), AMLException);
-    }
-
-    //@TODO: Is this needed? If it is, what could be 'invalid event'?
-    //TEST(EventToAmlTest, InvalidEvent) {}
-
-    TEST(ByteToEventTest, ConvertValid)
-    {
-        Representation rep = Representation(amlModelFile);
-        datamodel::Event* event = NULL;
+        AMLObject* amlObj = NULL;
         std::string binary = TestBinary();
-        EXPECT_NO_THROW(event = rep.ByteToEvent(binary));
+        EXPECT_NO_THROW(amlObj = rep.ByteToData(binary));
 
-        datamodel::Event varify = TestEvent();
-        EXPECT_TRUE(isEqual(event, &varify));
+        AMLObject varify = TestAMLObject();
+        EXPECT_TRUE(isEqual(*amlObj, varify));
 
-        if (NULL != event)  delete event;
+        if (NULL != amlObj)  delete amlObj;
     }
 
-    TEST(ByteToEventTest, InvalidByte)
+    TEST(ByteToDataTest, InvalidByte)
     {
         Representation rep = Representation(amlModelFile);
-        datamodel::Event* event = NULL;
+        AMLObject* amlObj = NULL;
         std::string amlBinary("invalidBinary");
         
-        EXPECT_THROW(event = rep.ByteToEvent(amlBinary), AMLException);
+        EXPECT_THROW(amlObj = rep.ByteToData(amlBinary), AMLException);
 
-        if (NULL != event)  delete event;
+        if (NULL != amlObj)  delete amlObj;
     }
 
-    TEST(EventToByteTest, ConvertValid)
+    TEST(DataToByteTest, ConvertValid)
     {
         Representation rep = Representation(amlModelFile);
-        datamodel::Event event = TestEvent();
+        AMLObject amlObj = TestAMLObject();
         std::string amlBinary;
-        EXPECT_NO_THROW(amlBinary = rep.EventToByte(&event));
+        EXPECT_NO_THROW(amlBinary = rep.DataToByte(amlObj));
 
         std::string varify = TestBinary();
         EXPECT_EQ(varify.compare(amlBinary), 0);
     }
-
-    TEST(EventToByteTest, NullParam)
-    {
-        Representation rep = Representation(amlModelFile);
-        std::string byteStr;
-        EXPECT_THROW(byteStr = rep.EventToByte(nullptr), AMLException);
-    }
-*/
-    //@TODO: Is this needed? If it is, what could be 'invalid event'?
-    //TEST(EventToByteTest, InvalidEvent) {}
 }

@@ -494,6 +494,11 @@ static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
         {
             xml_attr.append_child(VALUE).text().set(att.value().c_str());
         }
+        if (att.has_refsemantic())
+        {
+            pugi::xml_node xml_refsemantic = xml_attr.append_child(REF_SEMANTIC);
+            xml_refsemantic.append_attribute(CORRESPONDING_ATTRIBUTE_PATH) = att.refsemantic().correspondingattributepath().c_str();
+        }
     }
 
     return;
@@ -543,6 +548,14 @@ static void extractAttribute(T* attr, pugi::xml_node xmlNode)
         if (NULL != xmlValue)
         {
             attr_child->set_value(xmlValue.text().as_string());
+        }
+
+        pugi::xml_node xmlRefSemantic = xmlAttr.child(REF_SEMANTIC);
+        if (NULL != xmlRefSemantic)
+        {
+            datamodel::RefSemantic* refSemantic = new datamodel::RefSemantic();
+            refSemantic->set_correspondingattributepath(xmlRefSemantic.attribute(CORRESPONDING_ATTRIBUTE_PATH).value());
+            attr_child->set_allocated_refsemantic(refSemantic);
         }
     }
 
