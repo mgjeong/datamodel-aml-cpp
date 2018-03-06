@@ -1,50 +1,53 @@
 #include <string>
 #include <sstream>
+#include <vector>
 
 #include "pugixml.hpp"
 
 #include "Representation.h"
+#include "AMLInterface.h"
 #include "AMLException.h"
-#include "Event.pb.h"
 #include "AML.pb.h"
 
-static const char CAEX_FILE[]                   = "CAEXFile";
-static const char INSTANCE_HIERARCHY[]          = "InstanceHierarchy";
-static const char ROLE_CLASS_LIB[]              = "RoleClassLib";
-static const char ROLE_CLASS[]                  = "RoleClass";
-static const char SYSTEM_UNIT_CLASS_LIB[]       = "SystemUnitClassLib";
-static const char SYSTEM_UNIT_CLASS[]           = "SystemUnitClass";
-static const char INTERNAL_ELEMENT[]            = "InternalElement";
-static const char ATTRIBUTE[]                   = "Attribute";
-static const char ADDITIONAL_INFORMATION[]      = "AdditionalInformation";
+using namespace std;
 
-static const char NAME[]                        = "Name";
-static const char VALUE[]                       = "Value";
-static const char VERSION[]                     = "Version";
-static const char ATTRIBUTE_DATA_TYPE[]         = "AttributeDataType";
-static const char DESCRIPTION[]                 = "Description";
-static const char REF_BASE_SYSTEM_UNIT_PATH[]   = "RefBaseSystemUnitPath";
-static const char REF_ROLE_CLASS_PATH[]         = "RefRoleClassPath";
-static const char REF_BASE_CLASS_PATH[]         = "RefBaseClassPath";
-static const char SUPPORTED_ROLE_CLASS[]        = "SupportedRoleClass";
+static const char CAEX_FILE[]                       = "CAEXFile";
+static const char INSTANCE_HIERARCHY[]              = "InstanceHierarchy";
+static const char ROLE_CLASS_LIB[]                  = "RoleClassLib";
+static const char ROLE_CLASS[]                      = "RoleClass";
+static const char SYSTEM_UNIT_CLASS_LIB[]           = "SystemUnitClassLib";
+static const char SYSTEM_UNIT_CLASS[]               = "SystemUnitClass";
+static const char INTERNAL_ELEMENT[]                = "InternalElement";
+static const char ATTRIBUTE[]                       = "Attribute";
+static const char ADDITIONAL_INFORMATION[]          = "AdditionalInformation";
+static const char REF_SEMANTIC[]                    = "RefSemantic";
 
-static const char EDGE_COREDATA[]               = "Edge_CoreData";
-static const char EVENT[]                       = "Event";
-static const char DATA[]                        = "Data";
+static const char NAME[]                            = "Name";
+static const char VALUE[]                           = "Value";
+static const char ATTRIBUTE_DATA_TYPE[]             = "AttributeDataType";
+static const char DESCRIPTION[]                     = "Description";
+static const char REF_BASE_SYSTEM_UNIT_PATH[]       = "RefBaseSystemUnitPath";
+static const char REF_ROLE_CLASS_PATH[]             = "RefRoleClassPath";
+static const char SUPPORTED_ROLE_CLASS[]            = "SupportedRoleClass";
+static const char CORRESPONDING_ATTRIBUTE_PATH[]    = "CorrespondingAttributePath";
+static const char ORDERED_LIST_TYPE[]               = "OrderedListType";
 
-static const char KEY_NAME[]                    = "name";
-static const char KEY_VALUE[]                   = "value";
-static const char KEY_DEVICE[]                  = "device";
-static const char KEY_ID[]                      = "id";
-static const char KEY_PUSHED[]                  = "pushed";
-static const char KEY_CREATED[]                 = "created";
-static const char KEY_MODIFIED[]                = "modified";
-static const char KEY_ORIGIN[]                  = "origin";
+static const char EDGE_COREDATA[]                   = "Edge_CoreData";
+static const char EVENT[]                           = "Event";
+
+static const char KEY_DEVICE[]                      = "device";
+static const char KEY_ID[]                          = "id";
+static const char KEY_TIMESTAMP[]                   = "timestamp";
 
 #define IS_NAME(node, name)                     (std::string((node).attribute(NAME).value()) == (name))
 #define ADD_VALUE(node, value)                  (node).append_child(VALUE).text().set((value).c_str()) //#TODO: verify non-null after append_child()
 
 #define VERIFY_NON_NULL_THROW_EXCEPTION(var)    if (NULL == (var)) throw AMLException(Exception::NO_MEMORY); 
+
+#define IS_VALUE_TYPE_STRING(node)              (NULL != (node).child(VALUE))
+#define IS_VALUE_TYPE_STRING_ARRAY(node)        ((NULL != (node).child(REF_SEMANTIC)) && \
+                                                 0 != strncmp((node).attribute(CORRESPONDING_ATTRIBUTE_PATH).value(), ORDERED_LIST_TYPE, strlen(ORDERED_LIST_TYPE)))
+#define IS_VALUE_TYPE_MAP(node)                 ((NULL == (node).child(REF_SEMANTIC)) && (NULL != (node).child(ATTRIBUTE)))
 
 // for test ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define PRINT_NODE(node)    for (pugi::xml_node tool = (node).first_child(); tool; tool = tool.next_sibling()) \
@@ -94,23 +97,23 @@ public:
         }
 
         pugi::xml_node xmlCaexFile = m_doc->child(CAEX_FILE);
-        if (NULL == xmlCaexFile) 
+        if (NULL == xmlCaexFile)
         {
             delete m_doc;
             throw AMLException(Exception::INVALID_SCHEMA);
         }
 
-        m_roleClassLib = xmlCaexFile.child(ROLE_CLASS_LIB);
         m_systemUnitClassLib = xmlCaexFile.child(SYSTEM_UNIT_CLASS_LIB);
-        if (NULL == m_roleClassLib || NULL == m_systemUnitClassLib) 
+        if (NULL == m_systemUnitClassLib) 
         {
             delete m_doc;
             throw AMLException(Exception::INVALID_SCHEMA);
         }
 
-        // remove "AdditionalInformation" and "InstanceHierarchy" data
+        // remove "AdditionalInformation", "InstanceHierarchy" and "RoleClassLib" data
         while (xmlCaexFile.child(ADDITIONAL_INFORMATION))   xmlCaexFile.remove_child(ADDITIONAL_INFORMATION);
         while (xmlCaexFile.child(INSTANCE_HIERARCHY))       xmlCaexFile.remove_child(INSTANCE_HIERARCHY);
+        while (xmlCaexFile.child(ROLE_CLASS_LIB))           xmlCaexFile.remove_child(ROLE_CLASS_LIB);
     }
 
     ~AMLModel()
@@ -118,61 +121,41 @@ public:
         delete m_doc;
     }
 
-    datamodel::Event* constructEvent(pugi::xml_document* xml_doc)
+    AMLObject* constructAmlObject(pugi::xml_document* xml_doc)
     {
         assert(nullptr != xml_doc);
 
         if (NULL == xml_doc->child(CAEX_FILE) ||
-            NULL == xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY) ||
-            NULL == xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY).child(INTERNAL_ELEMENT))
+            NULL == xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY))
         {
             throw AMLException(Exception::INVALID_AML_FORMAT);
         }
 
-        pugi::xml_node xml_event = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY).child(INTERNAL_ELEMENT); // xml_ih might have next_sibling(INSTANCE_HIERARCHY)
-        for (; xml_event; xml_event = xml_event.next_sibling(INTERNAL_ELEMENT))
-        {
-            if (std::string(xml_event.attribute(NAME).value()) == EVENT) break; // What if there are more than 2 events?
-        }
+        pugi::xml_node xml_event = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY).find_child_by_attribute(INTERNAL_ELEMENT, NAME, EVENT);
         if (NULL == xml_event) 
         {
             throw AMLException(Exception::INVALID_AML_FORMAT);
         }
 
-        datamodel::Event* event = new datamodel::Event();
-
+        std::string deviceId, timeStamp, id;
         for (pugi::xml_node xml_attr = xml_event.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
         {
-            if      (IS_NAME(xml_attr, KEY_DEVICE))     event->set_device   (xml_attr.child(VALUE).text().as_string());
-            else if (IS_NAME(xml_attr, KEY_ID))         event->set_id       (xml_attr.child(VALUE).text().as_string());
-            else if (IS_NAME(xml_attr, KEY_PUSHED))     event->set_pushed   (xml_attr.child(VALUE).text().as_llong());
-            else if (IS_NAME(xml_attr, KEY_CREATED))    event->set_created  (xml_attr.child(VALUE).text().as_llong());
-            else if (IS_NAME(xml_attr, KEY_MODIFIED))   event->set_modified (xml_attr.child(VALUE).text().as_llong());
-            else if (IS_NAME(xml_attr, KEY_ORIGIN))     event->set_origin   (xml_attr.child(VALUE).text().as_llong());
+            if      (IS_NAME(xml_attr, KEY_DEVICE))     deviceId = xml_attr.child_value(VALUE);
+            else if (IS_NAME(xml_attr, KEY_TIMESTAMP))  timeStamp = xml_attr.child_value(VALUE);
+            else if (IS_NAME(xml_attr, KEY_ID))         id = xml_attr.child_value(VALUE);
         }
 
-        pugi::xml_node xml_data;
-        for (xml_data = xml_event.child(INTERNAL_ELEMENT) ; xml_data; xml_data = xml_data.next_sibling(INTERNAL_ELEMENT))
+        AMLObject* amlObj = new AMLObject(deviceId, timeStamp, id);
+
+        for (pugi::xml_node xml_ie = xml_event.child(INTERNAL_ELEMENT); xml_ie; xml_ie = xml_ie.next_sibling(INTERNAL_ELEMENT))
         {
-            if (std::string(xml_data.attribute(NAME).value()) == DATA)
-            {
-                datamodel::Reading *reading = event->add_reading();
+            AMLData amlData = constructAmlData(xml_ie);
+            std::string name = xml_ie.attribute(NAME).value();
 
-                for (pugi::xml_node xml_attr = xml_data.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
-                {
-                    if      (IS_NAME(xml_attr, KEY_DEVICE))     reading->set_device   (xml_attr.child(VALUE).text().as_string());
-                    else if (IS_NAME(xml_attr, KEY_ID))         reading->set_id       (xml_attr.child(VALUE).text().as_string());
-                    else if (IS_NAME(xml_attr, KEY_NAME))       reading->set_name     (xml_attr.child(VALUE).text().as_string());
-                    else if (IS_NAME(xml_attr, KEY_VALUE))      reading->set_value    (xml_attr.child(VALUE).text().as_string());
-                    else if (IS_NAME(xml_attr, KEY_PUSHED))     reading->set_pushed   (xml_attr.child(VALUE).text().as_llong());
-                    else if (IS_NAME(xml_attr, KEY_CREATED))    reading->set_created  (xml_attr.child(VALUE).text().as_llong());
-                    else if (IS_NAME(xml_attr, KEY_MODIFIED))   reading->set_modified (xml_attr.child(VALUE).text().as_llong());
-                    else if (IS_NAME(xml_attr, KEY_ORIGIN))     reading->set_origin   (xml_attr.child(VALUE).text().as_llong());
-                }
-            }
+            amlObj->addData(name, amlData);
         }
 
-        return event;
+        return amlObj;
     }
 
     pugi::xml_document* constructXmlDoc()
@@ -184,7 +167,7 @@ public:
         return xml_doc;
     }
 
-    pugi::xml_document* constructXmlDoc(const datamodel::Event* event)
+    pugi::xml_document* constructXmlDoc(const AMLObject& amlObject)
     {
         pugi::xml_document* xml_doc = constructXmlDoc();
 
@@ -192,57 +175,41 @@ public:
         pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).append_child(INSTANCE_HIERARCHY);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_ih);
 
-        xml_ih.append_attribute(NAME) = EDGE_COREDATA;
+        xml_ih.append_attribute(NAME) = EDGE_COREDATA; // @TODO: Are we still going to use "Edge_CoreData" for the name of IH?
 
         // add Event as InternalElement
         pugi::xml_node xml_event = addInternalElement(xml_ih, EVENT);
         assert(NULL != xml_event);
 
+        // set default attributes of Event (This has a dependency on AMLObject class..)
         for (pugi::xml_node xml_attr = xml_event.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
         {
-            if      (IS_NAME(xml_attr, KEY_DEVICE))     ADD_VALUE(xml_attr, event->device());
-            else if (IS_NAME(xml_attr, KEY_ID))         ADD_VALUE(xml_attr, event->id());
-            else if (IS_NAME(xml_attr, KEY_PUSHED))     ADD_VALUE(xml_attr, toString(event->pushed()));
-            else if (IS_NAME(xml_attr, KEY_CREATED))    ADD_VALUE(xml_attr, toString(event->created()));
-            else if (IS_NAME(xml_attr, KEY_MODIFIED))   ADD_VALUE(xml_attr, toString(event->modified()));
-            else if (IS_NAME(xml_attr, KEY_ORIGIN))     ADD_VALUE(xml_attr, toString(event->origin()));
+            if      (IS_NAME(xml_attr, KEY_DEVICE))     ADD_VALUE(xml_attr, amlObject.getDeviceId());
+            else if (IS_NAME(xml_attr, KEY_TIMESTAMP))  ADD_VALUE(xml_attr, amlObject.getTimeStamp());
+            else if (IS_NAME(xml_attr, KEY_ID))         ADD_VALUE(xml_attr, amlObject.getId());
         }
 
-        // add Data(s) as InternalElement
-        for (int i = 0, size = event->reading_size(); i < size; i++)
+        // add AMLDatas into Event
+        vector<string> dataNames = amlObject.getDataNames();
+        for(string name : dataNames)
         {
-            datamodel::Reading reading = event->reading(i);
+            AMLData data = amlObject.getData(name);
+            pugi::xml_node xml_ie = addInternalElement(xml_event, name);
 
-            pugi::xml_node xml_data = addInternalElement(xml_event, DATA);
-            assert(NULL != xml_data);
-
-            for (pugi::xml_node xml_attr = xml_data.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
-            {
-                if      (IS_NAME(xml_attr, KEY_DEVICE))     ADD_VALUE(xml_attr, reading.device());
-                else if (IS_NAME(xml_attr, KEY_NAME))       ADD_VALUE(xml_attr, reading.name());
-                else if (IS_NAME(xml_attr, KEY_ID))         ADD_VALUE(xml_attr, reading.id());
-                else if (IS_NAME(xml_attr, KEY_VALUE))      ADD_VALUE(xml_attr, reading.value());
-                else if (IS_NAME(xml_attr, KEY_PUSHED))     ADD_VALUE(xml_attr, toString(reading.pushed()));
-                else if (IS_NAME(xml_attr, KEY_CREATED))    ADD_VALUE(xml_attr, toString(reading.created()));
-                else if (IS_NAME(xml_attr, KEY_MODIFIED))   ADD_VALUE(xml_attr, toString(reading.modified()));
-                else if (IS_NAME(xml_attr, KEY_ORIGIN))     ADD_VALUE(xml_attr, toString(reading.origin()));
-            }
+            setAttributeValue(xml_ie, &data);
         }
 
         return xml_doc;
     }
 
-    void appendModel(pugi::xml_document* xml_doc)    
+    void appendModel(pugi::xml_document* xml_doc)
     {
         assert(nullptr != xml_doc);
-        // append RoleClassLib and SystemUnitClassLib
-        xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
         xml_doc->child(CAEX_FILE).append_copy(m_systemUnitClassLib);
     }
 
 private:
     pugi::xml_document* m_doc;
-    pugi::xml_node m_roleClassLib;
     pugi::xml_node m_systemUnitClassLib;
 
     void initializeAML(pugi::xml_document* xml_doc)
@@ -260,39 +227,133 @@ private:
         xml_caexFile.append_attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
     }
 
-    pugi::xml_node addInternalElement(pugi::xml_node xml_ih, const std::string suc_name)
+    AMLData constructAmlData(pugi::xml_node xml_ie)
     {
-        pugi::xml_node xml_ie = xml_ih.append_child(INTERNAL_ELEMENT);
-        VERIFY_NON_NULL_THROW_EXCEPTION(xml_ie);
+        AMLData amlData;
 
-        for (pugi::xml_node xml_suc = m_systemUnitClassLib.child(SYSTEM_UNIT_CLASS); xml_suc; xml_suc = xml_suc.next_sibling(SYSTEM_UNIT_CLASS))
+        for (pugi::xml_node xml_attr = xml_ie.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
         {
-            if (std::string(xml_suc.attribute(NAME).value()) == suc_name)
+            std::string key = xml_attr.attribute(NAME).value();
+
+            if (IS_VALUE_TYPE_STRING(xml_attr))
             {
-                // set Name
-                xml_ie.append_attribute(NAME) = suc_name.c_str();
+                std::string value(xml_attr.child_value(VALUE));
 
-                // set RefBaseSystemUnitPath
-                std::string refBaseSystemUnitPath;
-                refBaseSystemUnitPath.append(m_systemUnitClassLib.attribute(NAME).value());
-                refBaseSystemUnitPath.append("/");
-                refBaseSystemUnitPath.append(suc_name);
-                xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = refBaseSystemUnitPath.c_str();
+                amlData.setValue(key, value);
+            }
+            else if (IS_VALUE_TYPE_STRING_ARRAY(xml_attr))
+            {
+                vector<string> values;
+                pugi::xml_node xml_child;
+                size_t sizeOfArray = 0;
 
-                // set Attribute(s)
-                for (pugi::xml_node xml_attr = xml_suc.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
+                for (xml_child = xml_attr.child(ATTRIBUTE); xml_child; xml_child = xml_child.next_sibling(ATTRIBUTE))
                 {
-                    xml_ie.append_copy(xml_attr);
+                    sizeOfArray++;
                 }
 
-                // set SupportedRoleClass
-                xml_ie.append_copy(xml_suc.child(SUPPORTED_ROLE_CLASS));
+                for (size_t index = 1; index <= sizeOfArray; ++index)
+                {
+                    xml_child = xml_attr.find_child_by_attribute(NAME, toString(index).c_str());
+                    std::string value(xml_child.child_value(VALUE));
+                    values.push_back(value);
+                }
 
-                break;
+                amlData.setValue(key, values);
+            }
+            else if (IS_VALUE_TYPE_MAP(xml_attr))
+            {
+                AMLData value = constructAmlData(xml_attr);
+
+                amlData.setValue(key, value);
+            }
+            else
+            {
+                /* @TODO: error */
             }
         }
 
+        return amlData;
+    }
+
+    pugi::xml_node addInternalElement(pugi::xml_node xml_parent, const std::string suc_name)
+    {
+        pugi::xml_node xml_ie = pugi::xml_node();
+
+        pugi::xml_node xml_suc = m_systemUnitClassLib.find_child_by_attribute(NAME, suc_name.c_str());
+        if (xml_suc)
+        {
+            xml_ie = xml_parent.append_copy(xml_suc);
+
+            // reset Name (SystemUnitClass -> InternalElement)
+            xml_ie.set_name(INTERNAL_ELEMENT);
+
+            // set RefBaseSystemUnitPath
+            std::string refBaseSystemUnitPath;
+            refBaseSystemUnitPath.append(m_systemUnitClassLib.attribute(NAME).value());
+            refBaseSystemUnitPath.append("/");
+            refBaseSystemUnitPath.append(suc_name);
+            xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = refBaseSystemUnitPath.c_str();
+
+            // // set SupportedRoleClass
+            // xml_ie.append_copy(xml_suc.child(SUPPORTED_ROLE_CLASS));
+        }
+
         return xml_ie;
+    }
+
+    void setAttributeValue(pugi::xml_node xml_ie, AMLData* amlData)
+    {
+        for (pugi::xml_node xml_attr = xml_ie.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
+        {
+            std::string attributeName(xml_attr.attribute(NAME).value());
+
+            if (NULL == xml_attr.first_child()) // If <Attribute> does not have any child like <Value> or <RefSemantic>, it has a single string value.
+            {
+                ADD_VALUE(xml_attr, amlData->getValueToStr(attributeName));
+            }
+            else if (IS_VALUE_TYPE_STRING_ARRAY(xml_attr))
+            {
+                addStringArrayValue(xml_attr, amlData->getValueToStrArr(attributeName));
+            }
+            else if (IS_VALUE_TYPE_MAP(xml_attr))
+            {
+                AMLData data = amlData->getValueToAMLData(attributeName);
+                setAttributeValue(xml_attr, &data);
+            }
+            else
+            {
+                // @TODO: error
+            }
+        }
+
+        return;
+    }
+
+    void addStringArrayValue(pugi::xml_node xml_ie, const std::vector<std::string> valueArray)
+    {
+        // @TODO: 모델링 AML파일에서 자식 Attribute의 DataType을 어떻게 가지고 있을 것인가? (부모 Attribute의 DataType은 Empty여야함)
+
+        for (std::size_t i = 0, size = valueArray.size(); i != size; ++i)
+        {
+            pugi::xml_node xml_child_attr = xml_ie.append_child(ATTRIBUTE);
+
+            //xml_child_attr.append_attribute(NAME) = toString(i);
+            //xml_child_attr.append_attribute(ATTRIBUTE_DATA_TYPE) = xml_ie.attribute(ATTRIBUTE_DATA_TYPE).value());
+            // Copy attributes from parent node to child node
+            for (pugi::xml_attribute_iterator attrIter = xml_ie.attributes_begin(), end = xml_ie.attributes_end(); attrIter != end; ++attrIter)
+            {
+                xml_child_attr.append_attribute(attrIter->name()) = attrIter->value();
+            }
+
+            // The names of child attribute are "1", "2", "3"...
+            xml_child_attr.attribute(NAME).set_value(i + 1);
+
+            ADD_VALUE(xml_child_attr, valueArray[i]);
+        }
+
+        // As AML Document(BPR MLA, V 1.0.0), 'AttributeDataType' of the parent attribute node should be kept empty.
+        xml_ie.attribute(ATTRIBUTE_DATA_TYPE).set_value("");
     }
 };
 
@@ -305,30 +366,11 @@ Representation::~Representation(void)
     delete m_amlModel;
 }
 
-datamodel::Event* Representation::AmlToEvent(const std::string& xmlStr)
+std::string Representation::DataToAml(const AMLObject& amlObject) const
 {
-    pugi::xml_document dataXml;
-    pugi::xml_parse_result result = dataXml.load_string(xmlStr.c_str());
-    if (pugi::status_ok != result.status)
-    {
-        throw AMLException(Exception::INVALID_XML_STR);
-    }
-
-    datamodel::Event *event = m_amlModel->constructEvent(&dataXml);
-    assert(nullptr != event);
-    return event;
-}
-
-std::string Representation::EventToAml(const datamodel::Event* event)
-{   
-    if (nullptr == event)
-    {
-        throw AMLException(Exception::INVALID_PARAM);
-    }
-
-    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(event);
+    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(amlObject);
     assert(nullptr != xml_doc);
-    
+
     m_amlModel->appendModel(xml_doc);
 
     std::ostringstream stream;
@@ -339,7 +381,21 @@ std::string Representation::EventToAml(const datamodel::Event* event)
     return stream.str();
 }
 
-datamodel::Event* Representation::ByteToEvent(const std::string& byte)
+AMLObject* Representation::AmlToData(const std::string& xmlStr) const
+{
+    pugi::xml_document dataXml;
+    pugi::xml_parse_result result = dataXml.load_string(xmlStr.c_str());
+    if (pugi::status_ok != result.status)
+    {
+        throw AMLException(Exception::INVALID_XML_STR);
+    }
+
+    AMLObject *amlObj = m_amlModel->constructAmlObject(&dataXml);
+    assert(nullptr != amlObj);
+    return amlObj;
+}
+
+AMLObject* Representation::ByteToData(const std::string& byte) const
 {
     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
 
@@ -372,23 +428,18 @@ datamodel::Event* Representation::ByteToEvent(const std::string& byte)
     caex->clear_instancehierarchy();
     delete caex;
 
-    datamodel::Event *event = m_amlModel->constructEvent(xml_doc);
-    assert(nullptr != event);
+    AMLObject* amlObj = m_amlModel->constructAmlObject(xml_doc);
+    assert(nullptr != amlObj);
 
     delete xml_doc;
 
-    return event;
+    return amlObj;
 }
 
-std::string Representation::EventToByte(const datamodel::Event* event)
+std::string Representation::DataToByte(const AMLObject& amlObject) const
 {
-    if (nullptr == event)
-    {
-        throw AMLException(Exception::INVALID_PARAM);
-    }
-    
-    // convert Event to XML object
-    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(event);
+    // convert AMLObject to XML object
+    pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(amlObject);
     assert(nullptr != xml_doc);
 
     // convert XML object to AML proto object
@@ -428,8 +479,9 @@ std::string Representation::EventToByte(const datamodel::Event* event)
 
 template <class T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
-{   
-    for (datamodel::Attribute att: attr->attribute()) {
+{
+    for (datamodel::Attribute att : attr->attribute())
+    {
         pugi::xml_node xml_attr = xmlNode.append_child(ATTRIBUTE);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_attr);
 
@@ -438,7 +490,10 @@ static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 
         extractProtoAttribute(xml_attr, &att);
 
-        xml_attr.append_child(VALUE).text().set(att.value().c_str());
+        if (att.has_value())
+        {
+            xml_attr.append_child(VALUE).text().set(att.value().c_str());
+        }
     }
 
     return;
@@ -447,7 +502,7 @@ static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 template <class T>
 static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
 {
-    for (datamodel::InternalElement sie: ie->internalelement())
+    for (datamodel::InternalElement sie : ie->internalelement())
     {
         pugi::xml_node xml_ie = xmlNode.append_child(INTERNAL_ELEMENT);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_ie);
@@ -458,18 +513,16 @@ static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
         extractProtoAttribute(xml_ie, &sie);
         extractProtoInternalElement(xml_ie, &sie);
 
-        if (nullptr != &sie.supportedroleclass())
+        if (nullptr != &sie.supportedroleclass() && 
+            nullptr != &sie.supportedroleclass().refroleclasspath())
         {
-            if (nullptr != &sie.supportedroleclass().refroleclasspath())
-             {
-                pugi::xml_node xml_src = xml_ie.append_child(SUPPORTED_ROLE_CLASS);
-                VERIFY_NON_NULL_THROW_EXCEPTION(xml_src);
+            pugi::xml_node xml_src = xml_ie.append_child(SUPPORTED_ROLE_CLASS);
+            VERIFY_NON_NULL_THROW_EXCEPTION(xml_src);
 
-                xml_src.append_attribute(REF_ROLE_CLASS_PATH) = sie.supportedroleclass().refroleclasspath().c_str();
-            }
+            xml_src.append_attribute(REF_ROLE_CLASS_PATH) = sie.supportedroleclass().refroleclasspath().c_str();
         }
     }
-    
+
     return;
 }
 

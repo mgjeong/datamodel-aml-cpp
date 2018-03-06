@@ -320,7 +320,7 @@ void AddDescriptorsImpl() {
       "\005 \003(\0132\024.datamodel.Attribute\".\n\022Supported"
       "RoleClass\022\030\n\020RefRoleClassPath\030\001 \002(\t\"l\n\tA"
       "ttribute\022\014\n\004Name\030\001 \002(\t\022\031\n\021AttributeDataT"
-      "ype\030\002 \002(\t\022\r\n\005Value\030\003 \002(\t\022\'\n\tAttribute\030\004 "
+      "ype\030\002 \002(\t\022\r\n\005Value\030\003 \001(\t\022\'\n\tAttribute\030\004 "
       "\003(\0132\024.datamodel.AttributeB\'\n\033edge.datamo"
       "del.protobuf.amlB\010ProtoAML"
   };
@@ -5419,7 +5419,7 @@ bool Attribute::MergePartialFromCodedStream(
         break;
       }
 
-      // required string Value = 3;
+      // optional string Value = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
@@ -5494,7 +5494,7 @@ void Attribute::SerializeWithCachedSizes(
       2, this->attributedatatype(), output);
   }
 
-  // required string Value = 3;
+  // optional string Value = 3;
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->value().data(), static_cast<int>(this->value().length()),
@@ -5548,7 +5548,7 @@ void Attribute::SerializeWithCachedSizes(
         2, this->attributedatatype(), target);
   }
 
-  // required string Value = 3;
+  // optional string Value = 3;
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->value().data(), static_cast<int>(this->value().length()),
@@ -5593,13 +5593,6 @@ size_t Attribute::RequiredFieldsByteSizeFallback() const {
         this->attributedatatype());
   }
 
-  if (has_value()) {
-    // required string Value = 3;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->value());
-  }
-
   return total_size;
 }
 size_t Attribute::ByteSizeLong() const {
@@ -5611,7 +5604,7 @@ size_t Attribute::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) == 0) {  // All required fields are present.
+  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
     // required string Name = 1;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -5621,11 +5614,6 @@ size_t Attribute::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->attributedatatype());
-
-    // required string Value = 3;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->value());
 
   } else {
     total_size += RequiredFieldsByteSizeFallback();
@@ -5639,6 +5627,13 @@ size_t Attribute::ByteSizeLong() const {
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->attribute(static_cast<int>(i)));
     }
+  }
+
+  // optional string Value = 3;
+  if (has_value()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->value());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -5703,7 +5698,7 @@ void Attribute::CopyFrom(const Attribute& from) {
 }
 
 bool Attribute::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->attribute())) return false;
   return true;
 }
@@ -5857,7 +5852,7 @@ void Attribute::set_allocated_attributedatatype(::std::string* attributedatatype
   // @@protoc_insertion_point(field_set_allocated:datamodel.Attribute.AttributeDataType)
 }
 
-// required string Value = 3;
+// optional string Value = 3;
 bool Attribute::has_value() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }

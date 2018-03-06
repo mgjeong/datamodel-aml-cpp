@@ -1479,7 +1479,7 @@ class Attribute : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::std::string* release_attributedatatype();
   void set_allocated_attributedatatype(::std::string* attributedatatype);
 
-  // required string Value = 3;
+  // optional string Value = 3;
   bool has_value() const;
   void clear_value();
   static const int kValueFieldNumber = 3;
@@ -3244,7 +3244,7 @@ inline void Attribute::set_allocated_attributedatatype(::std::string* attributed
   // @@protoc_insertion_point(field_set_allocated:datamodel.Attribute.AttributeDataType)
 }
 
-// required string Value = 3;
+// optional string Value = 3;
 inline bool Attribute::has_value() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }

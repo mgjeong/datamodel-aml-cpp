@@ -21,7 +21,6 @@
 
 #include "Representation.h"
 #include "AMLException.h"
-#include "Event.pb.h"
 #include "gtest/gtest.h"
 
 namespace AMLRepresentationTest
@@ -34,38 +33,38 @@ namespace AMLRepresentationTest
     std::string dataBinaryFile              = "./TEST_DataBinary";
 
     // Helper method
-    datamodel::Event TestEvent()
-    {
-        datamodel::Event event;
-        event.set_device("Robot1");
-        event.set_created(10);
-        event.set_modified(20);
-        event.set_id("id");
-        event.set_pushed(30);
-        event.set_origin(40);
+    // datamodel::Event TestEvent()
+    // {
+    //     datamodel::Event event;
+    //     event.set_device("Robot1");
+    //     event.set_created(10);
+    //     event.set_modified(20);
+    //     event.set_id("id");
+    //     event.set_pushed(30);
+    //     event.set_origin(40);
 
-        datamodel::Reading *reading1 = event.add_reading();
-        reading1->set_name("Robot_Model");
-        reading1->set_value("SR-P7-R970");
-        reading1->set_created(50);
-        reading1->set_device("Robot1");
-        reading1->set_modified(51);
-        reading1->set_id("id1");
-        reading1->set_origin(52);
-        reading1->set_pushed(53);
+    //     datamodel::Reading *reading1 = event.add_reading();
+    //     reading1->set_name("Robot_Model");
+    //     reading1->set_value("SR-P7-R970");
+    //     reading1->set_created(50);
+    //     reading1->set_device("Robot1");
+    //     reading1->set_modified(51);
+    //     reading1->set_id("id1");
+    //     reading1->set_origin(52);
+    //     reading1->set_pushed(53);
 
-        datamodel::Reading *reading2 = event.add_reading();
-        reading2->set_name("Robot_SW_Version");
-        reading2->set_value("0.0.1");
-        reading2->set_created(61);
-        reading2->set_device("Robot1");
-        reading2->set_modified(62);
-        reading2->set_id("id2");
-        reading2->set_origin(63);
-        reading2->set_pushed(64);
+    //     datamodel::Reading *reading2 = event.add_reading();
+    //     reading2->set_name("Robot_SW_Version");
+    //     reading2->set_value("0.0.1");
+    //     reading2->set_created(61);
+    //     reading2->set_device("Robot1");
+    //     reading2->set_modified(62);
+    //     reading2->set_id("id2");
+    //     reading2->set_origin(63);
+    //     reading2->set_pushed(64);
 
-        return event;
-    }
+    //     return event;
+    // }
 
     std::string TestAML()
     {
@@ -81,45 +80,45 @@ namespace AMLRepresentationTest
         return str;
     }
 
-    bool isEqual(datamodel::Event* event1, datamodel::Event* event2)
-    {
-        if (!event1 || !event2)                       return false;
+    // bool isEqual(datamodel::Event* event1, datamodel::Event* event2)
+    // {
+    //     if (!event1 || !event2)                       return false;
 
-        if (event1->device() != event2->device())     return false;
-        if (event1->pushed() != event2->pushed())     return false;
-        if (event1->id() != event2->id())             return false;
-        if (event1->created() != event2->created())   return false;
-        if (event1->modified() != event2->modified()) return false;
-        if (event1->origin() != event2->origin())     return false;
+    //     if (event1->device() != event2->device())     return false;
+    //     if (event1->pushed() != event2->pushed())     return false;
+    //     if (event1->id() != event2->id())             return false;
+    //     if (event1->created() != event2->created())   return false;
+    //     if (event1->modified() != event2->modified()) return false;
+    //     if (event1->origin() != event2->origin())     return false;
         
-        int size1 = event1->reading_size();
-        int size2 = event2->reading_size();
-        if (size1 != size2) return false;
+    //     int size1 = event1->reading_size();
+    //     int size2 = event2->reading_size();
+    //     if (size1 != size2) return false;
 
-        for (int i = 0; i < size1; i++)
-        {
-            datamodel::Reading reading1 = event1->reading(i);
-            datamodel::Reading reading2 = event2->reading(i);
+    //     for (int i = 0; i < size1; i++)
+    //     {
+    //         datamodel::Reading reading1 = event1->reading(i);
+    //         datamodel::Reading reading2 = event2->reading(i);
 
-            if (reading1.device() != reading2.device())     return false;
-            if (reading1.pushed() != reading2.pushed())     return false;
-            if (reading1.name() != reading2.name())         return false;
-            if (reading1.value() != reading2.value())       return false;
-            if (reading1.id() != reading2.id())             return false;
-            if (reading1.created() != reading2.created())   return false;
-            if (reading1.modified() != reading2.modified()) return false;
-            if (reading1.origin() != reading2.origin())     return false;
-        }
+    //         if (reading1.device() != reading2.device())     return false;
+    //         if (reading1.pushed() != reading2.pushed())     return false;
+    //         if (reading1.name() != reading2.name())         return false;
+    //         if (reading1.value() != reading2.value())       return false;
+    //         if (reading1.id() != reading2.id())             return false;
+    //         if (reading1.created() != reading2.created())   return false;
+    //         if (reading1.modified() != reading2.modified()) return false;
+    //         if (reading1.origin() != reading2.origin())     return false;
+    //     }
         
-        return true;
-    }
+    //     return true;
+    // }
 
     // Test
     TEST(ConstructRepresentationTest, ValidAML)
     {
         EXPECT_NO_THROW(Representation rep = Representation(amlModelFile));
     }
-
+/*
     TEST(ConstructRepresentationTest, InvalidFilePath)
     {
         EXPECT_THROW(Representation rep = Representation("NoExist.aml"), AMLException);
@@ -226,7 +225,7 @@ namespace AMLRepresentationTest
         std::string byteStr;
         EXPECT_THROW(byteStr = rep.EventToByte(nullptr), AMLException);
     }
-
+*/
     //@TODO: Is this needed? If it is, what could be 'invalid event'?
     //TEST(EventToByteTest, InvalidEvent) {}
 }
