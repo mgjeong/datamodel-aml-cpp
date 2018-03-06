@@ -2,7 +2,6 @@
 #include <string>
 
 #include "Representation.h"
-#include "Event.pb.h"
 
 using namespace std;
 
