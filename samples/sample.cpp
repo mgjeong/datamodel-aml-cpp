@@ -2,6 +2,8 @@
 #include <string>
 
 #include "Representation.h"
+#include "AMLInterface.h"
+#include "AMLException.h"
 
 using namespace std;
 
@@ -137,27 +139,32 @@ int main() {
 
     printAMLObject(amlObj);
 
+    try{
+        // Convert AMLObject to AMLstring(XML)
+        string aml_string = rep->DataToAml(amlObj);
+        cout << aml_string << endl;
+        cout << "-------------------------------------------------------------" << endl;
 
-    // Convert AMLObject to AMLstring(XML)
-    string aml_string = rep->DataToAml(amlObj);
-    cout << aml_string << endl;
-    cout << "-------------------------------------------------------------" << endl;
+        // Convert AMLstring(XML) to AMLObject
+        AMLObject* data_from_aml = rep->AmlToData(aml_string);
+        printAMLObject(*data_from_aml);
+        cout << "-------------------------------------------------------------" << endl;
 
-    // Convert AMLstring(XML) to AMLObject
-    AMLObject* data_from_aml = rep->AmlToData(aml_string);
-    printAMLObject(*data_from_aml);
-    cout << "-------------------------------------------------------------" << endl;
+        // Convert AMLObject to Byte(string)
+        string byte_string = rep->DataToByte(*data_from_aml);
+        cout << byte_string << endl;
+        cout << "-------------------------------------------------------------" << endl;
 
-    // Convert AMLObject to Byte(string)
-    string byte_string = rep->DataToByte(*data_from_aml);
-    cout << byte_string << endl;
-    cout << "-------------------------------------------------------------" << endl;
+        // Convert Byte(string) to AMLObject
+        AMLObject* data_from_byte = rep->ByteToData(byte_string);
+        printAMLObject(*data_from_byte);
+        cout << "-------------------------------------------------------------" << endl;
 
-    // Convert Byte(string) to AMLObject
-    AMLObject* data_from_byte = rep->ByteToData(byte_string);
-    printAMLObject(*data_from_byte);
-    cout << "-------------------------------------------------------------" << endl;
-
-    delete data_from_aml;
-    delete data_from_byte;
+        delete data_from_aml;
+        delete data_from_byte;
+    }
+    catch (const AMLException& e)
+    {
+        cout << e.what();
+    }
 }
