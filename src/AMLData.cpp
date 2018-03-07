@@ -76,10 +76,6 @@ AMLValueType AMLData::getValueType(const std::string& key) const
             {
                 return AMLValueType::AMLData;
             }
-            else 
-            {
-                throw AMLException(Exception::INVALID_DATA_TYPE);
-            }
         }
     }
 
