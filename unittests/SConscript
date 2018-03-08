@@ -53,7 +53,7 @@ if not aml_test_env.get('RELEASE'):
     aml_test_env.AppendUnique(CXXFLAGS=['--coverage'])
 
 aml_test_env.AppendUnique(CPPPATH=[
-	'../protobuf',
+    '../protobuf',
     '../include',
     '../src',
     '.'
@@ -63,7 +63,11 @@ aml_test_env.AppendUnique(CPPPATH=[
 # Build Test
 ######################################################################
 
-aml_rep_test_src = aml_test_env.Glob('./AMLRepresentationTest.cpp')
+aml_rep_test_src = [
+    'AMLRepresentationTest.cpp',
+    'AMLInterfaceTest.cpp'
+]
+
 aml_rep_test = aml_test_env.Program('aml_rep_test', aml_rep_test_src)
 
 Alias("aml_rep_test", aml_rep_test)

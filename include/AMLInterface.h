@@ -61,6 +61,7 @@ public:
      * @param       timestamp   [in] timestamp value of AMLObject delibered by device.
      */
     AMLObject(const std::string& deviceId, const std::string& timeStamp);
+
     /**
      * @brief       Constructor.
      * @param       deviceId    [in] Device id that source device of AMLObject.
@@ -69,7 +70,7 @@ public:
      */
     AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id);
     virtual ~AMLObject(void);
-    
+
     /**
      * @fn void addData(const std::string& name, const AMLData& data)
      * @brief       This function add AMLData to AMLObject using AMLData key that to match AMLData value.
@@ -78,7 +79,7 @@ public:
      * @exception   AMLException If AMLData key is duplicated on AMLObject or if name is a invalid key.
      */
     void                        addData(const std::string& name, const AMLData& data);
-    
+
     /**
      * @fn AMLData getData(const std::string& name) const
      * @brief       This function return AMLData which matched input name string with AMLObject's amlDatas key.

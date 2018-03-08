@@ -20,6 +20,7 @@
 #include <fstream>
 
 #include "Representation.h"
+#include "AMLInterface.h"
 #include "AMLException.h"
 #include "gtest/gtest.h"
 

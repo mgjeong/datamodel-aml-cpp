@@ -47,7 +47,7 @@ void AMLObject::addData(const std::string& name, const AMLData& data)
     // Try to insert a new element into the map and if the key already exists, throw an exeption.
     if (!m_amlDatas.insert(make_pair(name, data)).second)
     {
-        throw AMLException(Exception::OBJECT_KEY_DUP);
+        throw AMLException(Exception::KEY_ALREADY_EXIST);
     }
 }
 
@@ -57,7 +57,7 @@ AMLData AMLObject::getData(const std::string& name) const
     if (iter == m_amlDatas.end())
     {
         // The name does not exist.
-        throw AMLException(Exception::OBJECT_INVALID_KEY);
+        throw AMLException(Exception::KEY_NOT_EXIST);
     }
 
     return iter->second;

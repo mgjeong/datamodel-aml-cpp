@@ -32,17 +32,26 @@ AMLData::~AMLData(void)
 
 void AMLData::setValue(const std::string& key, const std::string& value)
 {
-    m_values.insert(std::pair<std::string, std::string>(key, value));
+    if (!m_values.insert(std::pair<std::string, std::string>(key, value)).second)
+    {
+        throw AMLException(Exception::KEY_ALREADY_EXIST);
+    }
 }
 
 void AMLData::setValue(const std::string& key, const std::vector<std::string>& value)
 {
-    m_values.insert(std::pair<std::string, std::vector<std::string>>(key, value));
+    if (!m_values.insert(std::pair<std::string, std::vector<std::string>>(key, value)).second)
+    {
+        throw AMLException(Exception::KEY_ALREADY_EXIST);
+    }
 }
 
 void AMLData::setValue(const std::string& key, const AMLData& value)
 {
-    m_values.insert(std::pair<std::string, AMLData>(key, value));
+    if (!m_values.insert(std::pair<std::string, AMLData>(key, value)).second)
+    {
+        throw AMLException(Exception::KEY_ALREADY_EXIST);
+    }
 }
 
 std::vector<std::string> AMLData::getKeys() const
@@ -79,7 +88,7 @@ AMLValueType AMLData::getValueType(const std::string& key) const
         }
     }
 
-    throw AMLException(Exception::DATA_INVALID_KEY);
+    throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
 std::string AMLData::getValueToStr(const std::string& key) const
@@ -102,7 +111,7 @@ std::string AMLData::getValueToStr(const std::string& key) const
         }
     }
 
-    throw AMLException(Exception::DATA_INVALID_KEY);
+    throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
 std::vector<std::string> AMLData::getValueToStrArr(const std::string& key) const
@@ -125,7 +134,7 @@ std::vector<std::string> AMLData::getValueToStrArr(const std::string& key) const
         }
     }
 
-    throw AMLException(Exception::DATA_INVALID_KEY);
+    throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
 AMLData AMLData::getValueToAMLData(const std::string& key) const
@@ -148,5 +157,5 @@ AMLData AMLData::getValueToAMLData(const std::string& key) const
         }
     }
 
-    throw AMLException(Exception::DATA_INVALID_KEY);
+    throw AMLException(Exception::KEY_NOT_EXIST);
 }
