@@ -21,6 +21,12 @@
  
 #include "AMLInterface.h"
 #include "AMLException.h"
+#include "AMLLogger.h"
+
+#define TAG "AMLData"
+
+// For logging
+#define TYPE(type)  (type)==0 ? "String" : ((type)==1 ? "String Vector" : "AMLData")
 
 AMLData::AMLData(void)
 {
@@ -34,6 +40,7 @@ void AMLData::setValue(const std::string& key, const std::string& value)
 {
     if (!m_values.insert(std::pair<std::string, std::string>(key, value)).second)
     {
+        AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(Exception::KEY_ALREADY_EXIST);
     }
 }
@@ -42,6 +49,7 @@ void AMLData::setValue(const std::string& key, const std::vector<std::string>& v
 {
     if (!m_values.insert(std::pair<std::string, std::vector<std::string>>(key, value)).second)
     {
+        AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(Exception::KEY_ALREADY_EXIST);
     }
 }
@@ -50,6 +58,7 @@ void AMLData::setValue(const std::string& key, const AMLData& value)
 {
     if (!m_values.insert(std::pair<std::string, AMLData>(key, value)).second)
     {
+        AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(Exception::KEY_ALREADY_EXIST);
     }
 }
@@ -88,6 +97,7 @@ AMLValueType AMLData::getValueType(const std::string& key) const
         }
     }
 
+    AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
     throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
@@ -101,6 +111,7 @@ std::string AMLData::getValueToStr(const std::string& key) const
 
             if (type != 0)
             {
+                AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(type));
                 throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
             }
             else
@@ -111,6 +122,7 @@ std::string AMLData::getValueToStr(const std::string& key) const
         }
     }
 
+    AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
     throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
@@ -124,6 +136,7 @@ std::vector<std::string> AMLData::getValueToStrArr(const std::string& key) const
 
             if (type != 1)
             {
+                AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(type));
                 throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
             }
             else
@@ -134,6 +147,7 @@ std::vector<std::string> AMLData::getValueToStrArr(const std::string& key) const
         }
     }
 
+    AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
     throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
@@ -147,6 +161,7 @@ AMLData AMLData::getValueToAMLData(const std::string& key) const
 
             if (type != 2)
             {
+                AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(type));
                 throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
             }
             else
@@ -157,5 +172,6 @@ AMLData AMLData::getValueToAMLData(const std::string& key) const
         }
     }
 
+    AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
     throw AMLException(Exception::KEY_NOT_EXIST);
 }

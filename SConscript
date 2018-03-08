@@ -33,7 +33,8 @@ else:
 aml_env.AppendUnique(CPPPATH=[
         './extlibs/pugixml/pugixml-1.8/src',
         './protobuf',
-        './include'
+        './include',
+        './include/logger'
 ])
 
 aml_env.PrependUnique(LIBS=['protobuf'])
@@ -56,7 +57,8 @@ if target_os in ['linux']:
 AML_DIR = '.'
 aml_env.AppendUnique(aml_src = [aml_env.Glob(os.path.join(AML_DIR, 'extlibs/pugixml/pugixml-1.8/src', '*.cpp')),
                                 aml_env.Glob(os.path.join(AML_DIR, 'protobuf', '*.cc')),
-                                aml_env.Glob(os.path.join(AML_DIR, 'src', '*.cpp'))])
+                                aml_env.Glob(os.path.join(AML_DIR, 'src', '*.cpp')),
+                                aml_env.Glob(os.path.join(AML_DIR, 'src', 'logger', '*.cpp'))])
 
 amlshared = aml_env.SharedLibrary('aml', aml_env.get('aml_src'))
 amlstatic = aml_env.StaticLibrary('aml', aml_env.get('aml_src'))
