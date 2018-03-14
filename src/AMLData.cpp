@@ -91,71 +91,47 @@ AMLValueType AMLData::getValueType(const std::string& key) const
     throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
-std::string AMLData::getValueToStr(const std::string& key) const
+const std::string& AMLData::getValueToStr(const std::string& key) const
 {
-    for (auto const& element : m_values)
+    auto iter = m_values.find(key);
+    if (iter == m_values.end())
     {
-        if (key.compare(element.first) == 0)
-        {
-            auto type = element.second.which();
-
-            if (type != 0)
-            {
-                throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
-            }
-            else
-            {
-                std::string ret = boost::get<std::string>(element.second);
-                return ret;
-            }
-        }
+        throw AMLException(Exception::KEY_NOT_EXIST);
+    }
+    else if (0 != iter->second.which())
+    {
+        throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
     }
 
-    throw AMLException(Exception::KEY_NOT_EXIST);
+    return boost::get<std::string>(iter->second);
 }
 
-std::vector<std::string> AMLData::getValueToStrArr(const std::string& key) const
+const std::vector<std::string>& AMLData::getValueToStrArr(const std::string& key) const
 {
-    for (auto const& element : m_values)
+    auto iter = m_values.find(key);
+    if (iter == m_values.end())
     {
-        if (key.compare(element.first) == 0)
-        {
-            auto type = element.second.which();
-
-            if (type != 1)
-            {
-                throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
-            }
-            else
-            {
-                std::vector<std::string> ret = boost::get<std::vector<std::string>>(element.second);
-                return ret;
-            }
-        }
+        throw AMLException(Exception::KEY_NOT_EXIST);
+    }
+    else if (1 != iter->second.which())
+    {
+        throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
     }
 
-    throw AMLException(Exception::KEY_NOT_EXIST);
+    return boost::get<std::vector<std::string>>(iter->second);
 }
 
-AMLData AMLData::getValueToAMLData(const std::string& key) const
+const AMLData& AMLData::getValueToAMLData(const std::string& key) const
 {
-    for (auto const& element : m_values)
+    auto iter = m_values.find(key);
+    if (iter == m_values.end())
     {
-        if (key.compare(element.first) == 0)
-        {
-            auto type = element.second.which();
-
-            if (type != 2)
-            {
-                throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
-            }
-            else
-            {
-                AMLData ret = boost::get<AMLData>(element.second);
-                return ret;
-            }
-        }
+        throw AMLException(Exception::KEY_NOT_EXIST);
+    }
+    else if (2 != iter->second.which())
+    {
+        throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
     }
 
-    throw AMLException(Exception::KEY_NOT_EXIST);
+    return boost::get<AMLData>(iter->second);
 }

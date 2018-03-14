@@ -51,7 +51,7 @@ void AMLObject::addData(const std::string& name, const AMLData& data)
     }
 }
 
-AMLData AMLObject::getData(const std::string& name) const
+const AMLData& AMLObject::getData(const std::string& name) const
 {
     map<string, AMLData>::iterator iter = m_amlDatas.find(name);
     if (iter == m_amlDatas.end())
@@ -74,17 +74,17 @@ vector<string> AMLObject::getDataNames() const
     return dataNames;
 }
 
-std::string AMLObject::getDeviceId() const
+const std::string& AMLObject::getDeviceId() const
 {
     return m_deviceId;
 }
 
-std::string AMLObject::getTimeStamp() const
+const std::string& AMLObject::getTimeStamp() const
 {
     return m_timeStamp;
 }
 
-std::string AMLObject::getId() const
+const std::string& AMLObject::getId() const
 {
     return m_id;
 }
