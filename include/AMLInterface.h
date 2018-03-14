@@ -78,7 +78,7 @@ public:
      * @param       data    [in] AMLData value.
      * @exception   AMLException If AMLData key is duplicated on AMLObject or if name is a invalid key.
      */
-    void                        addData(const std::string& name, const AMLData& data);
+    void                            addData(const std::string& name, const AMLData& data);
 
     /**
      * @fn AMLData getData(const std::string& name) const
@@ -87,35 +87,35 @@ public:
      * @return      AMLData that have sub key value fair.
      * @exception   AMLException If the input name does not exist in amlDatas.
      */
-    AMLData                     getData(const std::string& name) const;
+    const AMLData&                  getData(const std::string& name) const;
 
     /**
      * @fn std::vector<std::string> getDataNames() const
      * @brief       This function return string list about AMLObject's amlDatas keys string array.
      * @return      vector of string data's keys value list.
      */
-    std::vector<std::string>    getDataNames() const;
+    std::vector<std::string>        getDataNames() const;
 
     /**
      * @fn std::string getDeviceId() const;
      * @brief       This function return Device's ID saved on AMLObject.
      * @return      String value of device's Id.
      */    
-    std::string                 getDeviceId() const;
+    const std::string&              getDeviceId() const;
 
     /**
      * @fn std::string getTimeStamp() const;
      * @brief       This function return timestamp that deliveried device.
      * @return      String value of timestamp.
      */
-    std::string                 getTimeStamp() const;
+    const std::string&              getTimeStamp() const;
 
     /**
      * @fn std::string getId() const;
      * @brief       This function return ID that AMLObject.
      * @return      String value of AMLObject Id.
      */
-    std::string                 getId() const;
+    const std::string&              getId() const;
 
 private:
     const std::string m_deviceId;
@@ -141,7 +141,7 @@ public:
      * @param       key     [in] AMLData key.
      * @param       value   [in] AMLData value.
      */
-    void                        setValue(const std::string& key, const std::string& value);
+    void                            setValue(const std::string& key, const std::string& value);
 
     /**
      * @fn void setValue(const std::string& key, const std::vector<std::string>& value)
@@ -149,7 +149,7 @@ public:
      * @param       key     [in] AMLData key.
      * @param       value   [in] AMLData value.
      */
-    void                        setValue(const std::string& key, const std::vector<std::string>& value); 
+    void                            setValue(const std::string& key, const std::vector<std::string>& value); 
     
     /**
      * @fn void setValue(const std::string& key, const AMLData& value)
@@ -157,7 +157,7 @@ public:
      * @param       key     [in] AMLData key
      * @param       value   [in] AMLData value
      */
-    void                        setValue(const std::string& key, const AMLData& value);
+    void                            setValue(const std::string& key, const AMLData& value);
 
     /**
      * @fn std::string getValueToStr(const std::string& key) const
@@ -166,7 +166,7 @@ public:
      * @return      String value which matched using key on AMLMap.
      * @exception   AMLException If input key is not matching on AMLMap.
      */
-    std::string                 getValueToStr(const std::string& key) const;
+    const std::string&              getValueToStr(const std::string& key) const;
     
     /**
      * @fn std::string getValueToStrArr(const std::string& key) const
@@ -175,7 +175,7 @@ public:
      * @return      String array value which matched using key on AMLMap.
      * @exception   AMLException If input key is not matching on AMLMap.
      */
-    std::vector<std::string>    getValueToStrArr(const std::string& key) const;
+    const std::vector<std::string>& getValueToStrArr(const std::string& key) const;
     
     /**
      * @fn std::string getValueToAMLData(const std::string& key) const
@@ -184,14 +184,14 @@ public:
      * @return      AMLData value which matched using key on AMLMap.
      * @exception   AMLException If input key is not matching on AMLMap.
      */
-    AMLData                     getValueToAMLData(const std::string& key) const;
+    const AMLData&                  getValueToAMLData(const std::string& key) const;
 
     /**
      * @fn std::vector<std::string> getKeys() const
      * @brief       This function return string list about AMLData's AMLMap keys string array.
      * @return      vector of string data's keys value list.
      */
-    std::vector<std::string>    getKeys() const;
+    std::vector<std::string>        getKeys() const;
 
     /**
      * @fn AMLValueType getValueType(const std::string& key) const
@@ -199,7 +199,7 @@ public:
      * @param       key     [in] string of the AMLData value to check.
      * @return      value's AMLValueType of pre defined data type.
      */
-    AMLValueType                getValueType(const std::string& key) const;
+    AMLValueType                    getValueType(const std::string& key) const;
 
 private:
     AMLMap m_values;

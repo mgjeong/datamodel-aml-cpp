@@ -101,77 +101,53 @@ AMLValueType AMLData::getValueType(const std::string& key) const
     throw AMLException(Exception::KEY_NOT_EXIST);
 }
 
-std::string AMLData::getValueToStr(const std::string& key) const
+const std::string& AMLData::getValueToStr(const std::string& key) const
 {
-    for (auto const& element : m_values)
+    auto iter = m_values.find(key);
+    if (iter == m_values.end())
     {
-        if (key.compare(element.first) == 0)
-        {
-            auto type = element.second.which();
-
-            if (type != 0)
-            {
-                AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(type));
-                throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
-            }
-            else
-            {
-                std::string ret = boost::get<std::string>(element.second);
-                return ret;
-            }
-        }
+        AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
+        throw AMLException(Exception::KEY_NOT_EXIST);
+    }
+    else if (0 != iter->second.which())
+    {
+        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
+        throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
     }
 
-    AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
-    throw AMLException(Exception::KEY_NOT_EXIST);
+    return boost::get<std::string>(iter->second);
 }
 
-std::vector<std::string> AMLData::getValueToStrArr(const std::string& key) const
+const std::vector<std::string>& AMLData::getValueToStrArr(const std::string& key) const
 {
-    for (auto const& element : m_values)
+    auto iter = m_values.find(key);
+    if (iter == m_values.end())
     {
-        if (key.compare(element.first) == 0)
-        {
-            auto type = element.second.which();
-
-            if (type != 1)
-            {
-                AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(type));
-                throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
-            }
-            else
-            {
-                std::vector<std::string> ret = boost::get<std::vector<std::string>>(element.second);
-                return ret;
-            }
-        }
+        AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
+        throw AMLException(Exception::KEY_NOT_EXIST);
+    }
+    else if (1 != iter->second.which())
+    {
+        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
+        throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
     }
 
-    AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
-    throw AMLException(Exception::KEY_NOT_EXIST);
+    return boost::get<std::vector<std::string>>(iter->second);
 }
 
-AMLData AMLData::getValueToAMLData(const std::string& key) const
+const AMLData& AMLData::getValueToAMLData(const std::string& key) const
 {
-    for (auto const& element : m_values)
+    auto iter = m_values.find(key);
+    if (iter == m_values.end())
     {
-        if (key.compare(element.first) == 0)
-        {
-            auto type = element.second.which();
-
-            if (type != 2)
-            {
-                AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(type));
-                throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
-            }
-            else
-            {
-                AMLData ret = boost::get<AMLData>(element.second);
-                return ret;
-            }
-        }
+        AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
+        throw AMLException(Exception::KEY_NOT_EXIST);
+    }
+    else if (2 != iter->second.which())
+    {
+        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
+        throw AMLException(Exception::KEY_VALUE_NOT_MATCH);
     }
 
-    AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
-    throw AMLException(Exception::KEY_NOT_EXIST);
+    return boost::get<AMLData>(iter->second);
 }
