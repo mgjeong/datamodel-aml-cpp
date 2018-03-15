@@ -52,7 +52,6 @@ static const char SUPPORTED_ROLE_CLASS[]            = "SupportedRoleClass";
 static const char CORRESPONDING_ATTRIBUTE_PATH[]    = "CorrespondingAttributePath";
 static const char ORDERED_LIST_TYPE[]               = "OrderedListType";
 
-static const char EDGE_COREDATA[]                   = "Edge_CoreData";
 static const char EVENT[]                           = "Event";
 
 static const char KEY_DEVICE[]                      = "device";
@@ -200,7 +199,7 @@ public:
         pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).append_child(INSTANCE_HIERARCHY);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_ih);
 
-        xml_ih.append_attribute(NAME) = EDGE_COREDATA; // @TODO: Are we still going to use "Edge_CoreData" for the name of IH?
+        xml_ih.append_attribute(NAME) = m_systemUnitClassLib.attribute(NAME).value(); // set IH name to be the same as SUCL name
 
         // add Event as InternalElement
         pugi::xml_node xml_event = addInternalElement(xml_ih, EVENT);
@@ -216,7 +215,7 @@ public:
 
         // add AMLDatas into Event
         vector<string> dataNames = amlObject.getDataNames();
-        for(string name : dataNames)
+        for (string name : dataNames)
         {
             AMLData data = amlObject.getData(name);
             pugi::xml_node xml_ie = addInternalElement(xml_event, name);
@@ -247,7 +246,7 @@ private:
 
         pugi::xml_node xml_caexFile = xml_doc->append_child(CAEX_FILE);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_caexFile);
-        xml_caexFile.append_attribute("FileName") = "test.aml"; // @TODO: set by application? or randomly generated? or using time stamp of event
+        xml_caexFile.append_attribute("FileName") = "";
         xml_caexFile.append_attribute("SchemaVersion") = "2.15";
         xml_caexFile.append_attribute("xsi:noNamespaceSchemaLocation") = "CAEX_ClassModel_V2.15.xsd";
         xml_caexFile.append_attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
