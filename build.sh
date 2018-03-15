@@ -19,7 +19,7 @@
 
 AML_TARGET_ARCH=x86_64
 
-function build(){
+build() {
     scons TARGET_OS=linux TARGET_ARCH=${AML_TARGET_ARCH}
     if [ $? -ne 0 ]; then 
         echo -e "\033[31m"Build failed"\033[0m" 

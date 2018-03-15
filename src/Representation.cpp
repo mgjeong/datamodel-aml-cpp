@@ -24,7 +24,10 @@
 #include "Representation.h"
 #include "AMLInterface.h"
 #include "AMLException.h"
+#include "AMLLogger.h"
 #include "AML.pb.h"
+
+#define TAG "Representation"
 
 using namespace std;
 
@@ -109,6 +112,7 @@ public:
         pugi::xml_parse_result result = m_doc->load_file(amlFilePath.c_str());
         if (pugi::status_ok != result.status) 
         {
+            AML_LOG_V(ERROR, TAG, "Failed to load file : %s", amlFilePath.c_str());
             delete m_doc;
             throw AMLException(Exception::INVALID_FILE_PATH);
         }
@@ -116,6 +120,7 @@ public:
         pugi::xml_node xmlCaexFile = m_doc->child(CAEX_FILE);
         if (NULL == xmlCaexFile)
         {
+            AML_LOG(ERROR, TAG, "Invalid AML File : <CAEXFile> does not exist");
             delete m_doc;
             throw AMLException(Exception::INVALID_SCHEMA);
         }
@@ -123,6 +128,7 @@ public:
         m_systemUnitClassLib = xmlCaexFile.child(SYSTEM_UNIT_CLASS_LIB);
         if (NULL == m_systemUnitClassLib) 
         {
+            AML_LOG(ERROR, TAG, "Invalid AML File : <SystemUnitClassLib> does not exist");
             delete m_doc;
             throw AMLException(Exception::INVALID_SCHEMA);
         }
@@ -145,12 +151,14 @@ public:
         if (NULL == xml_doc->child(CAEX_FILE) ||
             NULL == xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY))
         {
+            AML_LOG(ERROR, TAG, "<CAEXFile> or <InstanceHierarchy> does not exist");
             throw AMLException(Exception::INVALID_AML_FORMAT);
         }
 
         pugi::xml_node xml_event = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY).find_child_by_attribute(INTERNAL_ELEMENT, NAME, EVENT);
         if (NULL == xml_event) 
         {
+            AML_LOG(ERROR, TAG, "<Event> does not exist");
             throw AMLException(Exception::INVALID_AML_FORMAT);
         }
 
@@ -341,7 +349,7 @@ private:
             }
             else
             {
-                // @TODO: error
+                AML_LOG_V(ERROR, TAG, "Invalid XML : <%s> has value of invalid type", attributeName.c_str());
                 throw AMLException(Exception::INVALID_XML_STR);
             }
         }
@@ -406,6 +414,7 @@ AMLObject* Representation::AmlToData(const std::string& xmlStr) const
     pugi::xml_parse_result result = dataXml.load_string(xmlStr.c_str());
     if (pugi::status_ok != result.status)
     {
+        AML_LOG(ERROR, TAG, "Failed to load string : Invalid XML");
         throw AMLException(Exception::INVALID_XML_STR);
     }
 
@@ -420,6 +429,7 @@ AMLObject* Representation::ByteToData(const std::string& byte) const
 
     if (false == caex->ParseFromString(byte))
     {
+        AML_LOG(ERROR, TAG, "Failed to parse from string : Invalid byte");
         delete caex;
         throw AMLException(Exception::NOT_IMPL); //@TODO: 'Invalid byte' or 'failed to deserialize' ?
     }
