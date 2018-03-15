@@ -44,6 +44,7 @@ static const char REF_SEMANTIC[]                    = "RefSemantic";
 
 static const char NAME[]                            = "Name";
 static const char VALUE[]                           = "Value";
+static const char VERSION[]                         = "Version";
 static const char ATTRIBUTE_DATA_TYPE[]             = "AttributeDataType";
 static const char DESCRIPTION[]                     = "Description";
 static const char REF_BASE_SYSTEM_UNIT_PATH[]       = "RefBaseSystemUnitPath";
@@ -233,6 +234,22 @@ public:
         //xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
     }
 
+    std::string constructModelId()
+    {
+        if(NULL != m_systemUnitClassLib) {
+            std::string s1(m_systemUnitClassLib.attribute(NAME).value());
+            std::string s2(m_systemUnitClassLib.child_value(VERSION));
+
+            std::string modelId = s1 + "_" + s2;
+            
+            return modelId;
+        }
+        else
+        {
+            throw AMLException(Exception::INVALID_SCHEMA);
+        }
+    }
+
 private:
     pugi::xml_document* m_doc;
     pugi::xml_node m_systemUnitClassLib;
@@ -358,8 +375,6 @@ private:
 
     void addStringArrayValue(pugi::xml_node xml_ie, const std::vector<std::string> valueArray)
     {
-        // @TODO: 모델링 AML파일에서 자식 Attribute의 DataType을 어떻게 가지고 있을 것인가? (부모 Attribute의 DataType은 Empty여야함)
-
         for (std::size_t i = 0, size = valueArray.size(); i != size; ++i)
         {
             pugi::xml_node xml_child_attr = xml_ie.append_child(ATTRIBUTE);
@@ -503,6 +518,11 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
         throw AMLException(Exception::NOT_IMPL); //@TODO: 'failed to serialize' ?
     }
     return binary;
+}
+
+std::string Representation::getRepresentationId() const
+{
+    return m_amlModel->constructModelId();
 }
 
 template <class T>

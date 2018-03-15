@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<CAEXFile FileName="data_modeling.aml" SchemaVersion="2.15" xsi:noNamespaceSchemaLocation="CAEX_Classmodel_V2.15.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<InstanceHierarchy Name="GTC_Robot_Sample">
+<CAEXFile FileName="" SchemaVersion="2.15" xsi:noNamespaceSchemaLocation="CAEX_Classmodel_V2.15.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<InstanceHierarchy Name="GTC_Robot">
 	</InstanceHierarchy>
 	<SystemUnitClassLib Name="GTC_Robot">
 		<Version>0.0.1</Version>
