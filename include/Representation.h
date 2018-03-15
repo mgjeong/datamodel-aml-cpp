@@ -81,8 +81,8 @@ public:
     AMLObject* ByteToData(const std::string& byte) const;
 
     /**
-     * @fn std::string getRepresentationId
-     * @brief       This function return AutomationML SystemUnitClassLib's unique ID
+     * @fn std::string getRepresentationId const
+     * @brief       This function returns AutomationML SystemUnitClassLib's unique ID
      * @return      string value of AML SystemUnitClassLIb's ID
      */
     std::string getRepresentationId() const;

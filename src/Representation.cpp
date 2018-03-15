@@ -41,10 +41,10 @@ static const char INTERNAL_ELEMENT[]                = "InternalElement";
 static const char ATTRIBUTE[]                       = "Attribute";
 static const char ADDITIONAL_INFORMATION[]          = "AdditionalInformation";
 static const char REF_SEMANTIC[]                    = "RefSemantic";
+static const char VERSION[]                         = "Version";
 
 static const char NAME[]                            = "Name";
 static const char VALUE[]                           = "Value";
-static const char VERSION[]                         = "Version";
 static const char ATTRIBUTE_DATA_TYPE[]             = "AttributeDataType";
 static const char DESCRIPTION[]                     = "Description";
 static const char REF_BASE_SYSTEM_UNIT_PATH[]       = "RefBaseSystemUnitPath";
@@ -236,18 +236,12 @@ public:
 
     std::string constructModelId()
     {
-        if(NULL != m_systemUnitClassLib) {
-            std::string s1(m_systemUnitClassLib.attribute(NAME).value());
-            std::string s2(m_systemUnitClassLib.child_value(VERSION));
+        std::string suclName(m_systemUnitClassLib.attribute(NAME).value());
+        std::string suclVersion(m_systemUnitClassLib.child_value(VERSION));
 
-            std::string modelId = s1 + "_" + s2;
-            
-            return modelId;
-        }
-        else
-        {
-            throw AMLException(Exception::INVALID_SCHEMA);
-        }
+        std::string modelId = suclName + "_" + suclVersion;
+
+        return modelId;
     }
 
 private:
