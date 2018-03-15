@@ -41,6 +41,7 @@ static const char INTERNAL_ELEMENT[]                = "InternalElement";
 static const char ATTRIBUTE[]                       = "Attribute";
 static const char ADDITIONAL_INFORMATION[]          = "AdditionalInformation";
 static const char REF_SEMANTIC[]                    = "RefSemantic";
+static const char VERSION[]                         = "Version";
 
 static const char NAME[]                            = "Name";
 static const char VALUE[]                           = "Value";
@@ -52,7 +53,6 @@ static const char SUPPORTED_ROLE_CLASS[]            = "SupportedRoleClass";
 static const char CORRESPONDING_ATTRIBUTE_PATH[]    = "CorrespondingAttributePath";
 static const char ORDERED_LIST_TYPE[]               = "OrderedListType";
 
-static const char EDGE_COREDATA[]                   = "Edge_CoreData";
 static const char EVENT[]                           = "Event";
 
 static const char KEY_DEVICE[]                      = "device";
@@ -200,7 +200,7 @@ public:
         pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).append_child(INSTANCE_HIERARCHY);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_ih);
 
-        xml_ih.append_attribute(NAME) = EDGE_COREDATA; // @TODO: Are we still going to use "Edge_CoreData" for the name of IH?
+        xml_ih.append_attribute(NAME) = m_systemUnitClassLib.attribute(NAME).value(); // set IH name to be the same as SUCL name
 
         // add Event as InternalElement
         pugi::xml_node xml_event = addInternalElement(xml_ih, EVENT);
@@ -216,7 +216,7 @@ public:
 
         // add AMLDatas into Event
         vector<string> dataNames = amlObject.getDataNames();
-        for(string name : dataNames)
+        for (string name : dataNames)
         {
             AMLData data = amlObject.getData(name);
             pugi::xml_node xml_ie = addInternalElement(xml_event, name);
@@ -234,6 +234,16 @@ public:
         //xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
     }
 
+    std::string constructModelId()
+    {
+        std::string suclName(m_systemUnitClassLib.attribute(NAME).value());
+        std::string suclVersion(m_systemUnitClassLib.child_value(VERSION));
+
+        std::string modelId = suclName + "_" + suclVersion;
+
+        return modelId;
+    }
+
 private:
     pugi::xml_document* m_doc;
     pugi::xml_node m_systemUnitClassLib;
@@ -247,7 +257,7 @@ private:
 
         pugi::xml_node xml_caexFile = xml_doc->append_child(CAEX_FILE);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_caexFile);
-        xml_caexFile.append_attribute("FileName") = "test.aml"; // @TODO: set by application? or randomly generated? or using time stamp of event
+        xml_caexFile.append_attribute("FileName") = "";
         xml_caexFile.append_attribute("SchemaVersion") = "2.15";
         xml_caexFile.append_attribute("xsi:noNamespaceSchemaLocation") = "CAEX_ClassModel_V2.15.xsd";
         xml_caexFile.append_attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
@@ -359,8 +369,6 @@ private:
 
     void addStringArrayValue(pugi::xml_node xml_ie, const std::vector<std::string> valueArray)
     {
-        // @TODO: 모델링 AML파일에서 자식 Attribute의 DataType을 어떻게 가지고 있을 것인가? (부모 Attribute의 DataType은 Empty여야함)
-
         for (std::size_t i = 0, size = valueArray.size(); i != size; ++i)
         {
             pugi::xml_node xml_child_attr = xml_ie.append_child(ATTRIBUTE);
@@ -504,6 +512,11 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
         throw AMLException(Exception::NOT_IMPL); //@TODO: 'failed to serialize' ?
     }
     return binary;
+}
+
+std::string Representation::getRepresentationId() const
+{
+    return m_amlModel->constructModelId();
 }
 
 template <class T>

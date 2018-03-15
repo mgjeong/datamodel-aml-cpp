@@ -34,6 +34,8 @@ namespace AMLRepresentationTest
     std::string amlDataFile                 = "./TEST_Data.aml";
     std::string dataBinaryFile              = "./TEST_DataBinary";
 
+    std::string amlModelId                  = "GTC_Robot_0.0.1"; // from "TEST_DataModel.aml" file
+
     // Helper method
     AMLObject TestAMLObject()
     {
@@ -246,5 +248,12 @@ namespace AMLRepresentationTest
 
         std::string varify = TestBinary();
         EXPECT_EQ(varify.compare(amlBinary), 0);
+    }
+
+    TEST(GetRepresentationIdTest, GetValid)
+    {
+        Representation rep = Representation(amlModelFile);
+
+        EXPECT_TRUE(amlModelId == rep.getRepresentationId());
     }
 }
