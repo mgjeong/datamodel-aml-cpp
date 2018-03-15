@@ -35,6 +35,7 @@ typedef enum
     AML_INVALID_SCHEMA,
     AML_INVALID_XML_STR,
     AML_INVALID_AML_FORMAT,
+    AML_INVALID_AMLDATA_NAME,
     AML_NOT_IMPL,               // @TODO: need to be specified more
     AML_NO_MEMORY,
 
@@ -57,6 +58,7 @@ namespace Exception
     static const char INVALID_SCHEMA[]              = "Invalid AutomationML Schema File";
     static const char INVALID_XML_STR[]             = "Invalid XML Style String";
     static const char INVALID_AML_FORMAT[]          = "Invalid AML format";
+    static const char INVALID_AMLDATA_NAME[]        = "Invalid AMLData Name";
     static const char NOT_IMPL[]                    = "Not Implemented";
     static const char NO_MEMORY[]                   = "No Momory";
 

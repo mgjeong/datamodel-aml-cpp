@@ -215,6 +215,41 @@ namespace AMLRepresentationTest
 //         EXPECT_EQ(varify.compare(amlStr), 0); //@TODO: issue - it does not return 0 though they are same string 
 //     }
 
+    TEST(DataToAmlTest, InvalidDataToModel)
+    {
+        Representation rep = Representation(amlModelFile);
+
+        AMLObject notMatchToModel("deviceId", "0");
+
+        AMLData data;
+        data.setValue("invalidKey", "invalidValue");
+
+        notMatchToModel.addData("invalidData", data);
+
+        EXPECT_THROW(rep.DataToAml(notMatchToModel), AMLException);
+    }
+
+    TEST(DataToAmlTest, IgnoreDataNotInModel)
+    {
+        Representation rep = Representation(amlModelFile);
+        AMLObject amlObj = TestAMLObject();
+
+        AMLData sample = amlObj.getData("Sample");
+        sample.setValue("additionalKey", "additionalValue");
+
+        std::string amlStr;
+        EXPECT_NO_THROW(amlStr = rep.DataToAml(amlObj));
+
+        AMLObject *resultObj = NULL;
+        EXPECT_NO_THROW(resultObj = rep.AmlToData(amlStr));
+
+        AMLData sampleResult = resultObj->getData("Sample");
+
+        EXPECT_THROW(sampleResult.getValueToStr("additionalKey"), AMLException);
+
+        if (NULL != resultObj) delete resultObj;
+    }
+
     TEST(ByteToDataTest, ConvertValid)
     {
         Representation rep = Representation(amlModelFile);
@@ -233,7 +268,7 @@ namespace AMLRepresentationTest
         Representation rep = Representation(amlModelFile);
         AMLObject* amlObj = NULL;
         std::string amlBinary("invalidBinary");
-        
+
         EXPECT_THROW(amlObj = rep.ByteToData(amlBinary), AMLException);
 
         if (NULL != amlObj)  delete amlObj;

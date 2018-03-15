@@ -33,6 +33,8 @@ std::string AMLException::reason(const AMLResult res)
             return Exception::INVALID_AML_FORMAT;
         case AML_INVALID_SCHEMA:
             return Exception::INVALID_SCHEMA;
+        case AML_INVALID_AMLDATA_NAME:
+            return Exception::INVALID_AMLDATA_NAME;
         case AML_NOT_IMPL:
             return Exception::NOT_IMPL;
         case AML_NO_MEMORY:
