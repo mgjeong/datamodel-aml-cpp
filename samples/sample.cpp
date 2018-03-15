@@ -115,8 +115,12 @@ void printAMLObject(AMLObject amlObj)
 
 int main() {
     // construct Representation object
-    Representation* rep = new Representation("data_modeling.aml");
-    cout << rep->getRepresentationId() << endl;
+    //Representation* rep = new Representation("data_modeling.aml");
+    Representation* rep = new Representation("GTC_data_modeling.aml");
+
+    AMLObject* config_amlObj= rep->getConfigAMLObject();
+    printAMLObject(*config_amlObj);
+    cout << "-------------------------------------------------------------" << endl;
 
     // create AMLObject
     string deviceId = "GTC001";

@@ -81,11 +81,18 @@ public:
     AMLObject* ByteToData(const std::string& byte) const;
 
     /**
-     * @fn std::string getRepresentationId const
+     * @fn std::string getRepresentationId() const
      * @brief       This function returns AutomationML SystemUnitClassLib's unique ID
      * @return      string value of AML SystemUnitClassLIb's ID
      */
     std::string getRepresentationId() const;
+
+    /**
+     * @fn AMLObject* getConfigAMLObject() const
+     * @brief       This function returns AMLObject that have data pushing cycle value to use OPCUA init configurate
+     * @return      AMLObject that have device data and cycle value
+     */
+    AMLObject* getConfigAMLObject() const;
 
 private:
     class AMLModel;

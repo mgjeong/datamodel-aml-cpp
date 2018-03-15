@@ -59,6 +59,10 @@ static const char KEY_DEVICE[]                      = "device";
 static const char KEY_ID[]                          = "id";
 static const char KEY_TIMESTAMP[]                   = "timestamp";
 
+static const char CONFIG[]                          = "Config";
+static const char CYCLE[]                           = "cycle";
+
+
 #define IS_NAME(node, name)                     (std::string((node).attribute(NAME).value()) == (name))
 #define ADD_VALUE(node, value)                  (node).append_child(VALUE).text().set((value).c_str()) //#TODO: verify non-null after append_child()
 
@@ -133,15 +137,61 @@ public:
             throw AMLException(Exception::INVALID_SCHEMA);
         }
 
+        m_roleClassLib = xmlCaexFile.child(ROLE_CLASS_LIB);
+        if (NULL == m_roleClassLib) 
+        {
+            AML_LOG(ERROR, TAG, "Invalid AML File : <RoleClassLib> does not exist");
+            delete m_doc;
+            throw AMLException(Exception::INVALID_SCHEMA);
+        }
+
         // remove "AdditionalInformation", "InstanceHierarchy" and "RoleClassLib" data
         while (xmlCaexFile.child(ADDITIONAL_INFORMATION))   xmlCaexFile.remove_child(ADDITIONAL_INFORMATION);
         while (xmlCaexFile.child(INSTANCE_HIERARCHY))       xmlCaexFile.remove_child(INSTANCE_HIERARCHY);
-        while (xmlCaexFile.child(ROLE_CLASS_LIB))           xmlCaexFile.remove_child(ROLE_CLASS_LIB);
+        //while (xmlCaexFile.child(ROLE_CLASS_LIB))           xmlCaexFile.remove_child(ROLE_CLASS_LIB);
     }
 
     ~AMLModel()
     {
         delete m_doc;
+    }
+
+    AMLObject* constructConfigAmlObject()
+    {
+        std::string deviceName(m_systemUnitClassLib.attribute(NAME).value());
+        std::string id = deviceName + "_" + CONFIG;
+        
+        AMLObject* amlObj = new AMLObject(deviceName, CONFIG, id);
+
+        for(pugi::xml_node xml_data = m_systemUnitClassLib.child(SYSTEM_UNIT_CLASS); xml_data; xml_data = xml_data.next_sibling(SYSTEM_UNIT_CLASS))
+        {
+            std::string dataName = xml_data.attribute(NAME).value();
+            if(!dataName.compare(EVENT))
+            {
+                continue;
+            }
+
+            std::string dataValue;
+            for(pugi::xml_node xml_data_rc = m_roleClassLib.child(ROLE_CLASS); xml_data_rc; xml_data_rc = xml_data_rc.next_sibling(ROLE_CLASS))
+            {
+                if(dataName.compare(xml_data_rc.attribute(NAME).value()) == 0)
+                {
+                    dataValue = xml_data_rc.child(ATTRIBUTE).child_value(VALUE);
+                    break;
+                } 
+            }
+            
+            if(dataValue.empty()) 
+            {
+                AML_LOG(ERROR, TAG, "Invalid AML File : <RoleClass> key not exist");
+                throw AMLException(Exception::KEY_NOT_EXIST);
+            }
+            AMLData amlData;
+            amlData.setValue(CYCLE, dataValue);
+            amlObj->addData(dataName, amlData);
+        }
+
+        return amlObj;
     }
 
     AMLObject* constructAmlObject(pugi::xml_document* xml_doc)
@@ -231,7 +281,7 @@ public:
     {
         assert(nullptr != xml_doc);
         xml_doc->child(CAEX_FILE).append_copy(m_systemUnitClassLib);
-        //xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
+        xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
     }
 
     std::string constructModelId()
@@ -247,6 +297,7 @@ public:
 private:
     pugi::xml_document* m_doc;
     pugi::xml_node m_systemUnitClassLib;
+    pugi::xml_node m_roleClassLib;
 
     void initializeAML(pugi::xml_document* xml_doc)
     {
@@ -518,6 +569,11 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
 std::string Representation::getRepresentationId() const
 {
     return m_amlModel->constructModelId();
+}
+
+AMLObject* Representation::getConfigAMLObject() const
+{
+    return m_amlModel->constructConfigAmlObject();
 }
 
 template <class T>
