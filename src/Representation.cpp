@@ -314,26 +314,27 @@ private:
 
     pugi::xml_node addInternalElement(pugi::xml_node xml_parent, const std::string suc_name)
     {
-        pugi::xml_node xml_ie = pugi::xml_node();
-
         pugi::xml_node xml_suc = m_systemUnitClassLib.find_child_by_attribute(NAME, suc_name.c_str());
-        if (xml_suc)
+        if (!xml_suc)
         {
-            xml_ie = xml_parent.append_copy(xml_suc);
-
-            // reset Name (SystemUnitClass -> InternalElement)
-            xml_ie.set_name(INTERNAL_ELEMENT);
-
-            // set RefBaseSystemUnitPath
-            std::string refBaseSystemUnitPath;
-            refBaseSystemUnitPath.append(m_systemUnitClassLib.attribute(NAME).value());
-            refBaseSystemUnitPath.append("/");
-            refBaseSystemUnitPath.append(suc_name);
-            xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = refBaseSystemUnitPath.c_str();
-
-            // // set SupportedRoleClass
-            // xml_ie.append_copy(xml_suc.child(SUPPORTED_ROLE_CLASS));
+            AML_LOG_V(ERROR, TAG, "Invalid Data : <%s> is not present in SystemUnitClassLib", suc_name.c_str());
+            throw AMLException(Exception::INVALID_AMLDATA_NAME);
         }
+
+        pugi::xml_node xml_ie = xml_parent.append_copy(xml_suc);
+
+        // reset Name (SystemUnitClass -> InternalElement)
+        xml_ie.set_name(INTERNAL_ELEMENT);
+
+        // set RefBaseSystemUnitPath
+        std::string refBaseSystemUnitPath;
+        refBaseSystemUnitPath.append(m_systemUnitClassLib.attribute(NAME).value());
+        refBaseSystemUnitPath.append("/");
+        refBaseSystemUnitPath.append(suc_name);
+        xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = refBaseSystemUnitPath.c_str();
+
+        // // set SupportedRoleClass
+        // xml_ie.append_copy(xml_suc.child(SUPPORTED_ROLE_CLASS));
 
         return xml_ie;
     }
