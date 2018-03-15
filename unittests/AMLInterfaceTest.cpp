@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 #include "AMLInterface.h"
 #include "AMLException.h"
