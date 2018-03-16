@@ -88,11 +88,12 @@ public:
     std::string getRepresentationId() const;
 
     /**
-     * @fn AMLObject* getConfigAMLObject() const
-     * @brief       This function returns AMLObject that have data pushing cycle value to use OPCUA init configurate
-     * @return      AMLObject that have device data and cycle value
+     * @fn AMLObject* getConfigInfo() const
+     * @brief       This function returns AMLObject that contains configuration data which is present in RoleClassLib.
+     * @return      AMLObject that has configuration data.
+     * @note        AMLObject instance will be allocated and returned, so it should be deleted after use.
      */
-    AMLObject* getConfigAMLObject() const;
+    AMLObject* getConfigInfo() const;
 
 private:
     class AMLModel;

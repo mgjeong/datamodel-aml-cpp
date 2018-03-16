@@ -15,6 +15,7 @@
  *
  *******************************************************************************/
 
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -25,6 +26,115 @@
 using namespace std;
 
 // helper methods
+void printAMLData(AMLData amlData, int depth);
+void printAMLObject(AMLObject amlObj);
+void saveStringToFile(string str, string filePath);
+
+/*
+    Raw Data1 (name : "Model")
+    {
+        "ctname": "Model_107.113.97.248",
+        "con": "SR-P7-970"
+    }
+
+    Raw Data2 (name : "Sample")
+    {
+        "info": {
+            "id": "f437da3b",
+            "axis": {
+                "x": "20",
+                "y": "110"
+                "z": "80"
+            }
+        },
+        "appendix": [
+            "935",
+            "52303",
+            "1442"
+        ]
+    }
+*/
+
+int main() {
+    // construct Representation object
+    Representation* rep = new Representation("data_modeling.aml");
+    cout << "RepresentationId is " << rep->getRepresentationId() << endl;
+    cout << "-------------------------------------------------------------" << endl;
+
+    AMLObject* config_amlObj = rep->getConfigInfo();
+    printAMLObject(*config_amlObj);
+    delete config_amlObj;
+    cout << "-------------------------------------------------------------" << endl;
+
+    // create AMLObject
+    string deviceId = "GTC001";
+    string timeStamp = "123456789";
+
+    AMLObject amlObj(deviceId, timeStamp);
+
+    // create "Model" data
+    AMLData model;
+    model.setValue("ctname", "Model_107.113.97.248");
+    model.setValue("con", "SR-P7-970");
+
+    // create "Sample" data
+    AMLData axis;
+    axis.setValue("x", "20");
+    axis.setValue("y", "110");
+    axis.setValue("z", "80");
+
+    AMLData info;
+    info.setValue("id", "f437da3b");
+    info.setValue("axis", axis);
+
+    vector<string> appendix;
+    appendix.push_back("52303");
+    appendix.push_back("935");
+    appendix.push_back("1442");
+
+    AMLData sample;
+    sample.setValue("info", info);
+    sample.setValue("appendix", appendix);
+
+
+    // Add Datas to AMLObject
+    amlObj.addData("Model", model);
+    amlObj.addData("Sample", sample);
+
+    printAMLObject(amlObj);
+
+    try{
+        // Convert AMLObject to AMLstring(XML)
+        string aml_string = rep->DataToAml(amlObj);
+        cout << aml_string << endl;
+        cout << "-------------------------------------------------------------" << endl;
+//        saveStringToFile(aml_string, "aml_result.aml");
+
+        // Convert AMLstring(XML) to AMLObject
+        AMLObject* data_from_aml = rep->AmlToData(aml_string);
+        printAMLObject(*data_from_aml);
+        cout << "-------------------------------------------------------------" << endl;
+
+        // Convert AMLObject to Byte(string)
+        string byte_string = rep->DataToByte(*data_from_aml);
+        cout << byte_string << endl;
+        cout << "-------------------------------------------------------------" << endl;
+//        saveStringToFile(byte_string, "binary_result");
+
+        // Convert Byte(string) to AMLObject
+        AMLObject* data_from_byte = rep->ByteToData(byte_string);
+        printAMLObject(*data_from_byte);
+        cout << "-------------------------------------------------------------" << endl;
+
+        delete data_from_aml;
+        delete data_from_byte;
+    }
+    catch (const AMLException& e)
+    {
+        cout << e.what();
+    }
+}
+
 void printAMLData(AMLData amlData, int depth)
 {
     string indent;
@@ -88,104 +198,9 @@ void printAMLObject(AMLObject amlObj)
     cout << "\n}" << endl;
 }
 
-/*
-    Raw Data1 (name : "Model")
-    {
-        "ctname": "Model_107.113.97.248",
-        "con": "SR-P7-970"
-    }
-
-    Raw Data2 (name : "Sample")
-    {
-        "info": {
-            "id": "f437da3b",
-            "axis": {
-                "x": "20",
-                "y": "110"
-                "z": "80"
-            }
-        },
-        "appendix": [
-            "935",
-            "52303",
-            "1442"
-        ]
-    }
-*/
-
-int main() {
-    // construct Representation object
-    //Representation* rep = new Representation("data_modeling.aml");
-    Representation* rep = new Representation("GTC_data_modeling.aml");
-
-    AMLObject* config_amlObj= rep->getConfigAMLObject();
-    printAMLObject(*config_amlObj);
-    cout << "-------------------------------------------------------------" << endl;
-
-    // create AMLObject
-    string deviceId = "GTC001";
-    string timeStamp = "123456789";
-
-    AMLObject amlObj(deviceId, timeStamp);
-
-
-    // create "Model" data
-    AMLData model;
-    model.setValue("ctname", "Model_107.113.97.248");
-    model.setValue("con", "SR-P7-970");
-
-    // create "Sample" data
-    AMLData axis;
-    axis.setValue("x", "20");
-    axis.setValue("y", "110");
-    axis.setValue("z", "80");
-
-    AMLData info;
-    info.setValue("id", "f437da3b");
-    info.setValue("axis", axis);
-
-    vector<string> appendix;
-    appendix.push_back("52303");
-    appendix.push_back("935");
-    appendix.push_back("1442");
-
-    AMLData sample;
-    sample.setValue("info", info);
-    sample.setValue("appendix", appendix);
-
-
-    // Add Datas to AMLObject
-    amlObj.addData("Model", model);
-    amlObj.addData("Sample", sample);
-
-    printAMLObject(amlObj);
-
-    try{
-        // Convert AMLObject to AMLstring(XML)
-        string aml_string = rep->DataToAml(amlObj);
-        cout << aml_string << endl;
-        cout << "-------------------------------------------------------------" << endl;
-
-        // Convert AMLstring(XML) to AMLObject
-        AMLObject* data_from_aml = rep->AmlToData(aml_string);
-        printAMLObject(*data_from_aml);
-        cout << "-------------------------------------------------------------" << endl;
-
-        // Convert AMLObject to Byte(string)
-        string byte_string = rep->DataToByte(*data_from_aml);
-        cout << byte_string << endl;
-        cout << "-------------------------------------------------------------" << endl;
-
-        // Convert Byte(string) to AMLObject
-        AMLObject* data_from_byte = rep->ByteToData(byte_string);
-        printAMLObject(*data_from_byte);
-        cout << "-------------------------------------------------------------" << endl;
-
-        delete data_from_aml;
-        delete data_from_byte;
-    }
-    catch (const AMLException& e)
-    {
-        cout << e.what();
-    }
+void saveStringToFile(string str, string filePath)
+{
+    std::ofstream out(filePath);
+    out << str;
+    out.close();
 }
