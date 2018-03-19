@@ -1,5 +1,8 @@
 # DataModel AML library (cpp)
-...
+datamodel-aml-cpp is a library which provides the way to present raw data(key/value based) to AutomationML(AML) standard format.
+ - Transform raw data to AML data(XML).
+ - Serialization / Deserialization AML data using protobuf.
+
 
 ## Prerequisites ##
 - SCons
@@ -15,17 +18,39 @@
   - [How to install](https://developers.google.com/protocol-buffers/docs/downloads)
 
 
-...
-
 ## How to build ##
 1. Goto: ~/datamodel-aml-cpp/
 2. Run the script:
+
    ```
-   ./build.sh <options>
+   ./build.sh <options>       : Native build for x86_64
+   ./build_arm.sh <options>   : Native build for armhf [Raspberry pi board])
    ```
 **Notes** </br>
 (a) For getting help about script option: **$ ./build.sh --help** </br>
 
+
 ## How to run ##
 
-...
+### Prerequisites ###
+ Built datamodel-aml-cpp library
+
+### Sample ###
+1. Goto: ~/datamodel-aml-cpp/out/linux/{ARCH}/{MODE}/samples/
+2. export LD_LIBRARY_PATH=../
+3. Run the sample:
+    ```
+     ./sample
+    ```
+
+## Usage guide for datamodel-aml-cpp library (for microservices)
+
+1. The microservice which wants to use aml APIs has to link following libraries:</br></br>
+   **(A) If microservice wants to link aml dynamically following are the libraries it needs to link:**</br>
+        - aml.so</br>
+   **(B) If microservice wants to link aml statically following are the libraries it needs to link:**</br>
+        - aml.a</br>
+2. Reference ezmq library APIs : [docs/docs/html/index.html](docs/docs/html/index.html)
+
+
+</br></br>
