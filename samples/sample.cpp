@@ -57,7 +57,7 @@ void saveStringToFile(string str, string filePath);
 
 int main() {
     // construct Representation object
-    Representation* rep = new Representation("data_modeling.aml");
+    Representation* rep = new Representation("sample_data_model.aml");
     cout << "RepresentationId is " << rep->getRepresentationId() << endl;
     cout << "-------------------------------------------------------------" << endl;
 
