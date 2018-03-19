@@ -81,11 +81,19 @@ public:
     AMLObject* ByteToData(const std::string& byte) const;
 
     /**
-     * @fn std::string getRepresentationId const
+     * @fn std::string getRepresentationId() const
      * @brief       This function returns AutomationML SystemUnitClassLib's unique ID
      * @return      string value of AML SystemUnitClassLIb's ID
      */
     std::string getRepresentationId() const;
+
+    /**
+     * @fn AMLObject* getConfigInfo() const
+     * @brief       This function returns AMLObject that contains configuration data which is present in RoleClassLib.
+     * @return      AMLObject that has configuration data.
+     * @note        AMLObject instance will be allocated and returned, so it should be deleted after use.
+     */
+    AMLObject* getConfigInfo() const;
 
 private:
     class AMLModel;
