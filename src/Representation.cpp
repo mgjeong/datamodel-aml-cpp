@@ -133,15 +133,55 @@ public:
             throw AMLException(Exception::INVALID_SCHEMA);
         }
 
-        // remove "AdditionalInformation", "InstanceHierarchy" and "RoleClassLib" data
+        m_roleClassLib = xmlCaexFile.child(ROLE_CLASS_LIB);
+        if (NULL == m_roleClassLib) 
+        {
+            AML_LOG(ERROR, TAG, "Invalid AML File : <RoleClassLib> does not exist");
+            delete m_doc;
+            throw AMLException(Exception::INVALID_SCHEMA);
+        }
+
+        // remove "AdditionalInformation" and "InstanceHierarchy" data
         while (xmlCaexFile.child(ADDITIONAL_INFORMATION))   xmlCaexFile.remove_child(ADDITIONAL_INFORMATION);
         while (xmlCaexFile.child(INSTANCE_HIERARCHY))       xmlCaexFile.remove_child(INSTANCE_HIERARCHY);
-        while (xmlCaexFile.child(ROLE_CLASS_LIB))           xmlCaexFile.remove_child(ROLE_CLASS_LIB);
     }
 
     ~AMLModel()
     {
         delete m_doc;
+    }
+
+    AMLObject* constructConfigAmlObject()
+    {
+        std::string deviceName(m_roleClassLib.attribute(NAME).value());
+
+        AMLObject* amlObj = new AMLObject(deviceName, "0");
+
+        for (pugi::xml_node xml_suc = m_systemUnitClassLib.child(SYSTEM_UNIT_CLASS); xml_suc; xml_suc = xml_suc.next_sibling(SYSTEM_UNIT_CLASS))
+        {
+            std::string className = xml_suc.attribute(NAME).value();
+            if (0 == className.compare(EVENT)) // Skip "Event"
+            {
+                continue;
+            }
+
+            pugi::xml_node xml_rc = m_roleClassLib.find_child_by_attribute(ROLE_CLASS, NAME, className.c_str());
+            if (NULL == xml_rc) 
+            {
+                AML_LOG_V(ERROR, TAG, "Invalid AML File : <RoleClass NAME=\"%s\"> does not exist", className.c_str());
+                throw AMLException(Exception::KEY_NOT_EXIST); //@TODO: need to be more specific
+            }
+
+            AMLData amlData;
+            for (pugi::xml_node xml_attr = xml_rc.child(ATTRIBUTE); xml_attr; xml_attr = xml_attr.next_sibling(ATTRIBUTE))
+            {
+                amlData.setValue(xml_attr.attribute(NAME).value(), xml_attr.child_value(VALUE));
+            }
+
+            amlObj->addData(className, amlData);
+        }
+
+        return amlObj;
     }
 
     AMLObject* constructAmlObject(pugi::xml_document* xml_doc)
@@ -231,7 +271,7 @@ public:
     {
         assert(nullptr != xml_doc);
         xml_doc->child(CAEX_FILE).append_copy(m_systemUnitClassLib);
-        //xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
+        xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
     }
 
     std::string constructModelId()
@@ -247,6 +287,7 @@ public:
 private:
     pugi::xml_document* m_doc;
     pugi::xml_node m_systemUnitClassLib;
+    pugi::xml_node m_roleClassLib;
 
     void initializeAML(pugi::xml_document* xml_doc)
     {
@@ -314,26 +355,27 @@ private:
 
     pugi::xml_node addInternalElement(pugi::xml_node xml_parent, const std::string suc_name)
     {
-        pugi::xml_node xml_ie = pugi::xml_node();
-
         pugi::xml_node xml_suc = m_systemUnitClassLib.find_child_by_attribute(NAME, suc_name.c_str());
-        if (xml_suc)
+        if (!xml_suc)
         {
-            xml_ie = xml_parent.append_copy(xml_suc);
-
-            // reset Name (SystemUnitClass -> InternalElement)
-            xml_ie.set_name(INTERNAL_ELEMENT);
-
-            // set RefBaseSystemUnitPath
-            std::string refBaseSystemUnitPath;
-            refBaseSystemUnitPath.append(m_systemUnitClassLib.attribute(NAME).value());
-            refBaseSystemUnitPath.append("/");
-            refBaseSystemUnitPath.append(suc_name);
-            xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = refBaseSystemUnitPath.c_str();
-
-            // // set SupportedRoleClass
-            // xml_ie.append_copy(xml_suc.child(SUPPORTED_ROLE_CLASS));
+            AML_LOG_V(ERROR, TAG, "Invalid Data : <%s> is not present in SystemUnitClassLib", suc_name.c_str());
+            throw AMLException(Exception::INVALID_AMLDATA_NAME);
         }
+
+        pugi::xml_node xml_ie = xml_parent.append_copy(xml_suc);
+
+        // reset Name (SystemUnitClass -> InternalElement)
+        xml_ie.set_name(INTERNAL_ELEMENT);
+
+        // set RefBaseSystemUnitPath
+        std::string refBaseSystemUnitPath;
+        refBaseSystemUnitPath.append(m_systemUnitClassLib.attribute(NAME).value());
+        refBaseSystemUnitPath.append("/");
+        refBaseSystemUnitPath.append(suc_name);
+        xml_ie.append_attribute(REF_BASE_SYSTEM_UNIT_PATH) = refBaseSystemUnitPath.c_str();
+
+        // // set SupportedRoleClass
+        // xml_ie.append_copy(xml_suc.child(SUPPORTED_ROLE_CLASS));
 
         return xml_ie;
     }
@@ -517,6 +559,11 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
 std::string Representation::getRepresentationId() const
 {
     return m_amlModel->constructModelId();
+}
+
+AMLObject* Representation::getConfigInfo() const
+{
+    return m_amlModel->constructConfigAmlObject();
 }
 
 template <class T>
