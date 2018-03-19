@@ -45,4 +45,4 @@ aml_sample_env.AppendUnique(LIBS=['aml', 'protobuf'])
 ######################################################################
 amlsample = aml_sample_env.Program('sample', ['sample.cpp'])
 
-Command("data_modeling.aml", File("sample_data_model.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
+Command("sample_data_model.aml", File("sample_data_model.aml").srcnode(), Copy("$TARGET", "$SOURCE"))
