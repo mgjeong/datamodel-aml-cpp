@@ -22,8 +22,6 @@
 #include <vector>
 #include <map>
 
-#include <boost/variant.hpp>
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -32,7 +30,7 @@ extern "C"
 
 class AMLData;
 
-typedef std::map<std::string, boost::variant<std::string, std::vector<std::string>, AMLData>> AMLMap;
+//typedef std::map<std::string, boost::variant<std::string, std::vector<std::string>, AMLData>> AMLMap;
 
 /**
  * @class AMLValueType
@@ -44,6 +42,19 @@ enum class AMLValueType
     String = 0,
     StringArray,
     AMLData
+};
+
+class AMLValue
+{
+public:
+    AMLValue ();
+    AMLValue (const AMLValue &t);
+
+    virtual ~AMLValue (void);
+    
+public:
+    AMLValueType type;
+    void* m_value;
 };
 
 /**
@@ -133,6 +144,7 @@ class AMLData
 {
 public:
     AMLData(void);
+    AMLData(const AMLData& t);
     virtual ~AMLData(void);
 
     /**
@@ -202,7 +214,8 @@ public:
     AMLValueType                    getValueType(const std::string& key) const;
 
 private:
-    AMLMap m_values;
+//    AMLMap m_values;
+    std::map<std::string, AMLValue*> m_values;
 };
 
 #ifdef __cplusplus

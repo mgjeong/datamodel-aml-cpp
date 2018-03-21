@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <iostream>
 
 #include "AMLInterface.h"
 #include "AMLException.h"
@@ -47,8 +48,9 @@ AMLObject::~AMLObject(void)
 
 void AMLObject::addData(const std::string& name, const AMLData& data)
 {
-    // Try to insert a new element into the map and if the key already exists, throw an exeption.
-    if (!m_amlDatas.insert(make_pair(name, data)).second)
+    //Try to insert a new element into the map and if the key already exists, throw an exeption.
+    std::pair<const std::string, AMLData> temp = std::make_pair(name, data);
+    if (!m_amlDatas.insert(temp).second)
     {
         AML_LOG_V(ERROR, TAG, "Name already exist in AMLObject : %s", name.c_str());
         throw AMLException(Exception::KEY_ALREADY_EXIST);
