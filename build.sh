@@ -73,27 +73,28 @@ install_dependencies() {
 usage() {
     echo -e "${BLUE}Usage:${NO_COLOUR} ./build.sh <option>"
     echo -e "${GREEN}Options:${NO_COLOUR}"
-    echo "  --with_dependencies=(default: false)                         :  Build aml along with dependencies [protobuf]"
     echo "  --build_mode=[release|debug](default: release)               :  Build aml library and samples in release or debug mode"
     echo "  --logging=[on|off](default: off)                             :  Build aml library including logs"
+    echo "  --with_dependencies=[true|false](default: false)             :  Build aml along with dependencies [protobuf]"
     echo "  -c                                                           :  Clean aml repository"
     echo "  -h / --help                                                  :  Display help and exit"
 }
 
 build() {
-    RELEASE="1"
-    LOGGING="0"
-    if [ ${AML_WITH_DEP} = true ]; then
+    if [ true = ${AML_WITH_DEP} ]; then
         install_dependencies
     fi
     cd $PROJECT_ROOT
+
+    RELEASE="1"
+    LOGGING="0"
     if [ "debug" = ${AML_BUILD_MODE} ]; then
         RELEASE="0"
     fi
     if [ "on" = ${AML_LOGGING} ]; then
         LOGGING="1"
     fi
-    
+
     scons TARGET_OS=linux TARGET_ARCH=${AML_TARGET_ARCH} RELEASE=${RELEASE} LOGGING=${LOGGING}
     if [ $? -ne 0 ]; then 
         echo -e "\033[31m"Build failed"\033[0m" 
