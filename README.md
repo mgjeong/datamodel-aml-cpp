@@ -16,6 +16,9 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
 - Protobuf
   - Version : 3.4.0(mandatory)
   - Protobuf will be installed by build option (See 'How to build')
+  - Refer to the links below for manual installation.
+    - [Where to download](https://github.com/google/protobuf/releases/tag/v3.4.0)
+    - [How to install](https://github.com/google/protobuf/blob/master/src/README.md)
 
 ## How to build ##
 1. Goto: ~/datamodel-aml-cpp/
