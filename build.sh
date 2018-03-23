@@ -25,22 +25,69 @@ NO_COLOUR="\033[0m"
 
 PROJECT_ROOT=$(pwd)
 AML_TARGET_ARCH=x86_64
+AML_WITH_DEP=false
 AML_BUILD_MODE="release"
 AML_LOGGING="off"
+
+install_dependencies() {
+    cd ./dependencies
+    DEP_ROOT=$(pwd)
+    
+    FILENAME="protobuf-cpp-3.4.0.tar.gz"
+    if [ -e "$FILENAME" ]; then
+        echo "Protobuf tar exist"
+    else
+        wget https://github.com/google/protobuf/releases/download/v3.4.0/protobuf-cpp-3.4.0.tar.gz
+    fi
+
+    if [ -d "./protobuf-3.4.0" ]; then
+        echo "Protobuf library folder exist"
+    else
+        tar -xvf protobuf-cpp-3.4.0.tar.gz
+    fi
+
+    cd protobuf-3.4.0/
+    chmod +x autogen.sh
+    ./autogen.sh
+    if [ "arm" = ${EZMQ_TARGET_ARCH} ]; then
+        echo -e "${BLUE}Protobuf configuring for arm${NO_COLOUR}"
+        ./configure --host=arm-linux CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
+        make -j 4
+    elif [ "arm64" = ${EZMQ_TARGET_ARCH} ]; then
+        echo -e "${BLUE}Protobuf configuring for arm64${NO_COLOUR}"
+        ./configure --host=aarch64-unknown-linux-gnu CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8
+        make -j 4
+    elif [ "armhf" = ${EZMQ_TARGET_ARCH} ]; then
+        echo -e "${BLUE}Protobuf configuring for armhf${NO_COLOUR}"
+        ./configure --host=arm-linux-gnueabihf CC=arm-linux-gnueabihf-gcc-4.8 CXX=arm-linux-gnueabihf-g++-4.8
+        make -j 4
+    else
+        ./configure
+        make -j 4
+        sudo make install
+    fi
+    sudo ldconfig
+    echo -e "${GREEN}Install dependencies done${NO_COLOUR}"
+}
 
 usage() {
     echo -e "${BLUE}Usage:${NO_COLOUR} ./build.sh <option>"
     echo -e "${GREEN}Options:${NO_COLOUR}"
     echo "  --build_mode=[release|debug](default: release)               :  Build aml library and samples in release or debug mode"
     echo "  --logging=[on|off](default: off)                             :  Build aml library including logs"
+    echo "  --with_dependencies=[true|false](default: false)             :  Build aml along with dependencies [protobuf]"
     echo "  -c                                                           :  Clean aml repository"
     echo "  -h / --help                                                  :  Display help and exit"
 }
 
 build() {
+    if [ true = ${AML_WITH_DEP} ]; then
+        install_dependencies
+    fi
+    cd $PROJECT_ROOT
+
     RELEASE="1"
     LOGGING="0"
-
     if [ "debug" = ${AML_BUILD_MODE} ]; then
         RELEASE="0"
     fi
@@ -65,6 +112,18 @@ clean() {
 process_cmd_args() {
     while [ "$#" -gt 0  ]; do
         case "$1" in
+            --with_dependencies=*)
+                AML_WITH_DEP="${1#*=}";
+                if [ ${AML_WITH_DEP} = true ]; then
+                    echo -e "${GREEN}Build with depedencies${NO_COLOUR}"
+                elif [ ${AML_WITH_DEP} = false ]; then
+                    echo -e "${GREEN}Build without depedencies${NO_COLOUR}"
+                else
+                    echo -e "${GREEN}Build without depedencies${NO_COLOUR}"
+                    shift 1; exit 0
+                fi
+                shift 1;
+                ;;
             --build_mode=*)
                 AML_BUILD_MODE="${1#*=}";
                 echo -e "${GREEN}Build mode is: $AML_BUILD_MODE${NO_COLOUR}"

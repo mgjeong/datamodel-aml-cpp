@@ -14,9 +14,8 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
   - [How to install](http://www.boost.org/doc/libs/1_66_0/more/getting_started/unix-variants.html)
 
 - Protobuf
-  - Version : 3.4.0(recommended) or above
-  - [How to install](https://developers.google.com/protocol-buffers/docs/downloads)
-
+  - Version : 3.4.0(mandatory)
+  - Protobuf will be installed by build option (See 'How to build')
 
 ## How to build ##
 1. Goto: ~/datamodel-aml-cpp/
@@ -28,6 +27,7 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
    ```
 **Notes** </br>
 (a) For getting help about script option: **$ ./build.sh --help** </br>
+(b) If you build for the first time, set <i>with_dependencies</i> option true. (e.g. $./build.sh --with_dependencies=true)<br> Then it will install the required libraries. In this case, script needs sudo permission for installing the libraries. In future need for sudo will be removed by installing those libraries in aml library.
 
 
 ## How to run ##
