@@ -51,13 +51,14 @@ void AMLData::setValue(const std::string& key, const std::string& value)
     AMLValue* amlVal = new AMLValue();
     amlVal->type = AMLValueType::String;
     amlVal->m_value = val;
-    m_values[key] = amlVal;
-    // if (!m_values.insert(std::pair<std::string, AMLValue&>(key, val)).second)
-    // {
-    //     AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
-    //     throw AMLException(Exception::KEY_ALREADY_EXIST);
-    // }
-    
+
+    if (m_values.find(key) == m_values.end())
+    {
+        AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
+        throw AMLException(Exception::KEY_ALREADY_EXIST);
+    }
+
+    m_values[key] = amlVal;    
 }
 
 void AMLData::setValue(const std::string& key, const std::vector<std::string>& value)
@@ -68,12 +69,14 @@ void AMLData::setValue(const std::string& key, const std::vector<std::string>& v
     AMLValue* amlVal = new AMLValue();
     amlVal->type = AMLValueType::StringArray;
     amlVal->m_value = val;
+    
+    if (m_values.find(key) == m_values.end())
+    {
+        AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
+        throw AMLException(Exception::KEY_ALREADY_EXIST);
+    }
+
     m_values[key] = amlVal;
-    // if (!m_values.insert(std::pair<std::string, AMLValue*>(key, &val)).second)
-    // {
-    //     AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
-    //     throw AMLException(Exception::KEY_ALREADY_EXIST);
-    // }
 }
 
 void AMLData::setValue(const std::string& key, const AMLData& value)
@@ -85,57 +88,15 @@ void AMLData::setValue(const std::string& key, const AMLData& value)
     AMLValue* amlVal = new AMLValue;
     amlVal->type = AMLValueType::AMLData;
     amlVal->m_value = val;
-    m_values[key] = amlVal;
 
-
-    // if (!m_values.insert(std::pair<std::string, AMLValue*>(key, &val)).second)
-    // {
-    //     AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
-    //     throw AMLException(Exception::KEY_ALREADY_EXIST);
-    // }
-}
-
-////////////////////////////////////////////////////////////////////////
-
-// template <typename T>
-// void AMLData::setValue(const std::string& key, const std::string& value)
-// {   
-//     AMLValue<T>* val = new AMLValue<T>(AMLValueType::String, value);
+    if (m_values.find(key) == m_values.end())
+    {
+        AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
+        throw AMLException(Exception::KEY_ALREADY_EXIST);
+    }
     
-//     // if (!m_values.insert(std::pair<std::string, AMLValue&>(key, val)).second)
-//     // {
-//     //     AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
-//     //     throw AMLException(Exception::KEY_ALREADY_EXIST);
-//     // }
-//     m_values[key] = val;
-// }
-
-// template <typename T>
-// void AMLData::setValue(const std::string& key, const std::vector<std::string>& value)
-// {
-//     AMLValue<T>* val = new AMLValue<T>(AMLValueType::StringArray, value);
-
-//     // if (!m_values.insert(std::pair<std::string, AMLValue&>(key, val)).second)
-//     // {
-//     //     AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
-//     //     throw AMLException(Exception::KEY_ALREADY_EXIST);
-//     // }
-//     m_values[key] = val;
-
-// }
-
-// template <typename T>
-// void AMLData::setValue(const std::string& key, const AMLData& value)
-// {
-//     AMLValue<T>* val = new AMLValue<T>(AMLValueType::AMLData, value);
-
-//     // if (!m_values.insert(std::pair<std::string, AMLValue&>(key, val)).second)
-//     // {
-//     //     AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
-//     //     throw AMLException(Exception::KEY_ALREADY_EXIST);
-//     // }
-//     m_values[key] = val;
-// }
+    m_values[key] = amlVal;
+}
 
 std::vector<std::string> AMLData::getKeys() const
 {
