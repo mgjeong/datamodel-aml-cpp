@@ -16,14 +16,19 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
 - Protobuf
   - Version : 3.4.0(mandatory)
   - Protobuf will be installed by build option (See 'How to build')
+  - Refer to the links below for manual installation.
+    - [Where to download](https://github.com/google/protobuf/releases/tag/v3.4.0)
+    - [How to install](https://github.com/google/protobuf/blob/master/src/README.md)
 
 ## How to build ##
 1. Goto: ~/datamodel-aml-cpp/
 2. Run the script:
 
    ```
-   ./build.sh <options>       : Native build for x86_64
-   ./build_arm.sh <options>   : Native build for armhf [Raspberry pi board])
+   ./build.sh <options>         : Native build for x86_64
+   ./build_32.sh <options>      : Native build for x86
+   ./build_arm.sh <options>     : Native build for armhf [Raspberry pi board])
+   ./build_arm64.sh <options>   : Native build for arm64 [Raspberry pi board])
    ```
 **Notes** </br>
 (a) For getting help about script option: **$ ./build.sh --help** </br>
@@ -50,7 +55,7 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
         - aml.so</br>
    **(B) If microservice wants to link aml statically following are the libraries it needs to link:**</br>
         - aml.a</br>
-2. Reference ezmq library APIs : [docs/docs/html/index.html](docs/docs/html/index.html)
+2. Reference aml library APIs : [docs/docs/html/index.html](docs/docs/html/index.html)
 
 
 </br></br>
