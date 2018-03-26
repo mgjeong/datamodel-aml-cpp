@@ -53,7 +53,7 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
         - aml.so</br>
    **(B) If microservice wants to link aml statically following are the libraries it needs to link:**</br>
         - aml.a</br>
-2. Reference ezmq library APIs : [docs/docs/html/index.html](docs/docs/html/index.html)
+2. Reference aml library APIs : [docs/docs/html/index.html](docs/docs/html/index.html)
 
 
 </br></br>
