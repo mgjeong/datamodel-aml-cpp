@@ -25,8 +25,10 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
 2. Run the script:
 
    ```
-   ./build.sh <options>       : Native build for x86_64
-   ./build_arm.sh <options>   : Native build for armhf [Raspberry pi board])
+   ./build.sh <options>         : Native build for x86_64
+   ./build_32.sh <options>      : Native build for x86
+   ./build_arm.sh <options>     : Native build for armhf [Raspberry pi board])
+   ./build_arm64.sh <options>   : Native build for arm64 [Raspberry pi board])
    ```
 **Notes** </br>
 (a) For getting help about script option: **$ ./build.sh --help** </br>
