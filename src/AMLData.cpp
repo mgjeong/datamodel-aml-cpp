@@ -42,6 +42,7 @@ AMLData::AMLData(const AMLData& t)
 
 AMLData::~AMLData(void)
 {
+    this->m_values.erase(this->m_values.begin(), this->m_values.end());
 }
 
 void AMLData::setValue(const std::string& key, const std::string& value)
@@ -52,13 +53,13 @@ void AMLData::setValue(const std::string& key, const std::string& value)
     amlVal->type = AMLValueType::String;
     amlVal->m_value = val;
 
-    if (m_values.find(key) == m_values.end())
+    if (m_values.find(key) != m_values.end())
     {
         AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(Exception::KEY_ALREADY_EXIST);
     }
 
-    m_values[key] = amlVal;    
+    m_values[key] = amlVal;
 }
 
 void AMLData::setValue(const std::string& key, const std::vector<std::string>& value)
@@ -70,7 +71,7 @@ void AMLData::setValue(const std::string& key, const std::vector<std::string>& v
     amlVal->type = AMLValueType::StringArray;
     amlVal->m_value = val;
     
-    if (m_values.find(key) == m_values.end())
+    if (m_values.find(key) != m_values.end())
     {
         AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(Exception::KEY_ALREADY_EXIST);
@@ -89,7 +90,7 @@ void AMLData::setValue(const std::string& key, const AMLData& value)
     amlVal->type = AMLValueType::AMLData;
     amlVal->m_value = val;
 
-    if (m_values.find(key) == m_values.end())
+    if (m_values.find(key) != m_values.end())
     {
         AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(Exception::KEY_ALREADY_EXIST);

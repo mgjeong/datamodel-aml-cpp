@@ -30,7 +30,6 @@ using namespace std;
 
 AMLValue::AMLValue()
 {
-    cout<<"const"<<endl;
 }
 
 AMLValue::~AMLValue()

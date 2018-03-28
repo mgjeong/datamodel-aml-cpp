@@ -128,6 +128,7 @@ int main() {
 
         delete data_from_aml;
         delete data_from_byte;
+        delete rep;
     }
     catch (const AMLException& e)
     {
