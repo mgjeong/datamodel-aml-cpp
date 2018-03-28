@@ -73,6 +73,9 @@ install_dependencies() {
     fi
 
     # Check, clone, build and install the depencency libraries
+    if [ ! -d "./dependencies" ]; then
+        mkdir dependencies
+    fi
     cd ./dependencies
     DEP_ROOT=$(pwd)
 
