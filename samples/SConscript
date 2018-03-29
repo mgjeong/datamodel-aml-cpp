@@ -21,24 +21,25 @@ Import('env')
 
 aml_sample_env = env.Clone()
 target_arch = aml_sample_env.get('TARGET_ARCH')
+exclude_protobuf = aml_sample_env.get('EXCLUDE_PROTOBUF')
 
 ######################################################################
 # Build flags
 ######################################################################
-aml_sample_env.PrependUnique(CPPPATH=[
-    '../protobuf',
-    '../include'
-])
+aml_sample_env.PrependUnique(CPPPATH=['../include'])
+
+if not exclude_protobuf:
+    aml_sample_env.PrependUnique(CPPPATH=['../protobuf'])
 
 aml_sample_env.AppendUnique(
     CXXFLAGS=['-O2', '-g', '-Wall', '-fmessage-length=0', '-std=c++0x', '-I/usr/local/include'])
 
-#if aml_sample_env.get('RELEASE'):
-#	aml_sample_env.PrependUnique(LIBS=['aml'], LIBPATH=[os.path.join('./../out/linux/', target_arch, 'release')])
-#else:
-#	aml_sample_env.PrependUnique(LIBS=['aml'], LIBPATH=[os.path.join('./../out/linux/', target_arch, 'debug')])
+aml_sample_env.AppendUnique(LIBS=['aml'])
 
-aml_sample_env.AppendUnique(LIBS=['aml', 'protobuf'])
+if not exclude_protobuf:
+    aml_sample_env.AppendUnique(LIBS=['protobuf'])
+else:
+    aml_sample_env.AppendUnique(CPPDEFINES = ['_EXCLUDE_PROTOBUF_'])
 
 ####################################################################
 # Source files and Targets

@@ -115,6 +115,7 @@ int main() {
         printAMLObject(*data_from_aml);
         cout << "-------------------------------------------------------------" << endl;
 
+#ifndef _EXCLUDE_PROTOBUF_
         // Convert AMLObject to Byte(string)
         string byte_string = rep->DataToByte(*data_from_aml);
         cout << byte_string << endl;
@@ -126,8 +127,11 @@ int main() {
         printAMLObject(*data_from_byte);
         cout << "-------------------------------------------------------------" << endl;
 
-        delete data_from_aml;
         delete data_from_byte;
+#endif // _EXCLUDE_PROTOBUF_
+
+        delete data_from_aml;
+        delete rep;
     }
     catch (const AMLException& e)
     {
