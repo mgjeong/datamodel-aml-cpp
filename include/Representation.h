@@ -22,11 +22,6 @@
 
 #include "AMLInterface.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 /**
  *  @class  Representation
  *  @brief  This class converts between AMLObject, AML(XML) string, AML(Protobuf) byte.
@@ -99,9 +94,5 @@ private:
     class AMLModel;
     AMLModel* m_amlModel;
 };
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // REPRESENTAITON_H_

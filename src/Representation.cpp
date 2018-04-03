@@ -82,16 +82,16 @@ static const char KEY_TIMESTAMP[]                   = "timestamp";
                             std::cout<<std::endl;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T>
+template <typename T>
 static void extractAttribute(T* attr, pugi::xml_node xmlNode);
 
-template <class T>
+template <typename T>
 static void extractInternalElement(T* ie, pugi::xml_node xmlNode);
 
-template <class T>
+template <typename T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr);
 
-template <class T>
+template <typename T>
 static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie);
 
 template <typename T>
@@ -566,7 +566,7 @@ AMLObject* Representation::getConfigInfo() const
     return m_amlModel->constructConfigAmlObject();
 }
 
-template <class T>
+template <typename T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 {
     for (datamodel::Attribute att : attr->attribute())
@@ -593,7 +593,7 @@ static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
     return;
 }
 
-template <class T>
+template <typename T>
 static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
 {
     for (datamodel::InternalElement sie : ie->internalelement())
@@ -620,7 +620,7 @@ static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
     return;
 }
 
-template <class T>
+template <typename T>
 static void extractAttribute(T* attr, pugi::xml_node xmlNode)
 {
     for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))
@@ -651,7 +651,7 @@ static void extractAttribute(T* attr, pugi::xml_node xmlNode)
     return;
 }
 
-template <class T>
+template <typename T>
 static void extractInternalElement(T* ie, pugi::xml_node xmlNode)
 {
     for (pugi::xml_node xmlIe = xmlNode.child(INTERNAL_ELEMENT); xmlIe; xmlIe = xmlIe.next_sibling(INTERNAL_ELEMENT))    

@@ -21,14 +21,10 @@
 #include <string>
 #include <vector>
 #include <map>
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
+#include <iostream>
 
 class AMLData;
+using namespace std;
 
 //typedef std::map<std::string, boost::variant<std::string, std::vector<std::string>, AMLData>> AMLMap;
 
@@ -47,14 +43,39 @@ enum class AMLValueType
 class AMLValue
 {
 public:
-    AMLValue ();
-    AMLValue (const AMLValue &t);
+    AMLValue(AMLValueType t) : m_type(t)
+    {
+    }
+    virtual ~AMLValue()
+    {
+    }
+    AMLValueType getType()
+    {
+        return m_type;
+    }
+private:
+    AMLValueType m_type;
+};
 
-    virtual ~AMLValue (void);
-    
+template <typename T>
+class AMLValue_ : public AMLValue
+{
 public:
-    AMLValueType type;
-    void* m_value;
+    AMLValue_ (AMLValueType t, T val) : AMLValue(t), m_value(val)
+    {
+    }
+    //AMLValue (const AMLValue &t);
+
+    virtual ~AMLValue_ ()
+    {
+    }
+    
+    T& getValue()
+    {
+        return m_value;
+    }
+private:
+    T m_value;
 };
 
 /**
@@ -80,6 +101,8 @@ public:
      * @param       id          [in] id of AMLObject.
      */
     AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id);
+
+    AMLObject(const AMLObject& t);
     virtual ~AMLObject(void);
 
     /**
@@ -128,11 +151,14 @@ public:
      */
     const std::string&              getId() const;
 
+    void                            copyObject(AMLObject* target) const;
+
+
 private:
     const std::string m_deviceId;
     const std::string m_timeStamp;
     const std::string m_id;
-    mutable std::map<std::string, AMLData> m_amlDatas;
+    mutable std::map<std::string, AMLData*> m_amlDatas;
 };
 
 /**
@@ -147,12 +173,16 @@ public:
     AMLData(const AMLData& t);
     virtual ~AMLData(void);
 
+    // template <typename T>
+    // void                            setValue(const std::string& key, const T& value);
+  
     /**
      * @fn void setValue(const std::string& key, const std::string& value)
      * @brief       This function set key and string type value pair on AMLData.
      * @param       key     [in] AMLData key.
      * @param       value   [in] AMLData value.
      */
+   //template <typename T>
     void                            setValue(const std::string& key, const std::string& value);
 
     /**
@@ -161,6 +191,7 @@ public:
      * @param       key     [in] AMLData key.
      * @param       value   [in] AMLData value.
      */
+    //template <typename T>
     void                            setValue(const std::string& key, const std::vector<std::string>& value); 
     
     /**
@@ -169,6 +200,7 @@ public:
      * @param       key     [in] AMLData key
      * @param       value   [in] AMLData value
      */
+    //template <typename T>
     void                            setValue(const std::string& key, const AMLData& value);
 
     /**
@@ -178,6 +210,7 @@ public:
      * @return      String value which matched using key on AMLMap.
      * @exception   AMLException If input key is not matching on AMLMap.
      */
+
     const std::string&              getValueToStr(const std::string& key) const;
     
     /**
@@ -213,13 +246,12 @@ public:
      */
     AMLValueType                    getValueType(const std::string& key) const;
 
+
+    void                            copyData(AMLData* target) const;
+
 private:
 //    AMLMap m_values;
     std::map<std::string, AMLValue*> m_values;
 };
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // AML_INTERFACE_H_
