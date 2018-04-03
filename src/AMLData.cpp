@@ -28,6 +28,8 @@
 // For logging
 #define TYPE(type)  (type)==0 ? "String" : ((type)==1 ? "String Vector" : "AMLData")
 
+using namespace AML;
+
 AMLData::AMLData(void)
 {
 }

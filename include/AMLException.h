@@ -26,30 +26,33 @@ extern "C"
 {
 #endif
 
+namespace AML
+{
+
 typedef enum
 {
-    AML_RESULT_OK = 0,
+    RESULT_OK = 0,
 
-    AML_INVALID_PARAM = 100,
-    AML_INVALID_FILE_PATH,
-    AML_INVALID_SCHEMA,
-    AML_INVALID_XML_STR,
-    AML_INVALID_AML_FORMAT,
-    AML_INVALID_AMLDATA_NAME,
-    AML_NOT_IMPL,               // @TODO: need to be specified more
-    AML_NO_MEMORY,
+    INVALID_PARAM = 100,
+    INVALID_FILE_PATH,
+    INVALID_SCHEMA,
+    INVALID_XML_STR,
+    INVALID_AML_FORMAT,
+    INVALID_AMLDATA_NAME,
+    NOT_IMPL,               // @TODO: need to be specified more
+    NO_MEMORY,
 
-    AML_KEY_NOT_EXIST,
-    AML_KEY_ALREADY_EXIST,
+    KEY_NOT_EXIST,
+    KEY_ALREADY_EXIST,
 
-    AML_INVALID_DATA_TYPE,
-    AML_KEY_VALUE_NOT_MATCH,
+    INVALID_DATA_TYPE,
+    KEY_VALUE_NOT_MATCH,
 
-    AML_ERROR = 255
+    ERROR = 255
 
-} AMLResult;
+} ResultCode;
 
-namespace Exception 
+namespace Exception
 {
     static const char NO_ERROR[]                    = "No Error";
 
@@ -74,24 +77,26 @@ namespace Exception
 class AMLException : public std::runtime_error
 {
     public:
-        AMLException(const std::string& msg, AMLResult reason = AML_ERROR)
+        AMLException(const std::string& msg, ResultCode reason = ERROR)
         : std::runtime_error(msg), m_reason(reason) {}
 
-        static std::string reason(const AMLResult res);
+        static std::string reason(const ResultCode res);
 
         std::string reason() const
         {
             return reason(m_reason);
         }
 
-        AMLResult code() const
+        ResultCode code() const
         {
             return m_reason;
         }
 
     private:
-        AMLResult m_reason;
+        ResultCode m_reason;
 };
+
+} // namespace AML
 
 #ifdef __cplusplus
 }

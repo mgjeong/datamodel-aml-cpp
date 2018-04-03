@@ -17,37 +17,39 @@
 
 #include "AMLException.h"
 
-std::string AMLException::reason(const AMLResult res)
+
+
+std::string AML::AMLException::reason(const ResultCode res)
 {
     switch (res)
     {
-        case AML_RESULT_OK:
+        case AML::RESULT_OK:
             return Exception::NO_ERROR;
-        case AML_INVALID_PARAM:
+        case AML::INVALID_PARAM:
             return Exception::INVALID_PARAM;
-        case AML_INVALID_FILE_PATH:
+        case AML::INVALID_FILE_PATH:
             return Exception::INVALID_FILE_PATH;
-        case AML_INVALID_XML_STR:
+        case AML::INVALID_XML_STR:
             return Exception::INVALID_XML_STR;
-        case AML_INVALID_AML_FORMAT:
+        case AML::INVALID_AML_FORMAT:
             return Exception::INVALID_AML_FORMAT;
-        case AML_INVALID_SCHEMA:
+        case AML::INVALID_SCHEMA:
             return Exception::INVALID_SCHEMA;
-        case AML_INVALID_AMLDATA_NAME:
+        case AML::INVALID_AMLDATA_NAME:
             return Exception::INVALID_AMLDATA_NAME;
-        case AML_NOT_IMPL:
+        case AML::NOT_IMPL:
             return Exception::NOT_IMPL;
-        case AML_NO_MEMORY:
+        case AML::NO_MEMORY:
             return Exception::NO_MEMORY;
 
-        case AML_KEY_NOT_EXIST:
+        case AML::KEY_NOT_EXIST:
             return Exception::KEY_NOT_EXIST;
-        case AML_KEY_ALREADY_EXIST:
+        case AML::KEY_ALREADY_EXIST:
             return Exception::KEY_ALREADY_EXIST;
 
-        case AML_INVALID_DATA_TYPE:
+        case AML::INVALID_DATA_TYPE:
             return Exception::INVALID_DATA_TYPE;
-        case AML_KEY_VALUE_NOT_MATCH:
+        case AML::KEY_VALUE_NOT_MATCH:
             return Exception::KEY_VALUE_NOT_MATCH;
 
         default:

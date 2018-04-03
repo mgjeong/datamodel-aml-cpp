@@ -29,6 +29,8 @@ extern "C"
 {
 #endif
 
+namespace AML
+{
 
 class AMLData;
 
@@ -204,6 +206,8 @@ public:
 private:
     AMLMap m_values;
 };
+
+} // namespace AML
 
 #ifdef __cplusplus
 }

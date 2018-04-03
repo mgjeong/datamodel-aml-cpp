@@ -34,6 +34,7 @@
 #define TAG "Representation"
 
 using namespace std;
+using namespace AML;
 
 static const char CAEX_FILE[]                       = "CAEXFile";
 static const char INSTANCE_HIERARCHY[]              = "InstanceHierarchy";

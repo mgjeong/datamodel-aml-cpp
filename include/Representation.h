@@ -27,6 +27,9 @@ extern "C"
 {
 #endif
 
+namespace AML
+{
+
 /**
  *  @class  Representation
  *  @brief  This class converts between AMLObject, AML(XML) string, AML(Protobuf) byte.
@@ -101,6 +104,8 @@ private:
     class AMLModel;
     AMLModel* m_amlModel;
 };
+
+} // namespace AML
 
 #ifdef __cplusplus
 }

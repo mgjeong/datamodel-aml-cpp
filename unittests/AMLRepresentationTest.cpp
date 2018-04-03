@@ -25,6 +25,7 @@
 #include "gtest/gtest.h"
 
 using namespace std;
+using namespace AML;
 
 namespace AMLRepresentationTest
 {

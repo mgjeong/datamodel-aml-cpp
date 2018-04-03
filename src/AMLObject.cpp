@@ -26,6 +26,7 @@
 #define TAG "AMLObject"
 
 using namespace std;
+using namespace AML;
 
 /*
  * "id" is automatically created using "deviceId" and "timeStamp".
