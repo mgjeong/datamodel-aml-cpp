@@ -56,6 +56,7 @@ public:
      */
     AMLObject* AmlToData(const std::string& xmlStr) const;
 
+#ifndef _EXCLUDE_PROTOBUF_
     /**
      * @fn std::string DataToByte(const AMLObject& amlObject) const
      * @brief       This function converts AMLObject to Protobuf byte data to match the AML model information which is set by constructor.
@@ -74,6 +75,7 @@ public:
      * @note        AMLObject instance will be allocated and returned, so it should be deleted after use.
      */
     AMLObject* ByteToData(const std::string& byte) const;
+#endif // _EXCLUDE_PROTOBUF_
 
     /**
      * @fn std::string getRepresentationId() const

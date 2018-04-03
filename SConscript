@@ -24,6 +24,7 @@ Import('env')
 aml_env = env.Clone()
 target_os = aml_env.get('TARGET_OS')
 target_arch = aml_env.get('TARGET_ARCH')
+exclude_protobuf = aml_env.get('EXCLUDE_PROTOBUF')
 
 if aml_env.get('RELEASE'):
     aml_env.AppendUnique(CCFLAGS=['-Os'])
@@ -32,12 +33,15 @@ else:
 
 aml_env.AppendUnique(CPPPATH=[
         './extlibs/pugixml/pugixml-1.8/src',
-        './protobuf',
         './include',
         './include/logger'
 ])
 
-aml_env.PrependUnique(LIBS=['protobuf'])
+if not exclude_protobuf:
+    aml_env.AppendUnique(CPPPATH=['./protobuf'])
+    aml_env.PrependUnique(LIBS=['protobuf'])
+else:
+    aml_env.AppendUnique(CPPDEFINES = ['_EXCLUDE_PROTOBUF_'])
 
 if target_os not in ['windows']:
     aml_env.AppendUnique(
@@ -56,9 +60,11 @@ if target_os in ['linux']:
 
 AML_DIR = '.'
 aml_env.AppendUnique(aml_src = [aml_env.Glob(os.path.join(AML_DIR, 'extlibs/pugixml/pugixml-1.8/src', '*.cpp')),
-                                aml_env.Glob(os.path.join(AML_DIR, 'protobuf', '*.cc')),
                                 aml_env.Glob(os.path.join(AML_DIR, 'src', '*.cpp')),
                                 aml_env.Glob(os.path.join(AML_DIR, 'src', 'logger', '*.cpp'))])
+
+if not exclude_protobuf:
+    aml_env.AppendUnique(aml_src = [aml_env.Glob(os.path.join(AML_DIR, 'protobuf', '*.cc'))])
 
 amlshared = aml_env.SharedLibrary('aml', aml_env.get('aml_src'))
 amlstatic = aml_env.StaticLibrary('aml', aml_env.get('aml_src'))

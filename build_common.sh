@@ -28,6 +28,7 @@ AML_TARGET_ARCH="x86_64"
 AML_WITH_DEP=false
 AML_BUILD_MODE="release"
 AML_LOGGING="off"
+AML_EXCLD_PROTOBUF=false
 
 RELEASE="1"
 LOGGING="0"
@@ -140,37 +141,37 @@ usage() {
 
 build_x86() {
     echo -e "Building for x86"
-    scons TARGET_OS=linux TARGET_ARCH=x86 RELEASE=${RELEASE} LOGGING=${LOGGING}
+    scons TARGET_OS=linux TARGET_ARCH=x86 RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
 }
 
 build_x86_64() {
     echo -e "Building for x86_64"
-    scons TARGET_OS=linux TARGET_ARCH=x86_64 RELEASE=${RELEASE} LOGGING=${LOGGING}
+    scons TARGET_OS=linux TARGET_ARCH=x86_64 RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
 }
 
 build_arm() {
     echo -e "Building for arm"
-    scons TARGET_ARCH=arm TC_PREFIX=/usr/bin/arm-linux-gnueabi- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING}
+    scons TARGET_ARCH=arm TC_PREFIX=/usr/bin/arm-linux-gnueabi- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
 }
 
 build_arm64() {
     echo -e "Building for arm64"
-    scons TARGET_ARCH=arm64 TC_PREFIX=/usr/bin/aarch64-linux-gnu- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING}
+    scons TARGET_ARCH=arm64 TC_PREFIX=/usr/bin/aarch64-linux-gnu- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
 }
 
 build_armhf() {
     echo -e "Building for armhf"
-    scons TARGET_ARCH=armhf TC_PREFIX=/usr/bin/arm-linux-gnueabihf- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING}
+    scons TARGET_ARCH=armhf TC_PREFIX=/usr/bin/arm-linux-gnueabihf- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
 }
 
 build_armhf_native() {
     echo -e "Building for armhf_native"
-    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING}
+    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
 }
 
 build_armhf_qemu() {
     echo -e "Building for armhf-qemu"
-    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING}
+    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
 
     if [ -x "/usr/bin/qemu-arm-static" ]; then
         echo -e "${BLUE}qemu-arm-static found, copying it to current directory${NO_COLOUR}"
@@ -253,6 +254,11 @@ process_cmd_args() {
             --logging=*)
                 AML_LOGGING="${1#*=}";
                 echo -e "${GREEN}Logging option is: $AML_LOGGING${NO_COLOUR}"
+                shift 1;
+                ;;
+            --exclude_protobuf=*)
+                AML_EXCLD_PROTOBUF="${1#*=}";
+                echo -e "${GREEN}is Protobuf excluded : $AML_EXCLD_PROTOBUF${NO_COLOUR}"
                 shift 1;
                 ;;
             -c)

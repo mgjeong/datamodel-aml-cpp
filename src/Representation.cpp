@@ -15,6 +15,7 @@
  *
  *******************************************************************************/
 
+#include <string.h>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -25,7 +26,10 @@
 #include "AMLInterface.h"
 #include "AMLException.h"
 #include "AMLLogger.h"
+
+#ifndef _EXCLUDE_PROTOBUF_
 #include "AML.pb.h"
+#endif
 
 #define TAG "Representation"
 
@@ -82,6 +86,7 @@ static const char KEY_TIMESTAMP[]                   = "timestamp";
                             std::cout<<std::endl;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#ifndef _EXCLUDE_PROTOBUF_
 template <typename T>
 static void extractAttribute(T* attr, pugi::xml_node xmlNode);
 
@@ -93,6 +98,7 @@ static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr);
 
 template <typename T>
 static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie);
+#endif // _EXCLUDE_PROTOBUF_
 
 template <typename T>
 static std::string toString(const T& t)
@@ -443,6 +449,16 @@ Representation::~Representation(void)
     delete m_amlModel;
 }
 
+std::string Representation::getRepresentationId() const
+{
+    return m_amlModel->constructModelId();
+}
+
+AMLObject* Representation::getConfigInfo() const
+{
+    return m_amlModel->constructConfigAmlObject();
+}
+
 std::string Representation::DataToAml(const AMLObject& amlObject) const
 {
     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(amlObject);
@@ -473,6 +489,7 @@ AMLObject* Representation::AmlToData(const std::string& xmlStr) const
     return amlObj;
 }
 
+#ifndef _EXCLUDE_PROTOBUF_
 AMLObject* Representation::ByteToData(const std::string& byte) const
 {
     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
@@ -554,16 +571,6 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
         throw AMLException(Exception::NOT_IMPL); //@TODO: 'failed to serialize' ?
     }
     return binary;
-}
-
-std::string Representation::getRepresentationId() const
-{
-    return m_amlModel->constructModelId();
-}
-
-AMLObject* Representation::getConfigInfo() const
-{
-    return m_amlModel->constructConfigAmlObject();
 }
 
 template <typename T>
@@ -676,3 +683,4 @@ static void extractInternalElement(T* ie, pugi::xml_node xmlNode)
 
     return;
 }
+#endif // _EXCLUDE_PROTOBUF_

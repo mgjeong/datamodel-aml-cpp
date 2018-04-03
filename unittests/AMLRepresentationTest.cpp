@@ -250,6 +250,7 @@ namespace AMLRepresentationTest
         if (NULL != resultObj) delete resultObj;
     }
 
+#ifndef _EXCLUDE_PROTOBUF_
     TEST(ByteToDataTest, ConvertValid)
     {
         Representation rep = Representation(amlModelFile);
@@ -284,6 +285,7 @@ namespace AMLRepresentationTest
         std::string varify = TestBinary();
         EXPECT_EQ(varify.compare(amlBinary), 0);
     }
+#endif // _EXCLUDE_PROTOBUF_
 
     TEST(GetRepresentationIdTest, GetValid)
     {
