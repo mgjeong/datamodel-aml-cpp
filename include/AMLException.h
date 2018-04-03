@@ -21,64 +21,31 @@
 #include <stdexcept>
 #include <string>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 namespace AML
 {
 
 typedef enum
 {
-    RESULT_OK = 0,
+    NO_ERROR = 0,
 
     INVALID_PARAM = 100,
     INVALID_FILE_PATH,
-    INVALID_SCHEMA,
+    INVALID_AML_SCHEMA,
     INVALID_XML_STR,
-    INVALID_AML_FORMAT,
-    INVALID_AMLDATA_NAME,
-    NOT_IMPL,               // @TODO: need to be specified more
+    NOT_MATCH_TO_AML_MODEL,
+    INVALID_BYTE_STR,
+    SERIALIZE_FAIL,
     NO_MEMORY,
-
     KEY_NOT_EXIST,
     KEY_ALREADY_EXIST,
-
-    INVALID_DATA_TYPE,
-    KEY_VALUE_NOT_MATCH,
-
-    ERROR = 255
-
+    WRONG_GETTER_TYPE,
 } ResultCode;
-
-namespace Exception
-{
-    static const char NO_ERROR[]                    = "No Error";
-
-    static const char INVALID_PARAM[]               = "Invalid Parameter";
-    static const char INVALID_FILE_PATH[]           = "Invalid File Path";
-    static const char INVALID_SCHEMA[]              = "Invalid AutomationML Schema File";
-    static const char INVALID_XML_STR[]             = "Invalid XML Style String";
-    static const char INVALID_AML_FORMAT[]          = "Invalid AML format";
-    static const char INVALID_AMLDATA_NAME[]        = "Invalid AMLData Name";
-    static const char NOT_IMPL[]                    = "Not Implemented";
-    static const char NO_MEMORY[]                   = "No Momory";
-
-    static const char KEY_NOT_EXIST[]               = "Key does Not Exist";
-    static const char KEY_ALREADY_EXIST[]           = "Key already Exists";
-
-    static const char INVALID_DATA_TYPE[]           = "Invalid AMLData Type";
-    static const char KEY_VALUE_NOT_MATCH[]         = "Not Matching AMLData Key and Value";
-
-    static const char UNKNOWN_ERROR[]               = "Unknown Error";
-}
 
 class AMLException : public std::runtime_error
 {
     public:
-        AMLException(const std::string& msg, ResultCode reason = ERROR)
-        : std::runtime_error(msg), m_reason(reason) {}
+        AMLException(ResultCode reason = NO_ERROR)
+        : std::runtime_error(this->reason(reason)), m_reason(reason) {}
 
         static std::string reason(const ResultCode res);
 
@@ -97,9 +64,5 @@ class AMLException : public std::runtime_error
 };
 
 } // namespace AML
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // AML_EXCEPTION_H_

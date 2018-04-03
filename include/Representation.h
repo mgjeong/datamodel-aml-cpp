@@ -22,11 +22,6 @@
 
 #include "AMLInterface.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 namespace AML
 {
 
@@ -106,9 +101,5 @@ private:
 };
 
 } // namespace AML
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // REPRESENTAITON_H_

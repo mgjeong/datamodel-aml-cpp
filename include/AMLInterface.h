@@ -24,11 +24,6 @@
 
 #include <boost/variant.hpp>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 namespace AML
 {
 
@@ -208,9 +203,5 @@ private:
 };
 
 } // namespace AML
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // AML_INTERFACE_H_

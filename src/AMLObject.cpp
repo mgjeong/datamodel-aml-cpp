@@ -25,6 +25,8 @@
 
 #define TAG "AMLObject"
 
+#define VERIFY_NON_EMPTY_THROW_EXCEPTION(str)   if ((str).empty()) throw AMLException(INVALID_PARAM); 
+
 using namespace std;
 using namespace AML;
 
@@ -48,22 +50,26 @@ AMLObject::~AMLObject(void)
 
 void AMLObject::addData(const std::string& name, const AMLData& data)
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
+
     // Try to insert a new element into the map and if the key already exists, throw an exeption.
     if (!m_amlDatas.insert(make_pair(name, data)).second)
     {
         AML_LOG_V(ERROR, TAG, "Name already exist in AMLObject : %s", name.c_str());
-        throw AMLException(Exception::KEY_ALREADY_EXIST);
+        throw AMLException(KEY_ALREADY_EXIST);
     }
 }
 
 const AMLData& AMLObject::getData(const std::string& name) const
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
+
     map<string, AMLData>::iterator iter = m_amlDatas.find(name);
     if (iter == m_amlDatas.end())
     {
         // The name does not exist.
         AML_LOG_V(ERROR, TAG, "Name does not exist in AMLObject : %s", name.c_str());
-        throw AMLException(Exception::KEY_NOT_EXIST);
+        throw AMLException(KEY_NOT_EXIST);
     }
 
     return iter->second;
