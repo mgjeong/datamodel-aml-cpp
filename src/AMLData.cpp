@@ -42,9 +42,12 @@ AMLData::AMLData(const AMLData& t)
 
 AMLData::~AMLData(void)
 {
-    for(auto const& iter : m_values)
+    if(!m_values.empty()) 
     {
-        delete iter.second;
+        for(auto const& iter : m_values)
+        {
+            delete iter.second;
+        }
     }
 }
 

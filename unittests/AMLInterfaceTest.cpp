@@ -347,8 +347,9 @@ namespace AMLInterfaceTest
 
         EXPECT_NO_THROW(amlObj.addData(dataName, amlData));
 
-        AMLData amlData_get;
-        EXPECT_NO_THROW(amlData_get = amlObj.getData(dataName));
+
+        EXPECT_NO_THROW(amlObj.getData(dataName));
+        AMLData amlData_get =amlObj.getData(dataName);
         EXPECT_TRUE(value == amlData_get.getValueToStr(key));
 
         EXPECT_THROW(amlObj.getData("invalid_dataName"), AMLException);

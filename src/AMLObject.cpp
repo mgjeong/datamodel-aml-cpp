@@ -49,9 +49,12 @@ AMLObject::AMLObject(const AMLObject& t)
 
 AMLObject::~AMLObject(void)
 {
-    for(auto const& iter : m_amlDatas)
+    if(!m_amlDatas.empty()) 
     {
-        delete iter.second;
+        for(auto const& iter : m_amlDatas)
+        {
+            delete iter.second;
+        }
     }
 }
 
