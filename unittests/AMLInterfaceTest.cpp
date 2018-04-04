@@ -25,6 +25,7 @@
 #include "gtest/gtest.h"
 
 using namespace std;
+using namespace AML;
 
 namespace AMLInterfaceTest
 {
@@ -100,7 +101,15 @@ namespace AMLInterfaceTest
         string value = "value";
 
         EXPECT_NO_THROW(amlData.setValue(key, value));
-        EXPECT_THROW(amlData.setValue(key, value), AMLException);
+        try
+        {
+            amlData.setValue(key, value);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), KEY_ALREADY_EXIST);
+        }
     }
 
     TEST(AMLData_setValueStrArrTest, Valid)
@@ -121,7 +130,15 @@ namespace AMLInterfaceTest
         vector<string> value = {"value"};
 
         EXPECT_NO_THROW(amlData.setValue(key, value));
-        EXPECT_THROW(amlData.setValue(key, value), AMLException);
+        try
+        {
+            amlData.setValue(key, value);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), KEY_ALREADY_EXIST);
+        }
     }
 
     TEST(AMLData_setValueAMLDataTest, Valid)
@@ -142,7 +159,15 @@ namespace AMLInterfaceTest
         AMLData value;
 
         EXPECT_NO_THROW(amlData.setValue(key, value));
-        EXPECT_THROW(amlData.setValue(key, value), AMLException);
+        try
+        {
+            amlData.setValue(key, value);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), KEY_ALREADY_EXIST);
+        }
     }
 
     TEST(AMLData_getValueStrTest, Valid)
@@ -166,7 +191,15 @@ namespace AMLInterfaceTest
         EXPECT_NO_THROW(amlData.setValue(key, value));
 
         vector<string> arrayVal;
-        EXPECT_THROW(arrayVal = amlData.getValueToStrArr(key), AMLException);
+        try
+        {
+            arrayVal = amlData.getValueToStrArr(key);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), WRONG_GETTER_TYPE);
+        }
     }
 
     TEST(AMLData_getValueStrArrTest, Valid)
@@ -192,7 +225,15 @@ namespace AMLInterfaceTest
         EXPECT_NO_THROW(amlData.setValue(key, value));
 
         string strVal;
-        EXPECT_THROW(strVal = amlData.getValueToStr(key), AMLException);
+        try
+        {
+            strVal = amlData.getValueToStr(key);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), WRONG_GETTER_TYPE);
+        }
     }
 
     TEST(AMLData_getValueAMLDataTest, Valid)
@@ -220,7 +261,15 @@ namespace AMLInterfaceTest
         EXPECT_NO_THROW(amlData.setValue(key, value));
 
         string strVal;
-        EXPECT_THROW(strVal = amlData.getValueToStr(key), AMLException);
+        try
+        {
+            strVal = amlData.getValueToStr(key);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), WRONG_GETTER_TYPE);
+        }
     }
 
     TEST(AMLData_getKeys, Valid)
@@ -287,7 +336,15 @@ namespace AMLInterfaceTest
         EXPECT_NO_THROW(amlData.setValue(key2, value2));
         EXPECT_NO_THROW(amlData.setValue(key3, value3));
 
-        EXPECT_THROW(amlData.getValueType("key4"), AMLException);
+        try
+        {
+            amlData.getValueType("key4");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), KEY_NOT_EXIST);
+        }
     }
 
     // AMLObject Test
@@ -318,6 +375,45 @@ namespace AMLInterfaceTest
         EXPECT_TRUE(amlObj.getId() == id);
     }
 
+    TEST(AMLObjectTest, ConstructWithEmptyDeviceId)
+    {
+        try
+        {
+            AMLObject amlObj("", "0");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), INVALID_PARAM);
+        }
+    }
+
+    TEST(AMLObjectTest, ConstructWithEmptyTimeStamp)
+    {
+        try
+        {
+            AMLObject amlObj("deviceId", "");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), INVALID_PARAM);
+        }
+    }
+
+    TEST(AMLObjectTest, ConstructWithEmptyId)
+    {
+        try
+        {
+            AMLObject amlObj("deviceId", "0", "");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), INVALID_PARAM);
+        }
+    }
+
     TEST(AMLObjectTest, addData)
     {
         AMLData amlData;
@@ -331,7 +427,15 @@ namespace AMLInterfaceTest
         string dataName = "dataName";
 
         EXPECT_NO_THROW(amlObj.addData(dataName, amlData));
-        EXPECT_THROW(amlObj.addData(dataName, amlData2), AMLException);
+        try
+        {
+            amlObj.addData(dataName, amlData2);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), KEY_ALREADY_EXIST);
+        }
     }
 
     TEST(AMLObjectTest, getData)
@@ -351,6 +455,14 @@ namespace AMLInterfaceTest
         EXPECT_NO_THROW(amlData_get = amlObj.getData(dataName));
         EXPECT_TRUE(value == amlData_get.getValueToStr(key));
 
-        EXPECT_THROW(amlObj.getData("invalid_dataName"), AMLException);
+        try
+        {
+            amlObj.getData("invalid_dataName");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), KEY_NOT_EXIST);
+        }
     }
 }

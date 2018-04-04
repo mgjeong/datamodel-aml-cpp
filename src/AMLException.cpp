@@ -17,40 +17,50 @@
 
 #include "AMLException.h"
 
-std::string AMLException::reason(const AMLResult res)
+namespace Exception
 {
-    switch (res)
+    static const char NO_ERROR[]                    = "No Error";
+    static const char INVALID_PARAM[]               = "Invalid Parameter";
+    static const char INVALID_FILE_PATH[]           = "Invalid File Path";
+    static const char INVALID_AML_SCHEMA[]          = "Invalid AutomationML Schema File";
+    static const char INVALID_XML_STR[]             = "Invalid XML Style String";
+    static const char NOT_MATCH_TO_AML_MODEL[]      = "Data does not match to AML model";
+    static const char INVALID_BYTE_STR[]            = "Invalid Byte string";
+    static const char SERIALIZE_FAIL[]              = "Failed to serialize";
+    static const char NO_MEMORY[]                   = "No Momory";
+    static const char KEY_NOT_EXIST[]               = "Key does Not Exist";
+    static const char KEY_ALREADY_EXIST[]           = "Key already Exists";
+    static const char WRONG_GETTER_TYPE[]           = "Wrong Getter function call for Value";
+}
+
+std::string AML::AMLException::reason(const ResultCode resCode)
+{
+    switch (resCode)
     {
-        case AML_RESULT_OK:
-            return Exception::NO_ERROR;
-        case AML_INVALID_PARAM:
+        case AML::INVALID_PARAM:
             return Exception::INVALID_PARAM;
-        case AML_INVALID_FILE_PATH:
+        case AML::INVALID_FILE_PATH:
             return Exception::INVALID_FILE_PATH;
-        case AML_INVALID_XML_STR:
+        case AML::INVALID_XML_STR:
             return Exception::INVALID_XML_STR;
-        case AML_INVALID_AML_FORMAT:
-            return Exception::INVALID_AML_FORMAT;
-        case AML_INVALID_SCHEMA:
-            return Exception::INVALID_SCHEMA;
-        case AML_INVALID_AMLDATA_NAME:
-            return Exception::INVALID_AMLDATA_NAME;
-        case AML_NOT_IMPL:
-            return Exception::NOT_IMPL;
-        case AML_NO_MEMORY:
+        case AML::INVALID_AML_SCHEMA:
+            return Exception::INVALID_AML_SCHEMA;
+        case AML::NOT_MATCH_TO_AML_MODEL:
+            return Exception::NOT_MATCH_TO_AML_MODEL;
+        case AML::INVALID_BYTE_STR:
+            return Exception::INVALID_BYTE_STR;
+        case AML::SERIALIZE_FAIL:
+            return Exception::SERIALIZE_FAIL;
+        case AML::NO_MEMORY:
             return Exception::NO_MEMORY;
-
-        case AML_KEY_NOT_EXIST:
+        case AML::KEY_NOT_EXIST:
             return Exception::KEY_NOT_EXIST;
-        case AML_KEY_ALREADY_EXIST:
+        case AML::KEY_ALREADY_EXIST:
             return Exception::KEY_ALREADY_EXIST;
-
-        case AML_INVALID_DATA_TYPE:
-            return Exception::INVALID_DATA_TYPE;
-        case AML_KEY_VALUE_NOT_MATCH:
-            return Exception::KEY_VALUE_NOT_MATCH;
+         case AML::WRONG_GETTER_TYPE:
+             return Exception::WRONG_GETTER_TYPE;
 
         default:
-            return Exception::UNKNOWN_ERROR;
+            return Exception::NO_ERROR;
     }
 }

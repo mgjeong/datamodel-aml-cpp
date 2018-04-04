@@ -24,11 +24,8 @@
 
 #include <boost/variant.hpp>
 
-#ifdef __cplusplus
-extern "C"
+namespace AML
 {
-#endif
-
 
 class AMLData;
 
@@ -205,8 +202,6 @@ private:
     AMLMap m_values;
 };
 
-#ifdef __cplusplus
-}
-#endif
+} // namespace AML
 
 #endif // AML_INTERFACE_H_
