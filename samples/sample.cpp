@@ -24,6 +24,7 @@
 #include "AMLException.h"
 
 using namespace std;
+using namespace AML;
 
 // helper methods
 void printAMLData(AMLData amlData, int depth);

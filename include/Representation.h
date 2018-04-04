@@ -22,6 +22,9 @@
 
 #include "AMLInterface.h"
 
+namespace AML
+{
+
 /**
  *  @class  Representation
  *  @brief  This class converts between AMLObject, AML(XML) string, AML(Protobuf) byte.
@@ -96,5 +99,7 @@ private:
     class AMLModel;
     AMLModel* m_amlModel;
 };
+
+} // namespace AML
 
 #endif // REPRESENTAITON_H_

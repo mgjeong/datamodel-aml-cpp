@@ -21,71 +21,48 @@
 #include <stdexcept>
 #include <string>
 
+namespace AML
+{
+
 typedef enum
 {
-    AML_RESULT_OK = 0,
+    NO_ERROR = 0,
 
-    AML_INVALID_PARAM = 100,
-    AML_INVALID_FILE_PATH,
-    AML_INVALID_SCHEMA,
-    AML_INVALID_XML_STR,
-    AML_INVALID_AML_FORMAT,
-    AML_INVALID_AMLDATA_NAME,
-    AML_NOT_IMPL,               // @TODO: need to be specified more
-    AML_NO_MEMORY,
-
-    AML_KEY_NOT_EXIST,
-    AML_KEY_ALREADY_EXIST,
-
-    AML_INVALID_DATA_TYPE,
-    AML_KEY_VALUE_NOT_MATCH,
-
-    AML_ERROR = 255
-
-} AMLResult;
-
-namespace Exception 
-{
-    static const char NO_ERROR[]                    = "No Error";
-
-    static const char INVALID_PARAM[]               = "Invalid Parameter";
-    static const char INVALID_FILE_PATH[]           = "Invalid File Path";
-    static const char INVALID_SCHEMA[]              = "Invalid AutomationML Schema File";
-    static const char INVALID_XML_STR[]             = "Invalid XML Style String";
-    static const char INVALID_AML_FORMAT[]          = "Invalid AML format";
-    static const char INVALID_AMLDATA_NAME[]        = "Invalid AMLData Name";
-    static const char NOT_IMPL[]                    = "Not Implemented";
-    static const char NO_MEMORY[]                   = "No Momory";
-
-    static const char KEY_NOT_EXIST[]               = "Key does Not Exist";
-    static const char KEY_ALREADY_EXIST[]           = "Key already Exists";
-
-    static const char INVALID_DATA_TYPE[]           = "Invalid AMLData Type";
-    static const char KEY_VALUE_NOT_MATCH[]         = "Not Matching AMLData Key and Value";
-
-    static const char UNKNOWN_ERROR[]               = "Unknown Error";
-}
+    INVALID_PARAM = 100,
+    INVALID_FILE_PATH,
+    INVALID_AML_SCHEMA,
+    INVALID_XML_STR,
+    NOT_MATCH_TO_AML_MODEL,
+    INVALID_BYTE_STR,
+    SERIALIZE_FAIL,
+    NO_MEMORY,
+    KEY_NOT_EXIST,
+    KEY_ALREADY_EXIST,
+    WRONG_GETTER_TYPE,
+} ResultCode;
 
 class AMLException : public std::runtime_error
 {
     public:
-        AMLException(const std::string& msg, AMLResult reason = AML_ERROR)
-        : std::runtime_error(msg), m_reason(reason) {}
+        AMLException(ResultCode resCode = NO_ERROR)
+        : std::runtime_error(this->reason(resCode)), m_code(resCode) {}
 
-        static std::string reason(const AMLResult res);
+        static std::string reason(const ResultCode resCode);
 
         std::string reason() const
         {
-            return reason(m_reason);
+            return reason(m_code);
         }
 
-        AMLResult code() const
+        ResultCode code() const
         {
-            return m_reason;
+            return m_code;
         }
 
     private:
-        AMLResult m_reason;
+        ResultCode m_code;
 };
+
+} // namespace AML
 
 #endif // AML_EXCEPTION_H_

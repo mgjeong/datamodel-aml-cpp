@@ -34,6 +34,7 @@
 #define TAG "Representation"
 
 using namespace std;
+using namespace AML;
 
 static const char CAEX_FILE[]                       = "CAEXFile";
 static const char INSTANCE_HIERARCHY[]              = "InstanceHierarchy";
@@ -66,7 +67,7 @@ static const char KEY_TIMESTAMP[]                   = "timestamp";
 #define IS_NAME(node, name)                     (std::string((node).attribute(NAME).value()) == (name))
 #define ADD_VALUE(node, value)                  (node).append_child(VALUE).text().set((value).c_str()) //#TODO: verify non-null after append_child()
 
-#define VERIFY_NON_NULL_THROW_EXCEPTION(var)    if (NULL == (var)) throw AMLException(Exception::NO_MEMORY); 
+#define VERIFY_NON_NULL_THROW_EXCEPTION(var)    if (NULL == (var)) throw AMLException(NO_MEMORY); 
 
 #define IS_VALUE_TYPE_STRING(node)              (NULL != (node).child(VALUE))
 #define IS_VALUE_TYPE_STRING_ARRAY(node)        ((NULL != (node).child(REF_SEMANTIC)) && \
@@ -120,7 +121,7 @@ public:
         {
             AML_LOG_V(ERROR, TAG, "Failed to load file : %s", amlFilePath.c_str());
             delete m_doc;
-            throw AMLException(Exception::INVALID_FILE_PATH);
+            throw AMLException(INVALID_FILE_PATH);
         }
 
         pugi::xml_node xmlCaexFile = m_doc->child(CAEX_FILE);
@@ -128,7 +129,7 @@ public:
         {
             AML_LOG(ERROR, TAG, "Invalid AML File : <CAEXFile> does not exist");
             delete m_doc;
-            throw AMLException(Exception::INVALID_SCHEMA);
+            throw AMLException(INVALID_AML_SCHEMA);
         }
 
         m_systemUnitClassLib = xmlCaexFile.child(SYSTEM_UNIT_CLASS_LIB);
@@ -136,7 +137,7 @@ public:
         {
             AML_LOG(ERROR, TAG, "Invalid AML File : <SystemUnitClassLib> does not exist");
             delete m_doc;
-            throw AMLException(Exception::INVALID_SCHEMA);
+            throw AMLException(INVALID_AML_SCHEMA);
         }
 
         m_roleClassLib = xmlCaexFile.child(ROLE_CLASS_LIB);
@@ -144,7 +145,7 @@ public:
         {
             AML_LOG(ERROR, TAG, "Invalid AML File : <RoleClassLib> does not exist");
             delete m_doc;
-            throw AMLException(Exception::INVALID_SCHEMA);
+            throw AMLException(INVALID_AML_SCHEMA);
         }
 
         // remove "AdditionalInformation" and "InstanceHierarchy" data
@@ -175,7 +176,7 @@ public:
             if (NULL == xml_rc) 
             {
                 AML_LOG_V(ERROR, TAG, "Invalid AML File : <RoleClass NAME=\"%s\"> does not exist", className.c_str());
-                throw AMLException(Exception::KEY_NOT_EXIST); //@TODO: need to be more specific
+                throw AMLException(KEY_NOT_EXIST); //@TODO: need to be more specific
             }
 
             AMLData amlData;
@@ -198,14 +199,14 @@ public:
             NULL == xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY))
         {
             AML_LOG(ERROR, TAG, "<CAEXFile> or <InstanceHierarchy> does not exist");
-            throw AMLException(Exception::INVALID_AML_FORMAT);
+            throw AMLException(INVALID_AML_SCHEMA);
         }
 
         pugi::xml_node xml_event = xml_doc->child(CAEX_FILE).child(INSTANCE_HIERARCHY).find_child_by_attribute(INTERNAL_ELEMENT, NAME, EVENT);
         if (NULL == xml_event) 
         {
             AML_LOG(ERROR, TAG, "<Event> does not exist");
-            throw AMLException(Exception::INVALID_AML_FORMAT);
+            throw AMLException(INVALID_AML_SCHEMA);
         }
 
         std::string deviceId, timeStamp, id;
@@ -300,7 +301,6 @@ private:
         pugi::xml_node xml_decl = xml_doc->prepend_child(pugi::node_declaration);
         xml_decl.append_attribute("version") = "1.0";
         xml_decl.append_attribute("encoding") = "utf-8";
-        xml_decl.append_attribute("standalone") = "yes"; // @TODO: required?
 
         pugi::xml_node xml_caexFile = xml_doc->append_child(CAEX_FILE);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_caexFile);
@@ -352,7 +352,8 @@ private:
             }
             else
             {
-                /* @TODO: error */
+                AML_LOG_V(ERROR, TAG, "Invalid AML : <%s> has value of invalid type", key.c_str());
+                throw AMLException(INVALID_AML_SCHEMA);
             }
         }
 
@@ -365,7 +366,7 @@ private:
         if (!xml_suc)
         {
             AML_LOG_V(ERROR, TAG, "Invalid Data : <%s> is not present in SystemUnitClassLib", suc_name.c_str());
-            throw AMLException(Exception::INVALID_AMLDATA_NAME);
+            throw AMLException(NOT_MATCH_TO_AML_MODEL);
         }
 
         pugi::xml_node xml_ie = xml_parent.append_copy(xml_suc);
@@ -407,8 +408,8 @@ private:
             }
             else
             {
-                AML_LOG_V(ERROR, TAG, "Invalid XML : <%s> has value of invalid type", attributeName.c_str());
-                throw AMLException(Exception::INVALID_XML_STR);
+                AML_LOG_V(ERROR, TAG, "Invalid AML : <%s> has value of invalid type", attributeName.c_str());
+                throw AMLException(INVALID_AML_SCHEMA);
             }
         }
 
@@ -481,7 +482,7 @@ AMLObject* Representation::AmlToData(const std::string& xmlStr) const
     if (pugi::status_ok != result.status)
     {
         AML_LOG(ERROR, TAG, "Failed to load string : Invalid XML");
-        throw AMLException(Exception::INVALID_XML_STR);
+        throw AMLException(INVALID_XML_STR);
     }
 
     AMLObject *amlObj = m_amlModel->constructAmlObject(&dataXml);
@@ -498,7 +499,7 @@ AMLObject* Representation::ByteToData(const std::string& byte) const
     {
         AML_LOG(ERROR, TAG, "Failed to parse from string : Invalid byte");
         delete caex;
-        throw AMLException(Exception::NOT_IMPL); //@TODO: 'Invalid byte' or 'failed to deserialize' ?
+        throw AMLException(INVALID_BYTE_STR);
     }
 
     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc();
@@ -568,7 +569,7 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
 
     if (false == isSuccess)
     {
-        throw AMLException(Exception::NOT_IMPL); //@TODO: 'failed to serialize' ?
+        throw AMLException(SERIALIZE_FAIL);
     }
     return binary;
 }

@@ -23,8 +23,12 @@
 #include <map>
 #include <iostream>
 
-class AMLData;
 using namespace std;
+
+namespace AML
+{
+
+class AMLData;
 
 //typedef std::map<std::string, boost::variant<std::string, std::vector<std::string>, AMLData>> AMLMap;
 
@@ -253,5 +257,7 @@ private:
 //    AMLMap m_values;
     std::map<std::string, AMLValue*> m_values;
 };
+
+} // namespace AML
 
 #endif // AML_INTERFACE_H_

@@ -26,7 +26,10 @@
 
 #define TAG "AMLObject"
 
+#define VERIFY_NON_EMPTY_THROW_EXCEPTION(str)   if ((str).empty()) throw AMLException(INVALID_PARAM); 
+
 using namespace std;
+using namespace AML;
 
 /*
  * "id" is automatically created using "deviceId" and "timeStamp".
@@ -35,11 +38,16 @@ using namespace std;
 AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp)
  : m_deviceId(deviceId), m_timeStamp(timeStamp), m_id(deviceId + "_" + timeStamp)
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(deviceId);
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(timeStamp);
 }
 
 AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id)
  : m_deviceId(deviceId), m_timeStamp(timeStamp), m_id(id)
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(deviceId);
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(timeStamp);
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(id);
 }
 
 AMLObject::AMLObject(const AMLObject& t) 
@@ -60,6 +68,8 @@ AMLObject::~AMLObject(void)
 
 void AMLObject::addData(const std::string& name, const AMLData& data)
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
+
     AMLData* amlData = new AMLData();
     data.copyData(amlData);
 
@@ -68,18 +78,20 @@ void AMLObject::addData(const std::string& name, const AMLData& data)
     if (!m_amlDatas.insert(temp).second)
     {
         AML_LOG_V(ERROR, TAG, "Name already exist in AMLObject : %s", name.c_str());
-        throw AMLException(Exception::KEY_ALREADY_EXIST);
+        throw AMLException(KEY_ALREADY_EXIST);
     }
 }
 
 const AMLData& AMLObject::getData(const std::string& name) const
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
+
     map<string, AMLData*>::iterator iter = m_amlDatas.find(name);
     if (iter == m_amlDatas.end())
     {
         // The name does not exist.
         AML_LOG_V(ERROR, TAG, "Name does not exist in AMLObject : %s", name.c_str());
-        throw AMLException(Exception::KEY_NOT_EXIST);
+        throw AMLException(KEY_NOT_EXIST);
     }
     return *(iter->second);
 }
