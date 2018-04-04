@@ -43,6 +43,12 @@ AMLData::AMLData(const AMLData& t)
     t.copyData(this);
 }
 
+AMLData& AMLData::operator=(const AMLData& t)
+{
+    t.copyData(this);
+    return *this;
+}
+
 AMLData::~AMLData(void)
 {
     if(!m_values.empty()) 

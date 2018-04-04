@@ -107,6 +107,9 @@ public:
     AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id);
 
     AMLObject(const AMLObject& t);
+
+    AMLObject& operator=(const AMLObject& t);
+
     virtual ~AMLObject(void);
 
     /**
@@ -175,6 +178,7 @@ class AMLData
 public:
     AMLData(void);
     AMLData(const AMLData& t);
+    AMLData& operator=(const AMLData& t);
     virtual ~AMLData(void);
 
     // template <typename T>

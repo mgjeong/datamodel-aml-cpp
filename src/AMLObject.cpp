@@ -55,6 +55,12 @@ AMLObject::AMLObject(const AMLObject& t)
     t.copyObject(this);
 }
 
+AMLObject& AMLObject::operator=(const AMLObject& t)
+{
+    t.copyObject(this);
+    return *this;
+}
+
 AMLObject::~AMLObject(void)
 {
     if(!m_amlDatas.empty()) 
