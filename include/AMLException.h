@@ -44,23 +44,23 @@ typedef enum
 class AMLException : public std::runtime_error
 {
     public:
-        AMLException(ResultCode reason = NO_ERROR)
-        : std::runtime_error(this->reason(reason)), m_reason(reason) {}
+        AMLException(ResultCode resCode = NO_ERROR)
+        : std::runtime_error(this->reason(resCode)), m_code(resCode) {}
 
-        static std::string reason(const ResultCode res);
+        static std::string reason(const ResultCode resCode);
 
         std::string reason() const
         {
-            return reason(m_reason);
+            return reason(m_code);
         }
 
         ResultCode code() const
         {
-            return m_reason;
+            return m_code;
         }
 
     private:
-        ResultCode m_reason;
+        ResultCode m_code;
 };
 
 } // namespace AML

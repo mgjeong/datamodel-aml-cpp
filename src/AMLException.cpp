@@ -33,9 +33,9 @@ namespace Exception
     static const char WRONG_GETTER_TYPE[]           = "Wrong Getter function call for Value";
 }
 
-std::string AML::AMLException::reason(const ResultCode res)
+std::string AML::AMLException::reason(const ResultCode resCode)
 {
-    switch (res)
+    switch (resCode)
     {
         case AML::INVALID_PARAM:
             return Exception::INVALID_PARAM;
