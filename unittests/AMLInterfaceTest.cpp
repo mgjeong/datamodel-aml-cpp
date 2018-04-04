@@ -375,6 +375,45 @@ namespace AMLInterfaceTest
         EXPECT_TRUE(amlObj.getId() == id);
     }
 
+    TEST(AMLObjectTest, ConstructWithEmptyDeviceId)
+    {
+        try
+        {
+            AMLObject amlObj("", "0");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), INVALID_PARAM);
+        }
+    }
+
+    TEST(AMLObjectTest, ConstructWithEmptyTimeStamp)
+    {
+        try
+        {
+            AMLObject amlObj("deviceId", "");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), INVALID_PARAM);
+        }
+    }
+
+    TEST(AMLObjectTest, ConstructWithEmptyId)
+    {
+        try
+        {
+            AMLObject amlObj("deviceId", "0", "");
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), INVALID_PARAM);
+        }
+    }
+
     TEST(AMLObjectTest, addData)
     {
         AMLData amlData;

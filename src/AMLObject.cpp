@@ -37,11 +37,16 @@ using namespace AML;
 AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp)
  : m_deviceId(deviceId), m_timeStamp(timeStamp), m_id(deviceId + "_" + timeStamp)
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(deviceId);
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(timeStamp);
 }
 
 AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id)
  : m_deviceId(deviceId), m_timeStamp(timeStamp), m_id(id)
 {
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(deviceId);
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(timeStamp);
+    VERIFY_NON_EMPTY_THROW_EXCEPTION(id);
 }
 
 AMLObject::~AMLObject(void)
