@@ -50,13 +50,18 @@ AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp, 
     VERIFY_NON_EMPTY_THROW_EXCEPTION(id);
 }
 
-AMLObject::AMLObject(const AMLObject& t) 
+AMLObject::AMLObject(const AMLObject& t)
+ : m_deviceId(t.getDeviceId()), m_timeStamp(t.getTimeStamp()), m_id(t.getId())
 {
     t.copyObject(this);
 }
 
 AMLObject& AMLObject::operator=(const AMLObject& t)
 {
+    const_cast<std::string&>(m_deviceId) = t.getDeviceId();
+    const_cast<std::string&>(m_timeStamp) = t.getTimeStamp();
+    const_cast<std::string&>(m_id) = t.getId();
+    
     t.copyObject(this);
     return *this;
 }
