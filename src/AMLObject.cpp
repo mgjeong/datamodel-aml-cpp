@@ -82,7 +82,8 @@ void AMLObject::addData(const std::string& name, const AMLData& data)
     VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
 
     AMLData* amlData = new AMLData();
-    data.copyData(amlData);
+    //data.copyData(amlData);
+    *amlData = data;
 
     //Try to insert a new element into the map and if the key already exists, throw an exeption.
     std::pair<const std::string, AMLData*> temp = std::make_pair(name, amlData);

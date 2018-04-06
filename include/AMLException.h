@@ -39,6 +39,7 @@ typedef enum
     KEY_NOT_EXIST,
     KEY_ALREADY_EXIST,
     WRONG_GETTER_TYPE,
+    API_NOT_ENABLED,
 } ResultCode;
 
 class AMLException : public std::runtime_error

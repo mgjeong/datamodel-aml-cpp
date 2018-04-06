@@ -177,7 +177,6 @@ namespace AMLRepresentationTest
         {
             EXPECT_EQ(e.code(), INVALID_FILE_PATH);
         }
-        //EXPECT_THROW(Representation rep = Representation("NoExist.aml"), AMLException);
     }
 
     TEST(ConstructRepresentationTest, AMLwithoutCAEX)
@@ -191,7 +190,6 @@ namespace AMLRepresentationTest
         {
             EXPECT_EQ(e.code(), INVALID_AML_SCHEMA);
         }
-        //EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoCAEX), AMLException);
     }
 
     TEST(ConstructRepresentationTest, AMLwithoutSUCL)
@@ -205,7 +203,6 @@ namespace AMLRepresentationTest
         {
             EXPECT_EQ(e.code(), INVALID_AML_SCHEMA);
         }
-        //EXPECT_THROW(Representation rep = Representation(amlModelFile_invalid_NoSUCL), AMLException);
     }
 
     TEST(AmlToDataTest, ConvertValid)
@@ -236,7 +233,6 @@ namespace AMLRepresentationTest
         {
             EXPECT_EQ(e.code(), INVALID_AML_SCHEMA);
         }
-        //EXPECT_THROW(amlObj = rep.AmlToData(invalidAmlStr), AMLException);
 
         if (NULL != amlObj)  delete amlObj;
     }
@@ -272,7 +268,6 @@ namespace AMLRepresentationTest
         {
             EXPECT_EQ(e.code(), NOT_MATCH_TO_AML_MODEL);
         }
-        //EXPECT_THROW(rep.DataToAml(notMatchToModel), AMLException);
     }
 
     TEST(DataToAmlTest, IgnoreDataNotInModel)
@@ -300,23 +295,35 @@ namespace AMLRepresentationTest
         {
             EXPECT_EQ(e.code(), KEY_NOT_EXIST);
         }
-        //EXPECT_THROW(sampleResult.getValueToStr("additionalKey"), AMLException);
 
         if (NULL != resultObj) delete resultObj;
     }
 
-#ifndef _EXCLUDE_PROTOBUF_
     TEST(ByteToDataTest, ConvertValid)
     {
+
         Representation rep = Representation(amlModelFile);
         AMLObject* amlObj = NULL;
         std::string binary = TestBinary();
+
+#ifndef _EXCLUDE_PROTOBUF_
         EXPECT_NO_THROW(amlObj = rep.ByteToData(binary));
 
         AMLObject varify = TestAMLObject();
         EXPECT_TRUE(isEqual(*amlObj, varify));
 
         if (NULL != amlObj)  delete amlObj;
+#else
+        try
+        {
+            amlObj = rep.ByteToData(binary);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), API_NOT_ENABLED);
+        }
+#endif
     }
 
     TEST(ByteToDataTest, InvalidByte)
@@ -332,9 +339,12 @@ namespace AMLRepresentationTest
         }
         catch (const AMLException& e)
         {
+#ifndef _EXCLUDE_PROTOBUF_
             EXPECT_EQ(e.code(), INVALID_BYTE_STR);
+#else
+            EXPECT_EQ(e.code(), API_NOT_ENABLED);
+#endif
         }
-        //EXPECT_THROW(amlObj = rep.ByteToData(amlBinary), AMLException);
 
         if (NULL != amlObj)  delete amlObj;
     }
@@ -344,12 +354,23 @@ namespace AMLRepresentationTest
         Representation rep = Representation(amlModelFile);
         AMLObject amlObj = TestAMLObject();
         std::string amlBinary;
+#ifndef _EXCLUDE_PROTOBUF_
         EXPECT_NO_THROW(amlBinary = rep.DataToByte(amlObj));
 
         std::string varify = TestBinary();
         EXPECT_EQ(varify.compare(amlBinary), 0);
+#else
+        try
+        {
+            amlBinary = rep.DataToByte(amlObj);
+            FAIL();
+        }
+        catch (const AMLException& e)
+        {
+            EXPECT_EQ(e.code(), API_NOT_ENABLED);
+        }
+#endif
     }
-#endif // _EXCLUDE_PROTOBUF_
 
     TEST(GetRepresentationIdTest, GetValid)
     {

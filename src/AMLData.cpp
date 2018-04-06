@@ -114,27 +114,6 @@ std::vector<std::string> AMLData::getKeys() const
 
 AMLValueType AMLData::getValueType(const std::string& key) const
 {
-    // for (auto const& element : m_values)
-    // {
-    //     if (key.compare(element.first) == 0)
-    //     {
-    //         auto type = element.second.which();
-
-    //         if (type == 0)
-    //         {
-    //             return AMLValueType::String;
-    //         }
-    //         else if (type == 1)
-    //         {
-    //             return AMLValueType::StringArray;
-    //         }
-    //         else if (type == 2)
-    //         {
-    //             return AMLValueType::AMLData;
-    //         }
-    //     }
-    // }
-
     VERIFY_NON_EMPTY_THROW_EXCEPTION(key);
 
     for (auto const& element : m_values)
@@ -166,8 +145,7 @@ const std::string& AMLData::getValueToStr(const std::string& key) const
         AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
-    //return boost::get<std::string>(iter->second);
-    //AMLValue_<std::string>* amlVal = (AMLValue_<std::string>*)iter->second;
+
     return ((AMLValue_<std::string>*)iter->second)->getValue();
 }
 
@@ -186,7 +164,7 @@ const std::vector<std::string>& AMLData::getValueToStrArr(const std::string& key
         AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
-    //return boost::get<std::vector<std::string>>(iter->second);
+
     AMLValue_<std::vector<std::string>>* amlVal = (AMLValue_<std::vector<std::string>>*)iter->second;
     return amlVal->getValue();
 }
@@ -208,7 +186,6 @@ const AMLData& AMLData::getValueToAMLData(const std::string& key) const
         throw AMLException(WRONG_GETTER_TYPE);
     }
 
-    //return boost::get<AMLData>(iter->second);
     AMLValue_<AMLData>* amlVal = (AMLValue_<AMLData>*)iter->second;
     return amlVal->getValue();
 }

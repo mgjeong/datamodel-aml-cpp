@@ -30,8 +30,6 @@ namespace AML
 
 class AMLData;
 
-//typedef std::map<std::string, boost::variant<std::string, std::vector<std::string>, AMLData>> AMLMap;
-
 /**
  * @class AMLValueType
  * @brief This class represent AMLdata Value type
@@ -44,6 +42,11 @@ enum class AMLValueType
     AMLData
 };
 
+/**
+ * @class AMLValue
+ * @brief This class use for AMLValue interface.
+ */
+
 class AMLValue
 {
 public:
@@ -53,6 +56,7 @@ public:
     virtual ~AMLValue()
     {
     }
+
     AMLValueType getType()
     {
         return m_type;
@@ -61,6 +65,12 @@ private:
     AMLValueType m_type;
 };
 
+/**
+ * @class AMLValue_
+ * @brief This class have all types of AMLValue data.
+ * @see AMLValue
+ */
+
 template <typename T>
 class AMLValue_ : public AMLValue
 {
@@ -68,12 +78,10 @@ public:
     AMLValue_ (AMLValueType t, T val) : AMLValue(t), m_value(val)
     {
     }
-    //AMLValue (const AMLValue &t);
-
     virtual ~AMLValue_ ()
     {
     }
-    
+  
     T& getValue()
     {
         return m_value;
@@ -106,8 +114,14 @@ public:
      */
     AMLObject(const std::string& deviceId, const std::string& timeStamp, const std::string& id);
 
+    /**
+     * @brief       Copy Constructor Overloading.
+     */
     AMLObject(const AMLObject& t);
 
+    /**
+     * @brief       Assignment Operator Overloading.
+     */
     AMLObject& operator=(const AMLObject& t);
 
     virtual ~AMLObject(void);
@@ -158,6 +172,12 @@ public:
      */
     const std::string&              getId() const;
 
+private:
+    /**
+     * @fn void copyData(AMLObject* target) const
+     * @brief       This function copy AMLData Data 
+     * @param       target     [in] AMLObject that target class want to input data
+     */
     void                            copyObject(AMLObject* target) const;
 
 
@@ -177,12 +197,17 @@ class AMLData
 {
 public:
     AMLData(void);
+    /**
+     * @brief       Copy Constructor Overloading.
+     */
+    
     AMLData(const AMLData& t);
+    /**
+     * @brief       Copy Constructor Overloading.
+     */
     AMLData& operator=(const AMLData& t);
-    virtual ~AMLData(void);
 
-    // template <typename T>
-    // void                            setValue(const std::string& key, const T& value);
+    virtual ~AMLData(void);
   
     /**
      * @fn void setValue(const std::string& key, const std::string& value)
@@ -190,7 +215,6 @@ public:
      * @param       key     [in] AMLData key.
      * @param       value   [in] AMLData value.
      */
-   //template <typename T>
     void                            setValue(const std::string& key, const std::string& value);
 
     /**
@@ -199,7 +223,6 @@ public:
      * @param       key     [in] AMLData key.
      * @param       value   [in] AMLData value.
      */
-    //template <typename T>
     void                            setValue(const std::string& key, const std::vector<std::string>& value); 
     
     /**
@@ -208,7 +231,6 @@ public:
      * @param       key     [in] AMLData key
      * @param       value   [in] AMLData value
      */
-    //template <typename T>
     void                            setValue(const std::string& key, const AMLData& value);
 
     /**
@@ -218,7 +240,6 @@ public:
      * @return      String value which matched using key on AMLMap.
      * @exception   AMLException If input key is not matching on AMLMap.
      */
-
     const std::string&              getValueToStr(const std::string& key) const;
     
     /**
@@ -254,11 +275,15 @@ public:
      */
     AMLValueType                    getValueType(const std::string& key) const;
 
-
+private:
+    /**
+     * @fn void copyData(AMLData* target) const
+     * @brief       This function copy AMLValue Data 
+     * @param       target     [in] AMLData that target class want to input data
+     */
     void                            copyData(AMLData* target) const;
 
 private:
-//    AMLMap m_values;
     std::map<std::string, AMLValue*> m_values;
 };
 

@@ -31,6 +31,7 @@ namespace Exception
     static const char KEY_NOT_EXIST[]               = "Key does Not Exist";
     static const char KEY_ALREADY_EXIST[]           = "Key already Exists";
     static const char WRONG_GETTER_TYPE[]           = "Wrong Getter function call for Value";
+    static const char API_NOT_ENABLED[]             = "API is Not Enabled";
 }
 
 std::string AML::AMLException::reason(const ResultCode resCode)
@@ -57,8 +58,10 @@ std::string AML::AMLException::reason(const ResultCode resCode)
             return Exception::KEY_NOT_EXIST;
         case AML::KEY_ALREADY_EXIST:
             return Exception::KEY_ALREADY_EXIST;
-         case AML::WRONG_GETTER_TYPE:
-             return Exception::WRONG_GETTER_TYPE;
+        case AML::WRONG_GETTER_TYPE:
+            return Exception::WRONG_GETTER_TYPE;
+        case AML::API_NOT_ENABLED:
+            return Exception::API_NOT_ENABLED;
 
         default:
             return Exception::NO_ERROR;

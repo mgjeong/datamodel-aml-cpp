@@ -490,9 +490,13 @@ AMLObject* Representation::AmlToData(const std::string& xmlStr) const
     return amlObj;
 }
 
-#ifndef _EXCLUDE_PROTOBUF_
 AMLObject* Representation::ByteToData(const std::string& byte) const
 {
+#ifdef _EXCLUDE_PROTOBUF_
+    (void)byte;
+    AML_LOG(ERROR, TAG, "ByteToData() is not supported. ('exclude_protobuf' build option is enabled)");
+    throw AMLException(API_NOT_ENABLED);
+#else
     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
 
     if (false == caex->ParseFromString(byte))
@@ -531,10 +535,16 @@ AMLObject* Representation::ByteToData(const std::string& byte) const
     delete xml_doc;
 
     return amlObj;
+#endif // _EXCLUDE_PROTOBUF_
 }
 
 std::string Representation::DataToByte(const AMLObject& amlObject) const
 {
+#ifdef _EXCLUDE_PROTOBUF_
+    (void)amlObject;
+    AML_LOG(ERROR, TAG, "DataToByte() is not supported. ('exclude_protobuf' build option is enabled)");
+    throw AMLException(API_NOT_ENABLED);
+#else
     // convert AMLObject to XML object
     pugi::xml_document* xml_doc = m_amlModel->constructXmlDoc(amlObject);
     assert(nullptr != xml_doc);
@@ -572,8 +582,10 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
         throw AMLException(SERIALIZE_FAIL);
     }
     return binary;
+#endif // _EXCLUDE_PROTOBUF_
 }
 
+#ifndef _EXCLUDE_PROTOBUF_
 template <typename T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 {
