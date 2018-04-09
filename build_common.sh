@@ -80,50 +80,54 @@ install_dependencies() {
     cd ./dependencies
     DEP_ROOT=$(pwd)
 
-    # build, install protobuf library
-    FILENAME="protobuf-cpp-3.4.0.tar.gz"
-    cd $DEP_ROOT
-    if [ -e "$FILENAME" ]; then
-        echo "Protobuf tar exist"
-    else
-        wget https://github.com/google/protobuf/releases/download/v3.4.0/protobuf-cpp-3.4.0.tar.gz
+    # Protobuf
+    if [ false = ${AML_EXCLD_PROTOBUF} ]; then
+        # build, install protobuf library
+        FILENAME="protobuf-cpp-3.4.0.tar.gz"
+        cd $DEP_ROOT
+        if [ -e "$FILENAME" ]; then
+            echo "Protobuf tar exist"
+        else
+            wget https://github.com/google/protobuf/releases/download/v3.4.0/protobuf-cpp-3.4.0.tar.gz
+        fi
+
+        if [ -d "./protobuf-3.4.0" ]; then
+            echo "Protobuf library folder exist"
+        else
+            tar -xvf protobuf-cpp-3.4.0.tar.gz
+        fi
+
+        cd protobuf-3.4.0/
+        chmod +x autogen.sh
+        ./autogen.sh
+        if [ "arm" = ${AML_TARGET_ARCH} ]; then
+            echo -e "${BLUE}Protobuf configuring for arm${NO_COLOUR}"
+            ./configure --host=arm-linux CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
+            make -j 4
+        elif [ "arm64" = ${AML_TARGET_ARCH} ]; then
+            echo -e "${BLUE}Protobuf configuring for arm64${NO_COLOUR}"
+            ./configure --host=aarch64-unknown-linux-gnu CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8
+            make -j 4
+            sudo make install
+        elif [ "armhf" = ${AML_TARGET_ARCH} ]; then
+            echo -e "${BLUE}Protobuf configuring for armhf${NO_COLOUR}"
+            ./configure --host=arm-linux-gnueabihf CC=arm-linux-gnueabihf-gcc-4.8 CXX=arm-linux-gnueabihf-g++-4.8
+            make -j 4
+        else
+            ./configure
+            make -j 4
+            sudo make install
+        fi
+
+        #handle protobuf error for cross compilation
+        if [ "arm" = ${AML_TARGET_ARCH} ] || [ "arm64" = ${AML_TARGET_ARCH} ] || [ "armhf" = ${AML_TARGET_ARCH} ] || [ "armhf-qemu" = ${AML_TARGET_ARCH} ]; then
+            echo -e "${BLUE}Copying libs from protobuf built directory to /usr/local/lib${NO_COLOUR}"
+            sudo cp src/.libs/protoc /usr/bin
+            sudo cp src/.libs/* /usr/local/lib
+        fi
+        sudo ldconfig
     fi
 
-    if [ -d "./protobuf-3.4.0" ]; then
-        echo "Protobuf library folder exist"
-    else
-        tar -xvf protobuf-cpp-3.4.0.tar.gz
-    fi
-
-    cd protobuf-3.4.0/
-    chmod +x autogen.sh
-    ./autogen.sh
-    if [ "arm" = ${AML_TARGET_ARCH} ]; then
-        echo -e "${BLUE}Protobuf configuring for arm${NO_COLOUR}"
-        ./configure --host=arm-linux CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
-        make -j 4
-    elif [ "arm64" = ${AML_TARGET_ARCH} ]; then
-        echo -e "${BLUE}Protobuf configuring for arm64${NO_COLOUR}"
-        ./configure --host=aarch64-unknown-linux-gnu CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8
-        make -j 4
-        sudo make install
-    elif [ "armhf" = ${AML_TARGET_ARCH} ]; then
-        echo -e "${BLUE}Protobuf configuring for armhf${NO_COLOUR}"
-        ./configure --host=arm-linux-gnueabihf CC=arm-linux-gnueabihf-gcc-4.8 CXX=arm-linux-gnueabihf-g++-4.8
-        make -j 4
-    else
-        ./configure
-        make -j 4
-        sudo make install
-    fi
-
-    #handle protobuf error for cross compilation
-    if [ "arm" = ${AML_TARGET_ARCH} ] || [ "arm64" = ${AML_TARGET_ARCH} ] || [ "armhf" = ${AML_TARGET_ARCH} ] || [ "armhf-qemu" = ${AML_TARGET_ARCH} ]; then
-        echo -e "${BLUE}Copying libs from protobuf built directory to /usr/local/lib${NO_COLOUR}"
-        sudo cp src/.libs/protoc /usr/bin
-        sudo cp src/.libs/* /usr/local/lib
-    fi
-    sudo ldconfig
     echo -e "${GREEN}Install dependencies done${NO_COLOUR}"
 }
 
@@ -136,8 +140,6 @@ usage() {
     echo "  -c                                                           :  Clean aml repository"
     echo "  -h / --help                                                  :  Display help and exit"
 }
-
-
 
 build_x86() {
     echo -e "Building for x86"
