@@ -18,9 +18,9 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <iostream>
 
 #include "AMLInterface.h"
+#include "AMLValue.h"
 #include "AMLException.h"
 #include "AMLLogger.h"
 
@@ -33,6 +33,7 @@
 
 using namespace std;
 using namespace AML;
+
 
 AMLData::AMLData(void)
 {

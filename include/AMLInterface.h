@@ -21,9 +21,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <iostream>
-
-using namespace std;
 
 namespace AML
 {
@@ -65,30 +62,6 @@ private:
     AMLValueType m_type;
 };
 
-/**
- * @class AMLValue_
- * @brief This class have all types of AMLValue data.
- * @see AMLValue
- */
-
-template <typename T>
-class AMLValue_ : public AMLValue
-{
-public:
-    AMLValue_ (AMLValueType t, T val) : AMLValue(t), m_value(val)
-    {
-    }
-    virtual ~AMLValue_ ()
-    {
-    }
-  
-    T& getValue()
-    {
-        return m_value;
-    }
-private:
-    T m_value;
-};
 
 /**
  * @class AMLObject
