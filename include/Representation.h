@@ -65,7 +65,7 @@ public:
      * @param       amlObject [in] AMLObject to be converted.
      * @return      Protobuf byte data(string) converted from amlObject.
      * @exception   AMLException If the schema of amlObject does not match to AML model information
-     * @node        If 'exclude_protobuf' build option is enabled, this API will be DISABLED and throw AMLException with code 'API_NOT_ENABLED'.
+     * @node        If 'disable_protobuf' build option is enabled, this API will be DISABLED and throw AMLException with code 'API_NOT_ENABLED'.
      */
     std::string DataToByte(const AMLObject& amlObject) const;
 
@@ -75,7 +75,7 @@ public:
      * @param       byte [in] Protobuf byte data(string) to be converted.
      * @return      AMLObject instance converted from amlObject.
      * @exception   AMLException If the schema of byte does not match to AML model information
-     * @node        If 'exclude_protobuf' build option is enabled, this API will be DISABLED and throw AMLException with code 'API_NOT_ENABLED'.
+     * @node        If 'disable_protobuf' build option is enabled, this API will be DISABLED and throw AMLException with code 'API_NOT_ENABLED'.
      * @note        AMLObject instance will be allocated and returned, so it should be deleted after use.
      */
     AMLObject* ByteToData(const std::string& byte) const;
