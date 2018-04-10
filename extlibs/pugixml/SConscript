@@ -37,10 +37,11 @@ print '*** Checking for installation of pugixml %s ***' % PUGIXML_VERSION
 # If the pugixml tar file is not already present, download it
 if not os.path.exists(pugixml_tar_file):
     pugixml_tar = pugixml_env.Download(pugixml_tar_path, pugixml_url)
-    print 'Unzipping to : ' + pugixml_dir
-    pugixml_env.UnpackAll(pugixml_dir, pugixml_tar)
 else:
     pugixml_tar = pugixml_tar_path
+    
+print 'Unzipping to : ' + pugixml_dir
+pugixml_env.UnpackAll(pugixml_dir, pugixml_tar)
 
 # Export flags once for all
 pugixml_env.PrependUnique(CPPPATH=[os.path.join(pugixml_dir, 'src')])
