@@ -36,7 +36,7 @@ else:
 
 aml_test_env = lib_env.Clone()
 target_os = aml_test_env.get('TARGET_OS')
-exclude_protobuf = aml_test_env.get('EXCLUDE_PROTOBUF')
+disable_protobuf = aml_test_env.get('DISABLE_PROTOBUF')
 
 ######################################################################
 # Build flags
@@ -45,7 +45,7 @@ exclude_protobuf = aml_test_env.get('EXCLUDE_PROTOBUF')
 aml_test_env.AppendUnique(LIBPATH=[lib_env.get('BUILD_DIR')])
 aml_test_env.AppendUnique(LIBS=['aml'])
 
-if not exclude_protobuf:
+if not disable_protobuf:
     aml_test_env.AppendUnique(LIBS=['protobuf'])
 
 if target_os not in ['windows']:
@@ -62,10 +62,10 @@ aml_test_env.AppendUnique(CPPPATH=[
     '.'
 ])
 
-if not exclude_protobuf:
+if not disable_protobuf:
     aml_test_env.AppendUnique(CPPPATH=['../protobuf'])
 else:
-    aml_test_env.AppendUnique(CPPDEFINES = ['_EXCLUDE_PROTOBUF_'])
+    aml_test_env.AppendUnique(CPPDEFINES = ['_DISABLE_PROTOBUF_'])
 
 ######################################################################
 # Build Test

@@ -25,15 +25,15 @@ NO_COLOUR="\033[0m"
 
 PROJECT_ROOT=$(pwd)
 AML_TARGET_ARCH="x86_64"
-AML_WITH_DEP=false
+AML_INSTALL_PREREQUISITES=false
 AML_BUILD_MODE="release"
 AML_LOGGING="off"
-AML_EXCLD_PROTOBUF=false
+AML_DISABLE_PROTOBUF=false
 
 RELEASE="1"
 LOGGING="0"
 
-install_dependencies() {
+install_prerequisites() {
     # download required tool chain for cross compilation [arm/arm64/armhf]
     if [ "arm" = ${AML_TARGET_ARCH} ]; then
         if [ -x "/usr/bin/arm-linux-gnueabi-g++" ] && [ -x "/usr/bin/arm-linux-gnueabi-gcc" ]; then
@@ -81,7 +81,7 @@ install_dependencies() {
     DEP_ROOT=$(pwd)
 
     # Protobuf
-    if [ false = ${AML_EXCLD_PROTOBUF} ]; then
+    if [ false = ${AML_DISABLE_PROTOBUF} ]; then
         # build, install protobuf library
         FILENAME="protobuf-cpp-3.4.0.tar.gz"
         cd $DEP_ROOT
@@ -136,44 +136,45 @@ usage() {
     echo -e "${GREEN}Options:${NO_COLOUR}"
     echo "  --build_mode=[release|debug](default: release)               :  Build aml library and samples in release or debug mode"
     echo "  --logging=[on|off](default: off)                             :  Build aml library including logs"
-    echo "  --with_dependencies=[true|false](default: false)             :  Build aml along with dependencies [protobuf]"
+    echo "  --disable_protobuf=[true|false](default: false)              :  Disable protobuf feature"
+    echo "  --install_prerequisites=[true|false](default: false)         :  Install the prerequisite S/W to build aml"
     echo "  -c                                                           :  Clean aml repository"
     echo "  -h / --help                                                  :  Display help and exit"
 }
 
 build_x86() {
     echo -e "Building for x86"
-    scons TARGET_OS=linux TARGET_ARCH=x86 RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
+    scons TARGET_OS=linux TARGET_ARCH=x86 RELEASE=${RELEASE} LOGGING=${LOGGING} DISABLE_PROTOBUF=${AML_DISABLE_PROTOBUF}
 }
 
 build_x86_64() {
     echo -e "Building for x86_64"
-    scons TARGET_OS=linux TARGET_ARCH=x86_64 RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
+    scons TARGET_OS=linux TARGET_ARCH=x86_64 RELEASE=${RELEASE} LOGGING=${LOGGING} DISABLE_PROTOBUF=${AML_DISABLE_PROTOBUF}
 }
 
 build_arm() {
     echo -e "Building for arm"
-    scons TARGET_ARCH=arm TC_PREFIX=/usr/bin/arm-linux-gnueabi- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
+    scons TARGET_ARCH=arm TC_PREFIX=/usr/bin/arm-linux-gnueabi- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} DISABLE_PROTOBUF=${AML_DISABLE_PROTOBUF}
 }
 
 build_arm64() {
     echo -e "Building for arm64"
-    scons TARGET_ARCH=arm64 TC_PREFIX=/usr/bin/aarch64-linux-gnu- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
+    scons TARGET_ARCH=arm64 TC_PREFIX=/usr/bin/aarch64-linux-gnu- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} DISABLE_PROTOBUF=${AML_DISABLE_PROTOBUF}
 }
 
 build_armhf() {
     echo -e "Building for armhf"
-    scons TARGET_ARCH=armhf TC_PREFIX=/usr/bin/arm-linux-gnueabihf- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
+    scons TARGET_ARCH=armhf TC_PREFIX=/usr/bin/arm-linux-gnueabihf- TC_PATH=/usr/bin/ RELEASE=${RELEASE} LOGGING=${LOGGING} DISABLE_PROTOBUF=${AML_DISABLE_PROTOBUF}
 }
 
 build_armhf_native() {
     echo -e "Building for armhf_native"
-    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
+    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING} DISABLE_PROTOBUF=${AML_DISABLE_PROTOBUF}
 }
 
 build_armhf_qemu() {
     echo -e "Building for armhf-qemu"
-    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING} EXCLUDE_PROTOBUF=${AML_EXCLD_PROTOBUF}
+    scons TARGET_ARCH=armhf RELEASE=${RELEASE} LOGGING=${LOGGING} DISABLE_PROTOBUF=${AML_DISABLE_PROTOBUF}
 
     if [ -x "/usr/bin/qemu-arm-static" ]; then
         echo -e "${BLUE}qemu-arm-static found, copying it to current directory${NO_COLOUR}"
@@ -185,8 +186,8 @@ build_armhf_qemu() {
 }
 
 build() {
-    if [ true = ${AML_WITH_DEP} ]; then
-        install_dependencies
+    if [ true = ${AML_INSTALL_PREREQUISITES} ]; then
+        install_prerequisites
     fi
 
     if [ "debug" = ${AML_BUILD_MODE} ]; then
@@ -231,16 +232,13 @@ clean() {
 process_cmd_args() {
     while [ "$#" -gt 0  ]; do
         case "$1" in
-            --with_dependencies=*)
-                AML_WITH_DEP="${1#*=}";
-                if [ ${AML_WITH_DEP} = true ]; then
-                    echo -e "${GREEN}Build with depedencies${NO_COLOUR}"
-                elif [ ${AML_WITH_DEP} = false ]; then
-                    echo -e "${GREEN}Build without depedencies${NO_COLOUR}"
-                else
-                    echo -e "${RED}Unknown option for --with_dependencies${NO_COLOUR}"
+            --install_prerequisites=*)
+                AML_INSTALL_PREREQUISITES="${1#*=}";
+                if [ ${AML_INSTALL_PREREQUISITES} != true ] && [ ${AML_INSTALL_PREREQUISITES} != false ]; then
+                    echo -e "${RED}Unknown option for --install_prerequisites${NO_COLOUR}"
                     shift 1; exit 0
                 fi
+                echo -e "${GREEN}Install the prerequisites before build: ${AML_INSTALL_PREREQUISITES}${NO_COLOUR}"
                 shift 1;
                 ;;
             --target_arch=*)
@@ -258,9 +256,13 @@ process_cmd_args() {
                 echo -e "${GREEN}Logging option is: $AML_LOGGING${NO_COLOUR}"
                 shift 1;
                 ;;
-            --exclude_protobuf=*)
-                AML_EXCLD_PROTOBUF="${1#*=}";
-                echo -e "${GREEN}is Protobuf excluded : $AML_EXCLD_PROTOBUF${NO_COLOUR}"
+            --disable_protobuf=*)
+                AML_DISABLE_PROTOBUF="${1#*=}";
+                if [ ${AML_DISABLE_PROTOBUF} != true ] && [ ${AML_DISABLE_PROTOBUF} != false ]; then
+                    echo -e "${RED}Unknown option for --disable_protobuf${NO_COLOUR}"
+                    shift 1; exit 0
+                fi
+                echo -e "${GREEN}is Protobuf disabled : $AML_DISABLE_PROTOBUF${NO_COLOUR}"
                 shift 1;
                 ;;
             -c)

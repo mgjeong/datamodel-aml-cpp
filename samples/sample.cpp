@@ -116,7 +116,7 @@ int main() {
         printAMLObject(*data_from_aml);
         cout << "-------------------------------------------------------------" << endl;
 
-#ifndef _EXCLUDE_PROTOBUF_
+#ifndef _DISABLE_PROTOBUF_
         // Convert AMLObject to Byte(string)
         string byte_string = rep->DataToByte(*data_from_aml);
         cout << byte_string << endl;
@@ -129,7 +129,7 @@ int main() {
         cout << "-------------------------------------------------------------" << endl;
 
         delete data_from_byte;
-#endif // _EXCLUDE_PROTOBUF_
+#endif // _DISABLE_PROTOBUF_
 
         delete data_from_aml;
         delete rep;
