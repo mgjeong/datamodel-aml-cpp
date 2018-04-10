@@ -306,7 +306,7 @@ namespace AMLRepresentationTest
         AMLObject* amlObj = NULL;
         std::string binary = TestBinary();
 
-#ifndef _EXCLUDE_PROTOBUF_
+#ifndef _DISABLE_PROTOBUF_
         EXPECT_NO_THROW(amlObj = rep.ByteToData(binary));
 
         AMLObject varify = TestAMLObject();
@@ -339,7 +339,7 @@ namespace AMLRepresentationTest
         }
         catch (const AMLException& e)
         {
-#ifndef _EXCLUDE_PROTOBUF_
+#ifndef _DISABLE_PROTOBUF_
             EXPECT_EQ(e.code(), INVALID_BYTE_STR);
 #else
             EXPECT_EQ(e.code(), API_NOT_ENABLED);
@@ -354,7 +354,7 @@ namespace AMLRepresentationTest
         Representation rep = Representation(amlModelFile);
         AMLObject amlObj = TestAMLObject();
         std::string amlBinary;
-#ifndef _EXCLUDE_PROTOBUF_
+#ifndef _DISABLE_PROTOBUF_
         EXPECT_NO_THROW(amlBinary = rep.DataToByte(amlObj));
 
         std::string varify = TestBinary();

@@ -96,8 +96,8 @@ help_vars.AddVariables(
                  'Enable stack logging level',
                  default='DEBUG',
                  allowed_values=('DEBUG', 'INFO', 'ERROR', 'WARNING', 'FATAL')),
-    BoolVariable('EXCLUDE_PROTOBUF',
-                 'Exclude Protobuf feature',
+    BoolVariable('DISABLE_PROTOBUF',
+                 'Disable Protobuf feature',
                  default=False)
 )
 
@@ -350,8 +350,8 @@ env.AppendUnique(CPPDEFINES={'AML_LOG_LEVEL': env.get('LOG_LEVEL')})
 if env.get('LOGGING'):
     env.AppendUnique(CPPDEFINES=['DEBUG_LOG'])
 
-if env.get('EXCLUDE_PROTOBUF'):
-    env.AppendUnique(CPPDEFINES=['_EXCLUDE_PROTOBUF_'])
+if env.get('DISABLE_PROTOBUF'):
+    env.AppendUnique(CPPDEFINES=['_DISABLE_PROTOBUF_'])
 
 #external libs building
 env.SConscript('external_builders.scons')

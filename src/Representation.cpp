@@ -27,7 +27,7 @@
 #include "AMLException.h"
 #include "AMLLogger.h"
 
-#ifndef _EXCLUDE_PROTOBUF_
+#ifndef _DISABLE_PROTOBUF_
 #include "AML.pb.h"
 #endif
 
@@ -87,7 +87,7 @@ static const char KEY_TIMESTAMP[]                   = "timestamp";
                             std::cout<<std::endl;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef _EXCLUDE_PROTOBUF_
+#ifndef _DISABLE_PROTOBUF_
 template <class T>
 static void extractAttribute(T* attr, pugi::xml_node xmlNode);
 
@@ -99,7 +99,7 @@ static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr);
 
 template <class T>
 static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie);
-#endif // _EXCLUDE_PROTOBUF_
+#endif // _DISABLE_PROTOBUF_
 
 template <typename T>
 static std::string toString(const T& t)
@@ -492,9 +492,9 @@ AMLObject* Representation::AmlToData(const std::string& xmlStr) const
 
 AMLObject* Representation::ByteToData(const std::string& byte) const
 {
-#ifdef _EXCLUDE_PROTOBUF_
+#ifdef _DISABLE_PROTOBUF_
     (void)byte;
-    AML_LOG(ERROR, TAG, "ByteToData() is not supported. ('exclude_protobuf' build option is enabled)");
+    AML_LOG(ERROR, TAG, "ByteToData() is not supported. ('disable_protobuf' build option is enabled)");
     throw AMLException(API_NOT_ENABLED);
 #else
     datamodel::CAEXFile* caex = new datamodel::CAEXFile();
@@ -535,14 +535,14 @@ AMLObject* Representation::ByteToData(const std::string& byte) const
     delete xml_doc;
 
     return amlObj;
-#endif // _EXCLUDE_PROTOBUF_
+#endif // _DISABLE_PROTOBUF_
 }
 
 std::string Representation::DataToByte(const AMLObject& amlObject) const
 {
-#ifdef _EXCLUDE_PROTOBUF_
+#ifdef _DISABLE_PROTOBUF_
     (void)amlObject;
-    AML_LOG(ERROR, TAG, "DataToByte() is not supported. ('exclude_protobuf' build option is enabled)");
+    AML_LOG(ERROR, TAG, "DataToByte() is not supported. ('disable_protobuf' build option is enabled)");
     throw AMLException(API_NOT_ENABLED);
 #else
     // convert AMLObject to XML object
@@ -582,10 +582,10 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
         throw AMLException(SERIALIZE_FAIL);
     }
     return binary;
-#endif // _EXCLUDE_PROTOBUF_
+#endif // _DISABLE_PROTOBUF_
 }
 
-#ifndef _EXCLUDE_PROTOBUF_
+#ifndef _DISABLE_PROTOBUF_
 template <class T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 {
@@ -696,4 +696,4 @@ static void extractInternalElement(T* ie, pugi::xml_node xmlNode)
 
     return;
 }
-#endif // _EXCLUDE_PROTOBUF_
+#endif // _DISABLE_PROTOBUF_

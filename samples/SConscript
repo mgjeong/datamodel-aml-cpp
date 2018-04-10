@@ -21,14 +21,14 @@ Import('env')
 
 aml_sample_env = env.Clone()
 target_arch = aml_sample_env.get('TARGET_ARCH')
-exclude_protobuf = aml_sample_env.get('EXCLUDE_PROTOBUF')
+disable_protobuf = aml_sample_env.get('DISABLE_PROTOBUF')
 
 ######################################################################
 # Build flags
 ######################################################################
 aml_sample_env.PrependUnique(CPPPATH=['../include'])
 
-if not exclude_protobuf:
+if not disable_protobuf:
     aml_sample_env.PrependUnique(CPPPATH=['../protobuf'])
 
 aml_sample_env.AppendUnique(
@@ -36,10 +36,10 @@ aml_sample_env.AppendUnique(
 
 aml_sample_env.AppendUnique(LIBS=['aml'])
 
-if not exclude_protobuf:
+if not disable_protobuf:
     aml_sample_env.AppendUnique(LIBS=['protobuf'])
 else:
-    aml_sample_env.AppendUnique(CPPDEFINES = ['_EXCLUDE_PROTOBUF_'])
+    aml_sample_env.AppendUnique(CPPDEFINES = ['_DISABLE_PROTOBUF_'])
 
 ####################################################################
 # Source files and Targets
