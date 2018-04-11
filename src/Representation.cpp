@@ -19,6 +19,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <cassert>
 
 #include "pugixml.hpp"
 
