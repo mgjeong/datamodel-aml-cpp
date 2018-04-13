@@ -52,9 +52,9 @@ AMLData& AMLData::operator=(const AMLData& t)
 
 AMLData::~AMLData(void)
 {
-    if(!m_values.empty()) 
+    if (!m_values.empty()) 
     {
-        for(auto const& iter : m_values)
+        for (auto const& iter : m_values)
         {
             delete iter.second;
         }
@@ -119,7 +119,7 @@ AMLValueType AMLData::getValueType(const std::string& key) const
 
     for (auto const& element : m_values)
     {
-        if(key.compare(element.first) == 0)
+        if (key.compare(element.first) == 0)
         {
             AMLValueType type = element.second->getType();
 
@@ -180,7 +180,6 @@ const AMLData& AMLData::getValueToAMLData(const std::string& key) const
         AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
         throw AMLException(KEY_NOT_EXIST);
     }
-    //else if (2 != iter->second.which())
     else if (AMLValueType::AMLData != iter->second->getType())
     {
         AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
@@ -197,11 +196,11 @@ void AMLData::copyData(AMLData* target) const
     {
         string key(element.first);
 
-        if(AMLValueType::String == element.second->getType())
+        if (AMLValueType::String == element.second->getType())
         {
             target->setValue(key, ((AMLValue_<string>*)element.second)->getValue());
         }
-        else if(AMLValueType::StringArray == element.second->getType())
+        else if (AMLValueType::StringArray == element.second->getType())
         {
             target->setValue(key, ((AMLValue_<vector<string>>*)element.second)->getValue());
         }
@@ -209,6 +208,5 @@ void AMLData::copyData(AMLData* target) const
         {
             target->setValue(key, ((AMLValue_<AMLData>*)element.second)->getValue());
         }
-        
     }
 }

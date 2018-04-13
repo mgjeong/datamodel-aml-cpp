@@ -60,16 +60,16 @@ AMLObject& AMLObject::operator=(const AMLObject& t)
     const_cast<std::string&>(m_deviceId) = t.getDeviceId();
     const_cast<std::string&>(m_timeStamp) = t.getTimeStamp();
     const_cast<std::string&>(m_id) = t.getId();
-    
+
     t.copyObject(this);
     return *this;
 }
 
 AMLObject::~AMLObject(void)
 {
-    if(!m_amlDatas.empty()) 
+    if (!m_amlDatas.empty()) 
     {
-        for(auto const& iter : m_amlDatas)
+        for (auto const& iter : m_amlDatas)
         {
             delete iter.second;
         }
@@ -81,7 +81,6 @@ void AMLObject::addData(const std::string& name, const AMLData& data)
     VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
 
     AMLData* amlData = new AMLData();
-    //data.copyData(amlData);
     *amlData = data;
 
     //Try to insert a new element into the map and if the key already exists, throw an exeption.

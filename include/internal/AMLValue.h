@@ -28,7 +28,6 @@ namespace AML
  * @brief This class have all types of AMLValue data.
  * @see AMLValue
  */
-
 template <typename T>
 class AMLValue_ : public AMLValue
 {
@@ -39,7 +38,7 @@ public:
     virtual ~AMLValue_ ()
     {
     }
-  
+
     T& getValue()
     {
         return m_value;

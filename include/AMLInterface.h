@@ -31,7 +31,6 @@ class AMLData;
  * @class AMLValueType
  * @brief This class represent AMLdata Value type
  */
-
 enum class AMLValueType
 {
     String = 0,
@@ -43,7 +42,6 @@ enum class AMLValueType
  * @class AMLValue
  * @brief This class use for AMLValue interface.
  */
-
 class AMLValue
 {
 public:
@@ -62,13 +60,11 @@ private:
     AMLValueType m_type;
 };
 
-
 /**
  * @class AMLObject
  * @brief This class have AMLData.
  * @see AMLData
  */
-
 class AMLObject
 {
 public:
@@ -153,8 +149,6 @@ private:
      */
     void                            copyObject(AMLObject* target) const;
 
-
-private:
     const std::string m_deviceId;
     const std::string m_timeStamp;
     const std::string m_id;
@@ -165,23 +159,23 @@ private:
  * @class AMLData
  * @brief This class have RawData map which have key value pair.
  */
-
 class AMLData
 {
 public:
     AMLData(void);
+
     /**
      * @brief       Copy Constructor Overloading.
      */
-    
     AMLData(const AMLData& t);
+
     /**
      * @brief       Copy Constructor Overloading.
      */
     AMLData& operator=(const AMLData& t);
 
     virtual ~AMLData(void);
-  
+
     /**
      * @fn void setValue(const std::string& key, const std::string& value)
      * @brief       This function set key and string type value pair on AMLData.
@@ -256,7 +250,6 @@ private:
      */
     void                            copyData(AMLData* target) const;
 
-private:
     std::map<std::string, AMLValue*> m_values;
 };
 
