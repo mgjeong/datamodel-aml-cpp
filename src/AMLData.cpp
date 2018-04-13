@@ -18,8 +18,9 @@
 #include <string>
 #include <vector>
 #include <map>
- 
+
 #include "AMLInterface.h"
+#include "AMLValue.h"
 #include "AMLException.h"
 #include "AMLLogger.h"
 
@@ -30,14 +31,34 @@
 // For logging
 #define TYPE(type)  (type)==0 ? "String" : ((type)==1 ? "String Vector" : "AMLData")
 
+using namespace std;
 using namespace AML;
+
 
 AMLData::AMLData(void)
 {
 }
 
+AMLData::AMLData(const AMLData& t) 
+{
+    t.copyData(this);
+}
+
+AMLData& AMLData::operator=(const AMLData& t)
+{
+    t.copyData(this);
+    return *this;
+}
+
 AMLData::~AMLData(void)
 {
+    if (!m_values.empty()) 
+    {
+        for (auto const& iter : m_values)
+        {
+            delete iter.second;
+        }
+    }
 }
 
 void AMLData::setValue(const std::string& key, const std::string& value)
@@ -45,11 +66,13 @@ void AMLData::setValue(const std::string& key, const std::string& value)
     VERIFY_NON_EMPTY_THROW_EXCEPTION(key);
     VERIFY_NON_EMPTY_THROW_EXCEPTION(value);
 
-    if (!m_values.insert(std::pair<std::string, std::string>(key, value)).second)
+    if (m_values.find(key) != m_values.end())
     {
         AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(KEY_ALREADY_EXIST);
     }
+
+    m_values[key] = (AMLValue*) new AMLValue_<std::string>(AMLValueType::String, value);
 }
 
 void AMLData::setValue(const std::string& key, const std::vector<std::string>& value)
@@ -57,22 +80,26 @@ void AMLData::setValue(const std::string& key, const std::vector<std::string>& v
     VERIFY_NON_EMPTY_THROW_EXCEPTION(key);
     VERIFY_NON_EMPTY_THROW_EXCEPTION(value);
 
-    if (!m_values.insert(std::pair<std::string, std::vector<std::string>>(key, value)).second)
+    if (m_values.find(key) != m_values.end())
     {
         AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(KEY_ALREADY_EXIST);
     }
+
+    m_values[key] = (AMLValue*) new AMLValue_<std::vector<std::string>>(AMLValueType::StringArray, value);
 }
 
 void AMLData::setValue(const std::string& key, const AMLData& value)
 {
     VERIFY_NON_EMPTY_THROW_EXCEPTION(key);
 
-    if (!m_values.insert(std::pair<std::string, AMLData>(key, value)).second)
+    if (m_values.find(key) != m_values.end())
     {
         AML_LOG_V(ERROR, TAG, "Key already exist in AMLData : %s", key.c_str());
         throw AMLException(KEY_ALREADY_EXIST);
     }
+    
+    m_values[key] = (AMLValue*) new AMLValue_<AMLData>(AMLValueType::AMLData, value);
 }
 
 std::vector<std::string> AMLData::getKeys() const
@@ -94,20 +121,9 @@ AMLValueType AMLData::getValueType(const std::string& key) const
     {
         if (key.compare(element.first) == 0)
         {
-            auto type = element.second.which();
+            AMLValueType type = element.second->getType();
 
-            if (type == 0)
-            {
-                return AMLValueType::String;
-            }
-            else if (type == 1)
-            {
-                return AMLValueType::StringArray;
-            }
-            else if (type == 2)
-            {
-                return AMLValueType::AMLData;
-            }
+            return type;
         }
     }
 
@@ -125,13 +141,13 @@ const std::string& AMLData::getValueToStr(const std::string& key) const
         AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
         throw AMLException(KEY_NOT_EXIST);
     }
-    else if (0 != iter->second.which())
+    else if (AMLValueType::String != iter->second->getType())
     {
         AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
 
-    return boost::get<std::string>(iter->second);
+    return ((AMLValue_<std::string>*)iter->second)->getValue();
 }
 
 const std::vector<std::string>& AMLData::getValueToStrArr(const std::string& key) const
@@ -144,13 +160,14 @@ const std::vector<std::string>& AMLData::getValueToStrArr(const std::string& key
         AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
         throw AMLException(KEY_NOT_EXIST);
     }
-    else if (1 != iter->second.which())
+    else if (AMLValueType::StringArray != iter->second->getType())
     {
         AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
 
-    return boost::get<std::vector<std::string>>(iter->second);
+    AMLValue_<std::vector<std::string>>* amlVal = (AMLValue_<std::vector<std::string>>*)iter->second;
+    return amlVal->getValue();
 }
 
 const AMLData& AMLData::getValueToAMLData(const std::string& key) const
@@ -163,11 +180,33 @@ const AMLData& AMLData::getValueToAMLData(const std::string& key) const
         AML_LOG_V(ERROR, TAG, "Key does not exist in AMLData : %s", key.c_str());
         throw AMLException(KEY_NOT_EXIST);
     }
-    else if (2 != iter->second.which())
+    else if (AMLValueType::AMLData != iter->second->getType())
     {
         AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
 
-    return boost::get<AMLData>(iter->second);
+    AMLValue_<AMLData>* amlVal = (AMLValue_<AMLData>*)iter->second;
+    return amlVal->getValue();
+}
+
+void AMLData::copyData(AMLData* target) const
+{
+    for (auto const& element : m_values)
+    {
+        string key(element.first);
+
+        if (AMLValueType::String == element.second->getType())
+        {
+            target->setValue(key, ((AMLValue_<string>*)element.second)->getValue());
+        }
+        else if (AMLValueType::StringArray == element.second->getType())
+        {
+            target->setValue(key, ((AMLValue_<vector<string>>*)element.second)->getValue());
+        }
+        else
+        {
+            target->setValue(key, ((AMLValue_<AMLData>*)element.second)->getValue());
+        }
+    }
 }

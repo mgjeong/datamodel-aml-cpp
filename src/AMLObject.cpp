@@ -49,16 +49,43 @@ AMLObject::AMLObject(const std::string& deviceId, const std::string& timeStamp, 
     VERIFY_NON_EMPTY_THROW_EXCEPTION(id);
 }
 
+AMLObject::AMLObject(const AMLObject& t)
+ : m_deviceId(t.getDeviceId()), m_timeStamp(t.getTimeStamp()), m_id(t.getId())
+{
+    t.copyObject(this);
+}
+
+AMLObject& AMLObject::operator=(const AMLObject& t)
+{
+    const_cast<std::string&>(m_deviceId) = t.getDeviceId();
+    const_cast<std::string&>(m_timeStamp) = t.getTimeStamp();
+    const_cast<std::string&>(m_id) = t.getId();
+
+    t.copyObject(this);
+    return *this;
+}
+
 AMLObject::~AMLObject(void)
 {
+    if (!m_amlDatas.empty()) 
+    {
+        for (auto const& iter : m_amlDatas)
+        {
+            delete iter.second;
+        }
+    }
 }
 
 void AMLObject::addData(const std::string& name, const AMLData& data)
 {
     VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
 
-    // Try to insert a new element into the map and if the key already exists, throw an exeption.
-    if (!m_amlDatas.insert(make_pair(name, data)).second)
+    AMLData* amlData = new AMLData();
+    *amlData = data;
+
+    //Try to insert a new element into the map and if the key already exists, throw an exeption.
+    std::pair<const std::string, AMLData*> temp = std::make_pair(name, amlData);
+    if (!m_amlDatas.insert(temp).second)
     {
         AML_LOG_V(ERROR, TAG, "Name already exist in AMLObject : %s", name.c_str());
         throw AMLException(KEY_ALREADY_EXIST);
@@ -69,15 +96,14 @@ const AMLData& AMLObject::getData(const std::string& name) const
 {
     VERIFY_NON_EMPTY_THROW_EXCEPTION(name);
 
-    map<string, AMLData>::iterator iter = m_amlDatas.find(name);
+    map<string, AMLData*>::iterator iter = m_amlDatas.find(name);
     if (iter == m_amlDatas.end())
     {
         // The name does not exist.
         AML_LOG_V(ERROR, TAG, "Name does not exist in AMLObject : %s", name.c_str());
         throw AMLException(KEY_NOT_EXIST);
     }
-
-    return iter->second;
+    return *(iter->second);
 }
 
 vector<string> AMLObject::getDataNames() const
@@ -104,4 +130,14 @@ const std::string& AMLObject::getTimeStamp() const
 const std::string& AMLObject::getId() const
 {
     return m_id;
+}
+
+void AMLObject::copyObject(AMLObject* target) const
+{
+    for (auto const& element : m_amlDatas)
+    {
+        string key(element.first);
+
+        target->addData(key, *element.second);
+    }
 }

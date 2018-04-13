@@ -34,7 +34,8 @@ else:
 aml_env.AppendUnique(CPPPATH=[
         './extlibs/pugixml/pugixml-1.8/src',
         './include',
-        './include/logger'
+        './include/logger',
+        './include/internal'
 ])
 
 if not disable_protobuf:

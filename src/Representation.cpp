@@ -19,6 +19,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <cassert>
 
 #include "pugixml.hpp"
 
@@ -88,16 +89,16 @@ static const char KEY_TIMESTAMP[]                   = "timestamp";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifndef _DISABLE_PROTOBUF_
-template <class T>
+template <typename T>
 static void extractAttribute(T* attr, pugi::xml_node xmlNode);
 
-template <class T>
+template <typename T>
 static void extractInternalElement(T* ie, pugi::xml_node xmlNode);
 
-template <class T>
+template <typename T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr);
 
-template <class T>
+template <typename T>
 static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie);
 #endif // _DISABLE_PROTOBUF_
 
@@ -586,7 +587,7 @@ std::string Representation::DataToByte(const AMLObject& amlObject) const
 }
 
 #ifndef _DISABLE_PROTOBUF_
-template <class T>
+template <typename T>
 static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
 {
     for (datamodel::Attribute att : attr->attribute())
@@ -613,7 +614,7 @@ static void extractProtoAttribute(pugi::xml_node xmlNode, T* attr)
     return;
 }
 
-template <class T>
+template <typename T>
 static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
 {
     for (datamodel::InternalElement sie : ie->internalelement())
@@ -640,7 +641,7 @@ static void extractProtoInternalElement(pugi::xml_node xmlNode, T* ie)
     return;
 }
 
-template <class T>
+template <typename T>
 static void extractAttribute(T* attr, pugi::xml_node xmlNode)
 {
     for (pugi::xml_node xmlAttr = xmlNode.child(ATTRIBUTE); xmlAttr; xmlAttr = xmlAttr.next_sibling(ATTRIBUTE))
@@ -671,7 +672,7 @@ static void extractAttribute(T* attr, pugi::xml_node xmlNode)
     return;
 }
 
-template <class T>
+template <typename T>
 static void extractInternalElement(T* ie, pugi::xml_node xmlNode)
 {
     for (pugi::xml_node xmlIe = xmlNode.child(INTERNAL_ELEMENT); xmlIe; xmlIe = xmlIe.next_sibling(INTERNAL_ELEMENT))    
