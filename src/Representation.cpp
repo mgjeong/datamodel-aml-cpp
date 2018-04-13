@@ -242,7 +242,6 @@ public:
     pugi::xml_document* constructXmlDoc(const AMLObject& amlObject)
     {
         pugi::xml_document* xml_doc = constructXmlDoc();
-
         // add InstanceHierarchy
         pugi::xml_node xml_ih = xml_doc->child(CAEX_FILE).append_child(INSTANCE_HIERARCHY);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_ih);
@@ -263,14 +262,15 @@ public:
 
         // add AMLDatas into Event
         vector<string> dataNames = amlObject.getDataNames();
+
         for (string name : dataNames)
         {
             AMLData data = amlObject.getData(name);
+
             pugi::xml_node xml_ie = addInternalElement(xml_event, name);
 
             setAttributeValue(xml_ie, &data);
         }
-
         return xml_doc;
     }
 
@@ -393,7 +393,12 @@ private:
         {
             std::string attributeName(xml_attr.attribute(NAME).value());
 
-            if (NULL == xml_attr.first_child()) // If <Attribute> does not have any child like <Value> or <RefSemantic>, it has a single string value.
+            if(NULL != xml_attr.child(DESCRIPTION))
+            {
+                if(NULL == xml_attr.child(DESCRIPTION).next_sibling())
+                    ADD_VALUE(xml_attr, amlData->getValueToStr(attributeName));
+            }
+            else if (NULL == xml_attr.first_child()) // If <Attribute> does not have any child like <Value> or <RefSemantic>, it has a single string value.
             {
                 ADD_VALUE(xml_attr, amlData->getValueToStr(attributeName));
             }
@@ -649,7 +654,7 @@ static void extractAttribute(T* attr, pugi::xml_node xmlNode)
 
         attr_child->set_name              (xmlAttr.attribute(NAME).value());
         attr_child->set_attributedatatype (xmlAttr.attribute(ATTRIBUTE_DATA_TYPE).value());
-      //attr->set_description       (xmlAttr.child_value(DESCRIPTION)); //@TODO: required?
+        //attr->set_description       (xmlAttr.child_value(DESCRIPTION)); //@TODO: required?
 
         extractAttribute<datamodel::Attribute>(attr_child, xmlAttr);
 
