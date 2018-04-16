@@ -29,7 +29,7 @@
 #define VERIFY_NON_EMPTY_THROW_EXCEPTION(str)   if ((str).empty()) throw AMLException(INVALID_PARAM); 
 
 // For logging
-#define TYPE(type)  (type)==0 ? "String" : ((type)==1 ? "String Vector" : "AMLData")
+#define TYPE(type)  (type) == AMLValueType::String ? "String" : ((type) == AMLValueType::StringArray ? "String Array" : "AMLData")
 
 using namespace std;
 using namespace AML;
@@ -143,7 +143,7 @@ const std::string& AMLData::getValueToStr(const std::string& key) const
     }
     else if (AMLValueType::String != iter->second->getType())
     {
-        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
+        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second->getType()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
 
@@ -162,7 +162,7 @@ const std::vector<std::string>& AMLData::getValueToStrArr(const std::string& key
     }
     else if (AMLValueType::StringArray != iter->second->getType())
     {
-        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
+        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second->getType()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
 
@@ -182,7 +182,7 @@ const AMLData& AMLData::getValueToAMLData(const std::string& key) const
     }
     else if (AMLValueType::AMLData != iter->second->getType())
     {
-        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second.which()));
+        AML_LOG_V(ERROR, TAG, "'%s' has a value of %s type", key.c_str(), TYPE(iter->second->getType()));
         throw AMLException(WRONG_GETTER_TYPE);
     }
 
