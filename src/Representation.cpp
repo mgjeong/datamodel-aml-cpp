@@ -302,6 +302,7 @@ private:
         pugi::xml_node xml_decl = xml_doc->prepend_child(pugi::node_declaration);
         xml_decl.append_attribute("version") = "1.0";
         xml_decl.append_attribute("encoding") = "utf-8";
+        //xml_decl.append_attribute("standalone") = "yes";
 
         pugi::xml_node xml_caexFile = xml_doc->append_child(CAEX_FILE);
         VERIFY_NON_NULL_THROW_EXCEPTION(xml_caexFile);
