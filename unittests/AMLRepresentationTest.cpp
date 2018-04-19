@@ -237,16 +237,16 @@ namespace AMLRepresentationTest
         if (NULL != amlObj)  delete amlObj;
     }
 
-//     TEST(DataToAmlTest, ConvertValid)
-//     {
-//         Representation rep = Representation(amlModelFile);
-//         AMLObject amlObj = TestAMLObject();
-//         std::string amlStr;
-//         EXPECT_NO_THROW(amlStr = rep.DataToAml(amlObj));
+    TEST(DataToAmlTest, ConvertValid)
+    {
+        Representation rep = Representation(amlModelFile);
+        AMLObject amlObj = TestAMLObject();
+        std::string amlStr;
+        EXPECT_NO_THROW(amlStr = rep.DataToAml(amlObj));
 
-//         std::string varify = TestAML();
-//         EXPECT_EQ(varify.compare(amlStr), 0); //@TODO: issue - it does not return 0 though they are same string 
-//     }
+        std::string varify = TestAML();
+        EXPECT_EQ(varify.compare(amlStr), 0); //@TODO: issue - it does not return 0 though they are same string 
+    }
 
     TEST(DataToAmlTest, InvalidDataToModel)
     {
