@@ -10,4 +10,4 @@ sudo cp out/linux/armhf/release/libaml.so $USR_LIB_DIR
 # COPY header file to /usr/local/include/datamodel-aml-cpp
 sudo rm -rf $USR_INC_DIR/$KEYWORD_AML_CPP
 sudo mkdir $USR_INC_DIR/$KEYWORD_AML_CPP
-sudo cp -f ./include/* $USR_INC_DIR/$KEYWORD_AML_CPP/
+sudo cp -r ./include/* $USR_INC_DIR/$KEYWORD_AML_CPP/
