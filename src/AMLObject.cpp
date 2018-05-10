@@ -57,11 +57,14 @@ AMLObject::AMLObject(const AMLObject& t)
 
 AMLObject& AMLObject::operator=(const AMLObject& t)
 {
-    const_cast<std::string&>(m_deviceId) = t.getDeviceId();
-    const_cast<std::string&>(m_timeStamp) = t.getTimeStamp();
-    const_cast<std::string&>(m_id) = t.getId();
+    if (&t != this)
+    {
+        const_cast<std::string&>(m_deviceId) = t.getDeviceId();
+        const_cast<std::string&>(m_timeStamp) = t.getTimeStamp();
+        const_cast<std::string&>(m_id) = t.getId();
 
-    t.copyObject(this);
+        t.copyObject(this);
+    }
     return *this;
 }
 
