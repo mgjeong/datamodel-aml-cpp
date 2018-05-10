@@ -57,54 +57,54 @@ void saveStringToFile(string str, string filePath);
 */
 
 int main() {
-    // construct Representation object
-    Representation* rep = new Representation("sample_data_model.aml");
-    cout << "RepresentationId is " << rep->getRepresentationId() << endl;
-    cout << "-------------------------------------------------------------" << endl;
-
-    AMLObject* config_amlObj = rep->getConfigInfo();
-    printAMLObject(*config_amlObj);
-    delete config_amlObj;
-    cout << "-------------------------------------------------------------" << endl;
-
-    // create AMLObject
-    string deviceId = "GTC001";
-    string timeStamp = "123456789";
-
-    AMLObject amlObj(deviceId, timeStamp);
-
-    // create "Model" data
-    AMLData model;
-    model.setValue("ctname", "Model_107.113.97.248");
-    model.setValue("con", "SR-P7-970");
-
-    // create "Sample" data
-    AMLData axis;
-    axis.setValue("x", "20");
-    axis.setValue("y", "110");
-    axis.setValue("z", "80");
-
-    AMLData info;
-    info.setValue("id", "f437da3b");
-    info.setValue("axis", axis);
-
-    vector<string> appendix;
-    appendix.push_back("52303");
-    appendix.push_back("935");
-    appendix.push_back("1442");
-
-    AMLData sample;
-    sample.setValue("info", info);
-    sample.setValue("appendix", appendix);
-
-
-    // Add Datas to AMLObject
-    amlObj.addData("Model", model);
-    amlObj.addData("Sample", sample);
-
-    printAMLObject(amlObj);
-
     try{
+        // construct Representation object
+        Representation* rep = new Representation("sample_data_model.aml");
+        cout << "RepresentationId is " << rep->getRepresentationId() << endl;
+        cout << "-------------------------------------------------------------" << endl;
+
+        AMLObject* config_amlObj = rep->getConfigInfo();
+        printAMLObject(*config_amlObj);
+        delete config_amlObj;
+        cout << "-------------------------------------------------------------" << endl;
+
+        // create AMLObject
+        string deviceId = "GTC001";
+        string timeStamp = "123456789";
+
+        AMLObject amlObj(deviceId, timeStamp);
+
+        // create "Model" data
+        AMLData model;
+        model.setValue("ctname", "Model_107.113.97.248");
+        model.setValue("con", "SR-P7-970");
+
+        // create "Sample" data
+        AMLData axis;
+        axis.setValue("x", "20");
+        axis.setValue("y", "110");
+        axis.setValue("z", "80");
+
+        AMLData info;
+        info.setValue("id", "f437da3b");
+        info.setValue("axis", axis);
+
+        vector<string> appendix;
+        appendix.push_back("52303");
+        appendix.push_back("935");
+        appendix.push_back("1442");
+
+        AMLData sample;
+        sample.setValue("info", info);
+        sample.setValue("appendix", appendix);
+
+
+        // Add Datas to AMLObject
+        amlObj.addData("Model", model);
+        amlObj.addData("Sample", sample);
+
+        printAMLObject(amlObj);
+
         // Convert AMLObject to AMLstring(XML)
         string aml_string = rep->DataToAml(amlObj);
         cout << aml_string << endl;
