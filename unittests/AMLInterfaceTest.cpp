@@ -465,4 +465,23 @@ namespace AMLInterfaceTest
             EXPECT_EQ(e.code(), KEY_NOT_EXIST);
         }
     }
+
+    TEST(AMLObjectTest, CopyConstructor)
+    {
+        AMLObject originObj("deviceId", "timeStamp");
+
+        string key = "key";
+        string value = "value";
+        AMLData amlData;
+        EXPECT_NO_THROW(amlData.setValue(key, value));
+
+        string dataName = "dataName";
+        EXPECT_NO_THROW(originObj.addData(dataName, amlData));
+
+        AMLObject cloneObj(originObj);
+
+        AMLData cloneData = cloneObj.getData(dataName);
+
+        EXPECT_TRUE(value == cloneData.getValueToStr(key));
+    }
 }
