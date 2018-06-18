@@ -66,7 +66,7 @@ static const char KEY_ID[]                          = "id";
 static const char KEY_TIMESTAMP[]                   = "timestamp";
 
 #define IS_NAME(node, name)                     (std::string((node).attribute(NAME).value()) == (name))
-#define ADD_VALUE(node, value)                  (node).append_child(VALUE).text().set((value).c_str()) //#TODO: verify non-null after append_child()
+#define ADD_VALUE(node, value)                  ((node).append_child(VALUE).text().set((value).c_str())) //#TODO: verify non-null after append_child()
 
 #define VERIFY_NON_NULL_THROW_EXCEPTION(var)    if (NULL == (var)) throw AMLException(NO_MEMORY); 
 
