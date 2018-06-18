@@ -35,6 +35,9 @@ proguard-project.txt
 dependencies/
 dep/
 
+# Ignore coverage folder, which would be generated during unittest
+coverage/
+
 # Ignore SCons generated files and directories
 .scon*
 out/

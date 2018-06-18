@@ -17,10 +17,12 @@
 
 #!/bin/bash
 
+PROJECT_ROOT=$(pwd)
 AML_TARGET_ARCH=x86_64
 
 function build(){
-    scons TARGET_OS=linux TARGET_ARCH=${AML_TARGET_ARCH}
+    cd $PROJECT_ROOT
+    scons TARGET_OS=linux TARGET_ARCH=${AML_TARGET_ARCH} RELEASE=0
     if [ $? -ne 0 ]; then 
         echo -e "\033[31m"Build failed"\033[0m" 
         exit 1 
@@ -28,12 +30,32 @@ function build(){
 }
 
 function run_test(){
-    cd out/linux/${AML_TARGET_ARCH}/release/unittests
+    cd $PROJECT_ROOT/out/linux/${AML_TARGET_ARCH}/debug/unittests
     ./aml_rep_test
     if [ $? -ne 0 ]; then 
         echo -e "\033[31m"Unittests failed"\033[0m" 
         exit 1 
     fi
+}
+
+function coverage() {
+    cd $PROJECT_ROOT
+    if [ ! -d "./coverage" ]; then
+        mkdir coverage
+    fi
+
+    gcovr -r . \
+            -e "build_common.*" \
+            -e "coverage.*" \
+            -e "dependencies.*" \
+            -e "docs.*" \
+            -e "extlibs.*" \
+            -e "out.*" \
+            -e "protobuf.*" \
+            -e "samples.*" \
+            -e "unittests.*" \
+            -e "src/logger.*" \
+            --html --html-details -o ./coverage/report.html
 }
 
 echo -e "Building AML DataModel library("${AML_TARGET_ARCH}").."
@@ -43,5 +65,9 @@ echo -e "Done building AML DataModel library("${AML_TARGET_ARCH}")"
 echo -e "Running AML DataModel Unittests"
 run_test
 echo -e "Done Unittests"
+
+if [ "$1" == --coverage ]; then
+    coverage
+fi
 
 exit 0
