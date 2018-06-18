@@ -1,4 +1,4 @@
 var namespaces =
 [
-    [ "Exception", "namespace_exception.html", null ]
+    [ "AML", "namespace_a_m_l.html", null ]
 ];

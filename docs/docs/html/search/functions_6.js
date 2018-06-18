@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['setvalue',['setValue',['../class_a_m_l_data.html#aa788876dccce98a6a0c425de6028c28e',1,'AMLData::setValue(const std::string &amp;key, const std::string &amp;value)'],['../class_a_m_l_data.html#ac4c156acdc2ef2a506e7d7b4f5aede21',1,'AMLData::setValue(const std::string &amp;key, const std::vector&lt; std::string &gt; &amp;value)'],['../class_a_m_l_data.html#a2bcaff5bc5caa26419b0632d71033d25',1,'AMLData::setValue(const std::string &amp;key, const AMLData &amp;value)']]]
+  ['reason',['reason',['../class_a_m_l_1_1_a_m_l_exception.html#a21ac3a144d7d3d98114988501aea657f',1,'AML::AMLException::reason(const ResultCode resCode)'],['../class_a_m_l_1_1_a_m_l_exception.html#ab6eb37af1e2ca6bdfd584d60745c5dd2',1,'AML::AMLException::reason() const ']]],
+  ['representation',['Representation',['../class_a_m_l_1_1_representation.html#a47b154209076ea07f1885eb1d7dd7cac',1,'AML::Representation']]]
 ];

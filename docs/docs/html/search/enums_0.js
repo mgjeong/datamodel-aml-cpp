@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['amlresult',['AMLResult',['../_a_m_l_exception_8h.html#a81d8181dd293304c9088695f607b805e',1,'AMLException.h']]],
-  ['amlvaluetype',['AMLValueType',['../_a_m_l_interface_8h.html#a79ddb278bb9701ac9511ae9e1ba1d0d5',1,'AMLInterface.h']]]
+  ['amlvaluetype',['AMLValueType',['../namespace_a_m_l.html#a5809ca12c9e97016380b2aaad232dc07',1,'AML']]]
 ];
