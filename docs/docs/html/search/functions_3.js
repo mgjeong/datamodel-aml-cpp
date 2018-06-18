@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['datatoaml',['DataToAml',['../class_representation.html#afd5430ba08fa7ace1fb477bb327e5a0d',1,'Representation']]],
-  ['datatobyte',['DataToByte',['../class_representation.html#a3310940159e5358a4c6c93e8f2f9f5e8',1,'Representation']]]
+  ['datatoaml',['DataToAml',['../class_a_m_l_1_1_representation.html#a5034cb83a49409c82408d63e532d0427',1,'AML::Representation']]],
+  ['datatobyte',['DataToByte',['../class_a_m_l_1_1_representation.html#a498178e047d0422556601585ec8016f6',1,'AML::Representation']]]
 ];

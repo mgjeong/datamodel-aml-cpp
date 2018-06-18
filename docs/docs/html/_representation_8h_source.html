@@ -68,7 +68,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -91,7 +90,7 @@ $(document).ready(function(){initNavTree('_representation_8h_source.html','');})
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -129,55 +128,51 @@ $(document).ready(function(){initNavTree('_representation_8h_source.html','');})
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_a_m_l_interface_8h.html">AMLInterface.h</a>&quot;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="class_representation.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_representation.html">Representation</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="class_representation.html#a821804a67c2dc15e78a2f295dbdf5998">Representation</a>(<span class="keyword">const</span> std::string amlFilePath);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_representation.html#adb250948872246b9911a9166b4a8b1f7">~Representation</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::string <a class="code" href="class_representation.html#afd5430ba08fa7ace1fb477bb327e5a0d">DataToAml</a>(<span class="keyword">const</span> <a class="code" href="class_a_m_l_object.html">AMLObject</a>&amp; amlObject) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="class_a_m_l_object.html">AMLObject</a>* <a class="code" href="class_representation.html#a39f24dc6bfde11161e9f3c0de11eb022">AmlToData</a>(<span class="keyword">const</span> std::string&amp; xmlStr) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    std::string <a class="code" href="class_representation.html#a3310940159e5358a4c6c93e8f2f9f5e8">DataToByte</a>(<span class="keyword">const</span> <a class="code" href="class_a_m_l_object.html">AMLObject</a>&amp; amlObject) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="class_a_m_l_object.html">AMLObject</a>* <a class="code" href="class_representation.html#a9c1ad33b3809bd33c58a6af980a14f99">ByteToData</a>(<span class="keyword">const</span> std::string&amp; byte) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>AML</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="class_a_m_l_1_1_representation.html">   33</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_a_m_l_1_1_representation.html">Representation</a></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="class_a_m_l_1_1_representation.html#a47b154209076ea07f1885eb1d7dd7cac">Representation</a>(<span class="keyword">const</span> std::string amlFilePath);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_a_m_l_1_1_representation.html#a4523aef6700a44bdf363d8ccc9c8dbfc">~Representation</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::string <a class="code" href="class_a_m_l_1_1_representation.html#a5034cb83a49409c82408d63e532d0427">DataToAml</a>(<span class="keyword">const</span> <a class="code" href="class_a_m_l_1_1_a_m_l_object.html">AMLObject</a>&amp; amlObject) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="class_a_m_l_1_1_a_m_l_object.html">AMLObject</a>* <a class="code" href="class_a_m_l_1_1_representation.html#a473ef4dcf056e86d3d4a415a08c7e6c9">AmlToData</a>(<span class="keyword">const</span> std::string&amp; xmlStr) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    std::string <a class="code" href="class_a_m_l_1_1_representation.html#a498178e047d0422556601585ec8016f6">DataToByte</a>(<span class="keyword">const</span> <a class="code" href="class_a_m_l_1_1_a_m_l_object.html">AMLObject</a>&amp; amlObject) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="class_a_m_l_1_1_a_m_l_object.html">AMLObject</a>* <a class="code" href="class_a_m_l_1_1_representation.html#a04743d9bba6b0f47f1da87cea6f4f73e">ByteToData</a>(<span class="keyword">const</span> std::string&amp; byte) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    std::string <a class="code" href="class_representation.html#a9675b70d27218ca3de04bd4b95d20038">getRepresentationId</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    std::string <a class="code" href="class_a_m_l_1_1_representation.html#a6093e9e42d9ea6da05f474ddea2d4848">getRepresentationId</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="class_a_m_l_object.html">AMLObject</a>* <a class="code" href="class_representation.html#acf0a9e68f948dc2ffcfbaa0ae7d3627b">getConfigInfo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="class_a_m_l_1_1_a_m_l_object.html">AMLObject</a>* <a class="code" href="class_a_m_l_1_1_representation.html#a80e304ae2767ce2d454bf4bf4b79e4f6">getConfigInfo</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">class </span>AMLModel;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    AMLModel* m_amlModel;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#endif // REPRESENTAITON_H_</span></div>
-<div class="ttc" id="class_representation_html_acf0a9e68f948dc2ffcfbaa0ae7d3627b"><div class="ttname"><a href="class_representation.html#acf0a9e68f948dc2ffcfbaa0ae7d3627b">Representation::getConfigInfo</a></div><div class="ttdeci">AMLObject * getConfigInfo() const </div><div class="ttdoc">This function returns AMLObject that contains configuration data which is present in RoleClassLib...</div></div>
-<div class="ttc" id="class_representation_html"><div class="ttname"><a href="class_representation.html">Representation</a></div><div class="ttdoc">This class converts between AMLObject, AML(XML) string, AML(Protobuf) byte. </div><div class="ttdef"><b>Definition:</b> Representation.h:35</div></div>
-<div class="ttc" id="class_representation_html_afd5430ba08fa7ace1fb477bb327e5a0d"><div class="ttname"><a href="class_representation.html#afd5430ba08fa7ace1fb477bb327e5a0d">Representation::DataToAml</a></div><div class="ttdeci">std::string DataToAml(const AMLObject &amp;amlObject) const </div><div class="ttdoc">This function converts AMLObject to AML(XML) string to match the AML model information which is set b...</div></div>
-<div class="ttc" id="class_a_m_l_object_html"><div class="ttname"><a href="class_a_m_l_object.html">AMLObject</a></div><div class="ttdoc">This class have AMLData. </div><div class="ttdef"><b>Definition:</b> AMLInterface.h:55</div></div>
-<div class="ttc" id="class_representation_html_adb250948872246b9911a9166b4a8b1f7"><div class="ttname"><a href="class_representation.html#adb250948872246b9911a9166b4a8b1f7">Representation::~Representation</a></div><div class="ttdeci">virtual ~Representation(void)</div></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;} <span class="comment">// namespace AML</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#endif // REPRESENTAITON_H_</span></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a80e304ae2767ce2d454bf4bf4b79e4f6"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a80e304ae2767ce2d454bf4bf4b79e4f6">AML::Representation::getConfigInfo</a></div><div class="ttdeci">AMLObject * getConfigInfo() const </div><div class="ttdoc">This function returns AMLObject that contains configuration data which is present in RoleClassLib...</div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html"><div class="ttname"><a href="class_a_m_l_1_1_representation.html">AML::Representation</a></div><div class="ttdoc">This class converts between AMLObject, AML(XML) string, AML(Protobuf) byte. </div><div class="ttdef"><b>Definition:</b> Representation.h:33</div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a6093e9e42d9ea6da05f474ddea2d4848"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a6093e9e42d9ea6da05f474ddea2d4848">AML::Representation::getRepresentationId</a></div><div class="ttdeci">std::string getRepresentationId() const </div><div class="ttdoc">This function returns AutomationML SystemUnitClassLib&#39;s unique ID. </div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a5034cb83a49409c82408d63e532d0427"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a5034cb83a49409c82408d63e532d0427">AML::Representation::DataToAml</a></div><div class="ttdeci">std::string DataToAml(const AMLObject &amp;amlObject) const </div><div class="ttdoc">This function converts AMLObject to AML(XML) string to match the AML model information which is set b...</div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a473ef4dcf056e86d3d4a415a08c7e6c9"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a473ef4dcf056e86d3d4a415a08c7e6c9">AML::Representation::AmlToData</a></div><div class="ttdeci">AMLObject * AmlToData(const std::string &amp;xmlStr) const </div><div class="ttdoc">This function converts AML(XML) string to AMLObject to match the AML model information which is set b...</div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a47b154209076ea07f1885eb1d7dd7cac"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a47b154209076ea07f1885eb1d7dd7cac">AML::Representation::Representation</a></div><div class="ttdeci">Representation(const std::string amlFilePath)</div><div class="ttdoc">Constructor. </div></div>
 <div class="ttc" id="_a_m_l_interface_8h_html"><div class="ttname"><a href="_a_m_l_interface_8h.html">AMLInterface.h</a></div></div>
-<div class="ttc" id="class_representation_html_a39f24dc6bfde11161e9f3c0de11eb022"><div class="ttname"><a href="class_representation.html#a39f24dc6bfde11161e9f3c0de11eb022">Representation::AmlToData</a></div><div class="ttdeci">AMLObject * AmlToData(const std::string &amp;xmlStr) const </div><div class="ttdoc">This function converts AML(XML) string to AMLObject to match the AML model information which is set b...</div></div>
-<div class="ttc" id="class_representation_html_a3310940159e5358a4c6c93e8f2f9f5e8"><div class="ttname"><a href="class_representation.html#a3310940159e5358a4c6c93e8f2f9f5e8">Representation::DataToByte</a></div><div class="ttdeci">std::string DataToByte(const AMLObject &amp;amlObject) const </div><div class="ttdoc">This function converts AMLObject to Protobuf byte data to match the AML model information which is se...</div></div>
-<div class="ttc" id="class_representation_html_a9c1ad33b3809bd33c58a6af980a14f99"><div class="ttname"><a href="class_representation.html#a9c1ad33b3809bd33c58a6af980a14f99">Representation::ByteToData</a></div><div class="ttdeci">AMLObject * ByteToData(const std::string &amp;byte) const </div><div class="ttdoc">This function converts Protobuf byte data to AMLObject to match the AML model information which is se...</div></div>
-<div class="ttc" id="class_representation_html_a9675b70d27218ca3de04bd4b95d20038"><div class="ttname"><a href="class_representation.html#a9675b70d27218ca3de04bd4b95d20038">Representation::getRepresentationId</a></div><div class="ttdeci">std::string getRepresentationId() const </div><div class="ttdoc">This function returns AutomationML SystemUnitClassLib&#39;s unique ID. </div></div>
-<div class="ttc" id="class_representation_html_a821804a67c2dc15e78a2f295dbdf5998"><div class="ttname"><a href="class_representation.html#a821804a67c2dc15e78a2f295dbdf5998">Representation::Representation</a></div><div class="ttdeci">Representation(const std::string amlFilePath)</div><div class="ttdoc">Constructor. </div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a498178e047d0422556601585ec8016f6"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a498178e047d0422556601585ec8016f6">AML::Representation::DataToByte</a></div><div class="ttdeci">std::string DataToByte(const AMLObject &amp;amlObject) const </div><div class="ttdoc">This function converts AMLObject to Protobuf byte data to match the AML model information which is se...</div></div>
+<div class="ttc" id="class_a_m_l_1_1_a_m_l_object_html"><div class="ttname"><a href="class_a_m_l_1_1_a_m_l_object.html">AML::AMLObject</a></div><div class="ttdoc">This class have AMLData. </div><div class="ttdef"><b>Definition:</b> AMLInterface.h:68</div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a04743d9bba6b0f47f1da87cea6f4f73e"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a04743d9bba6b0f47f1da87cea6f4f73e">AML::Representation::ByteToData</a></div><div class="ttdeci">AMLObject * ByteToData(const std::string &amp;byte) const </div><div class="ttdoc">This function converts Protobuf byte data to AMLObject to match the AML model information which is se...</div></div>
+<div class="ttc" id="class_a_m_l_1_1_representation_html_a4523aef6700a44bdf363d8ccc9c8dbfc"><div class="ttname"><a href="class_a_m_l_1_1_representation.html#a4523aef6700a44bdf363d8ccc9c8dbfc">AML::Representation::~Representation</a></div><div class="ttdeci">virtual ~Representation(void)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
     <ul>
-        <li class="footer">Generated on Mon Mar 19 2018 15:11:57</li>
+        <li class="footer">Generated on Mon Jun 18 2018 15:04:24</li>
     </ul>
 </div>
 </body>
