@@ -29,7 +29,7 @@
 #define VERIFY_NON_EMPTY_THROW_EXCEPTION(str)   if ((str).empty()) throw AMLException(INVALID_PARAM); 
 
 // For logging
-#define TYPE(type)  (type) == AMLValueType::String ? "String" : ((type) == AMLValueType::StringArray ? "String Array" : "AMLData")
+#define TYPE(type)  ((type) == AMLValueType::String ? "String" : ((type) == AMLValueType::StringArray ? "String Array" : "AMLData"))
 
 using namespace std;
 using namespace AML;
