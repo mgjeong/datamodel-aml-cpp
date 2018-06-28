@@ -28,7 +28,7 @@ datamodel-aml-cpp is a library which provides the way to present raw data(key/va
    ```
 **Notes** </br>
 (a) For getting help about script option: **$ ./build.sh --help** </br>
-(b) If you build for the first time, set <i>with_dependencies</i> option true. (e.g. $./build.sh --with_dependencies=true)<br> Then it will install the required libraries. In this case, script needs sudo permission for installing the libraries. In future need for sudo will be removed by installing those libraries in aml library.
+(b) If you build for the first time, set <i>install_prerequisites</i> option true. (e.g. $./build.sh --install_prerequisites=true)<br> Then it will install the required libraries. In this case, script needs sudo permission for installing the libraries. In future need for sudo will be removed by installing those libraries in aml library.
 
 
 ## How to run ##
