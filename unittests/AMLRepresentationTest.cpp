@@ -301,7 +301,6 @@ namespace AMLRepresentationTest
 
     TEST(ByteToDataTest, ConvertValid)
     {
-
         Representation rep = Representation(amlModelFile);
         AMLObject* amlObj = NULL;
         std::string binary = TestBinary();
@@ -318,6 +317,7 @@ namespace AMLRepresentationTest
         {
             amlObj = rep.ByteToData(binary);
             FAIL();
+            (void)amlObj;
         }
         catch (const AMLException& e)
         {
