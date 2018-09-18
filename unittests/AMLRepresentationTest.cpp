@@ -35,13 +35,13 @@ namespace AMLRepresentationTest
     std::string amlDataFile                 = "./TEST_Data.aml";
     std::string dataBinaryFile              = "./TEST_DataBinary";
 
-    std::string amlModelId                  = "GTC_Robot_0.0.1"; // from "TEST_DataModel.aml" file
+    std::string amlModelId                  = "SAMPLE_Robot_0.0.1"; // from "TEST_DataModel.aml" file
 
     // Helper method
     AMLObject TestAMLObject()
     {
         // create AMLObject
-        string deviceId = "GTC001";
+        string deviceId = "SAMPLE001";
         string timeStamp = "123456789";
 
         AMLObject amlObj(deviceId, timeStamp);
@@ -49,8 +49,8 @@ namespace AMLRepresentationTest
 
         // create "Model" data
         AMLData model;
-        model.setValue("ctname", "Model_107.113.97.248");
-        model.setValue("con", "SR-P7-970");
+        model.setValue("a", "Model_107.113.97.248");
+        model.setValue("b", "SR-P7-970");
 
         // create "Sample" data
         AMLData axis;
