@@ -34,8 +34,8 @@ void saveStringToFile(string str, string filePath);
 /*
     Raw Data1 (name : "Model")
     {
-        "ctname": "Model_107.113.97.248",
-        "con": "SR-P7-970"
+        "a": "Model_107.113.97.248",
+        "b": "SR-P7-970"
     }
 
     Raw Data2 (name : "Sample")
@@ -69,15 +69,15 @@ int main() {
         cout << "-------------------------------------------------------------" << endl;
 
         // create AMLObject
-        string deviceId = "GTC001";
+        string deviceId = "SAMPLE001";
         string timeStamp = "123456789";
 
         AMLObject amlObj(deviceId, timeStamp);
 
         // create "Model" data
         AMLData model;
-        model.setValue("ctname", "Model_107.113.97.248");
-        model.setValue("con", "SR-P7-970");
+        model.setValue("a", "Model_107.113.97.248");
+        model.setValue("b", "SR-P7-970");
 
         // create "Sample" data
         AMLData axis;
