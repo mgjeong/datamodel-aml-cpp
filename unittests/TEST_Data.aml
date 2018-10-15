@@ -57,6 +57,19 @@
 			</InternalElement>
 		</InternalElement>
 	</InstanceHierarchy>
+	<RoleClassLib Name="SAMPLE_Robot_Cycle">
+		<Version>1.0.0</Version>
+		<RoleClass Name="Sample">
+			<Attribute Name="cycle" AttributeDataType="xs:string">
+				<Value>25</Value>
+			</Attribute>
+		</RoleClass>
+		<RoleClass Name="Model">
+			<Attribute Name="cycle" AttributeDataType="xs:string">
+				<Value>once</Value>
+			</Attribute>
+		</RoleClass>
+	</RoleClassLib>
 	<SystemUnitClassLib Name="SAMPLE_Robot">
 		<Version>0.0.1</Version>
 		<SystemUnitClass Name="Event">
@@ -91,17 +104,4 @@
 			<Attribute Name="b" AttributeDataType="xs:string" />
 		</SystemUnitClass>
 	</SystemUnitClassLib>
-	<RoleClassLib Name="SAMPLE_Robot_Cycle">
-		<Version>1.0.0</Version>
-		<RoleClass Name="Sample">
-			<Attribute Name="cycle" AttributeDataType="xs:string">
-				<Value>25</Value>
-			</Attribute>
-		</RoleClass>
-		<RoleClass Name="Model">
-			<Attribute Name="cycle" AttributeDataType="xs:string">
-				<Value>once</Value>
-			</Attribute>
-		</RoleClass>
-	</RoleClassLib>
 </CAEXFile>
