@@ -278,8 +278,8 @@ public:
     void appendModel(pugi::xml_document* xml_doc)
     {
         assert(nullptr != xml_doc);
-        xml_doc->child(CAEX_FILE).append_copy(m_systemUnitClassLib);
         xml_doc->child(CAEX_FILE).append_copy(m_roleClassLib);
+        xml_doc->child(CAEX_FILE).append_copy(m_systemUnitClassLib);
     }
 
     std::string constructModelId()
